@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 13:27:10 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/01 13:28:30 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/01 13:39:11 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 int	ft_isspace(char c)
 {
 	if ((c >= 9 && c <= 13) || c == ' ')
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }
