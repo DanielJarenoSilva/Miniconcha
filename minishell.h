@@ -17,6 +17,14 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+
+
+typedef struct s_token
+{
+    char			**cmnds;
+}   t_token;
 
 char	**tokenizer(const char *s);
 
