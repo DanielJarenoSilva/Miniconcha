@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/01 13:37:48 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/04 13:36:23 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,3 +79,5 @@ char	**tokenizer(const char *s)
 	tokens[i] = NULL;
 	return (tokens);
 }
+
+//Hacer que divida por pipes etc y demas, pipex????????¿¿¿¿¿¿
