@@ -18,7 +18,6 @@ int	main(void)
 	char	**t;
 
 	t_token	token;
-	(void)token;
 	token.cmnds = malloc(sizeof(char *) * 1024);
 	while (1)
 	{
@@ -28,7 +27,7 @@ int	main(void)
 		if (*rl)
 		{
 			add_history(rl);
-			t = tokenizer(rl);
+			t = parser(rl);
 			for (int i = 0; t[i]; i++)
 			{
 				token.cmnds[i] = ft_strdup(t[i]);

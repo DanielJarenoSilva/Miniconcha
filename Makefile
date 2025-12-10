@@ -6,7 +6,8 @@ CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
 SRCS = main.c \
-		tokenizer.c \
+		parse.c \
+		helper.c
 
 OBJS = $(SRCS:.c=.o)
 

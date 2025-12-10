@@ -26,6 +26,10 @@ typedef struct s_token
     char			**cmnds;
 }   t_token;
 
-char	**tokenizer(const char *s);
+char	**parser(const char *s);
+int        ft_isnode(char c);
+int        ft_count_nodes(const char *s);
+char    *word_dup(const char *start, int len);
+
 
 #endif

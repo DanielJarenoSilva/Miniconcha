@@ -9,75 +9,37 @@
 /*   Updated: 2025/12/04 13:36:23 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "minishell.h"
 
-static int	ft_count_words(const char *s)
-{
-	int	count;
-
-	if (!*s)
-		return (0);
-	count = 0;
-	while (*s)
-	{
-		while (*s &&ft_isspace(*s))
-			s++;
-		if (*s)
-			count++;
-		while (!ft_isspace(*s) && *s)
-			s++;
-	}
-	return (count);
-}
-
-static char	*word_dup(const char *start, int len)
-{
-	char	*word;
-	int		i;
-
-	i = 0;
-	word = malloc(len + 1);
-	if (!word)
-		return (NULL);
-	while (i < len)
-	{
-		word[i] = start[i];
-		i++;
-	}
-	word[len] = '\0';
-	return (word);
-}
-
-char	**tokenizer(const char *s)
+char	**parser(const char *s)
 {
 	int			words;
-	char		**tokens;
+	char		**nodes;
 	int			i;
 	const char	*start;
 	int			len;
 
-	words = ft_count_words(s);
-	tokens = malloc(sizeof(char *) * (words + 1));
+	words = ft_count_nodes(s);
+	nodes = malloc(sizeof(char *) * (words + 1));
 	i = 0;
-	if (!tokens)
+	if (!nodes)
 		return (NULL);
 	while (*s)
 	{
-		while (*s && ft_isspace(*s))
+		while (*s && (ft_isspace(*s) || ft_isnode(*s)))
 			s++;
-		if (*s && !ft_isspace(*s))
+		if (*s && !ft_isspace(*s) && !ft_isnode(*s))
 		{
 			start = s;
 			len = 0;
-			while (s[len] && !ft_isspace(s[len]))
+			while (s[len] && !ft_isnode(s[len]))
 				len++;
-			tokens[i++] = word_dup(start, len);
+			nodes[i++] = word_dup(start, len);
 			s += len;
 		}
 	}
-	tokens[i] = NULL;
-	return (tokens);
+	nodes[i] = NULL;
+	return (nodes);
 }
 
 //Hacer que divida por pipes etc y demas, pipex????????¿¿¿¿¿¿
