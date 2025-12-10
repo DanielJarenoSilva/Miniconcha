@@ -11,6 +11,25 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+static int ft_count_words(const char *s)
+{
+	int	count;
+
+	if (!*s)
+		return (0);
+	count = 0;
+	while (*s)
+	{
+		while (*s && ft_isspace(*s))
+			s++;
+		if (*s)
+			count++;
+		while (!ft_isspace(*s) && *s)
+			s++;
+	}
+	return (count);
+}
+
 char	**parser(const char *s)
 {
 	int			words;
@@ -40,6 +59,37 @@ char	**parser(const char *s)
 	}
 	nodes[i] = NULL;
 	return (nodes);
+}
+
+char	**tokenizer(const char *s)
+{
+	int			words;
+	char		**tokens;
+	int			i;
+	const char	*start;
+	int			len;
+
+	words = ft_count_words(s);
+	tokens = malloc(sizeof(char *) * (words + 1));
+	i = 0;
+	if (!tokens)
+		return (NULL);
+	while (*s)
+	{
+		while (*s && ft_isspace(*s))
+			s++;
+		if (*s && !ft_isspace(*s))
+		{
+			start = s;
+			len = 0;
+			while (s[len] && !ft_isspace(s[len]))
+				len++;
+			tokens[i++] = word_dup(start, len);
+			s += len;
+		}
+	}
+	tokens[i] = NULL;
+	return (tokens);
 }
 
 //Hacer que divida por pipes etc y demas, pipex????????¿¿¿¿¿¿

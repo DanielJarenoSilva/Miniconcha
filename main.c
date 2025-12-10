@@ -16,9 +16,11 @@ int	main(void)
 {
 	char	*rl;
 	char	**t;
+	int		j = 0;
 
-	t_token	token;
-	token.cmnds = malloc(sizeof(char *) * 1024);
+	t_mini mini;
+	mini.nodes = malloc(sizeof(t_node) * 1024);
+	mini.nodes->tokens = malloc(sizeof(char *) * 1024);
 	while (1)
 	{
 		rl = readline("minishell > ");
@@ -28,10 +30,15 @@ int	main(void)
 		{
 			add_history(rl);
 			t = parser(rl);
-			for (int i = 0; t[i]; i++)
+			for (int i = 0; t[i] && t[j]; i++)
 			{
-				token.cmnds[i] = ft_strdup(t[i]);
-				printf("token %d: %s\n", i,	token.cmnds[i]);
+				j = 0;
+				while (t[j])
+				{
+					mini.nodes[i].tokens[j] = ft_strdup(t[j]);
+					printf("node %d: %s\n", j,	mini.nodes[i].tokens[j]);
+					j++;
+				}
 			}
 		}
 	}

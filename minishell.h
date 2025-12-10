@@ -20,11 +20,15 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-
-typedef struct s_token
+typedef struct s_node
 {
-    char			**cmnds;
-}   t_token;
+    char			**tokens;
+}   t_node;
+
+typedef struct s_mini
+{
+    t_node			*nodes;
+}   t_mini;
 
 char	**parser(const char *s);
 int        ft_isnode(char c);
