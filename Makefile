@@ -8,6 +8,9 @@ CC = cc
 SRCS = main.c \
 		tokenizer.c \
 		expand.c \
+		cmd.c \
+		builtins.c \
+		utils.c \
 
 OBJS = $(SRCS:.c=.o)
 

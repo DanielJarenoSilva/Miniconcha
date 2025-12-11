@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/01 13:37:48 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/10 10:47:34 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	ft_count_words(const char *s)
 	count = 0;
 	while (*s)
 	{
-		while (*s &&ft_isspace(*s))
+		while (*s && ft_isspace(*s))
 			s++;
 		if (*s)
 			count++;
