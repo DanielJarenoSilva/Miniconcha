@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 12:40:10 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/11 13:17:31 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/11 14:14:55 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,5 @@ void	cd(char **envp, char *route)
 	set_env(envp, "OLDPWD", tmp);
 	free(tmp);
 	chdir(route);
+	
 }
