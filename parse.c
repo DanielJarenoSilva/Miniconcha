@@ -11,6 +11,28 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+void parser(const char *s)
+{
+	char	**t;
+	int		j = 0;
+
+	t_mini mini;
+	mini.nodes = malloc(sizeof(t_node) * 1024);
+	mini.nodes->tokens = malloc(sizeof(char *) * 1024);
+	
+	t = get_nodes(s);
+	for (int i = 0; t[i] && t[j]; i++)
+	{
+		j = 0;
+		while (t[j])
+		{
+			mini.nodes[i].tokens[j] = ft_strdup(t[j]);
+			printf("node %d: %s\n", j,	mini.nodes[i].tokens[j]);
+			j++;
+		}
+	}
+}
+
 static int ft_count_words(const char *s)
 {
 	int	count;
@@ -30,34 +52,54 @@ static int ft_count_words(const char *s)
 	return (count);
 }
 
-char	**parser(const char *s)
+int get_quotes(char *s)
 {
-	int			words;
-	char		**nodes;
-	int			i;
-	const char	*start;
-	int			len;
+	int quote = 0;
+	int i = 0;
+	while (s[i])
+	{
+		if (ft_isquote(s[i]))
+			{
+				quote++;
+				i++;
+			}
+		i++;
+	}
+	if (quote == 0)
+		return -1;
+	if (quote != 0 && quote % 2 == 0)
+		return 1;
+	return 0;
+}
 
-	words = ft_count_nodes(s);
-	nodes = malloc(sizeof(char *) * (words + 1));
-	i = 0;
+char	**get_nodes(const char *s)
+{
+	int i = 0;
+	char **nodes;
+	const char *start;
+	int len;
+	nodes = malloc(sizeof(char *) * 1024);
 	if (!nodes)
 		return (NULL);
-	while (*s)
+	if (get_quotes((char *)s) == 1)
 	{
-		while (*s && (ft_isspace(*s) || ft_isnode(*s)))
-			s++;
-		if (*s && !ft_isspace(*s) && !ft_isnode(*s))
+		while (s[i])
 		{
-			start = s;
-			len = 0;
-			while (s[len] && !ft_isnode(s[len]))
-				len++;
-			nodes[i++] = word_dup(start, len);
-			s += len;
+			if (ft_isquote(s[i]))
+			{
+				start = &s[i + 1];
+				i++;
+				while (s[i] && s[i] != '\"' && s[i] != '\'')
+					i++;
+				len = &s[i] - start;
+				nodes[i++] = word_dup(start, len);
+				printf("node with quotes: %s\n", nodes[i - 1]);
+			}
+			s++;
 		}
 	}
-	nodes[i] = NULL;
+	else
+	
 	return (nodes);
 }
 

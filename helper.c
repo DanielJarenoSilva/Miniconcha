@@ -1,22 +1,15 @@
 #include "minishell.h"
 
-static int ft_ispipe(char c)
+int ft_ispipe(char c)
 {
     if (c == '|')
         return (1);
     return (0);
 }
 
-static int ft_isquote(char c)
+int ft_isquote(char c)
 {
     if (c == '\'' || c == '"')
-        return (1);
-    return (0);
-}
-
-int ft_isnode(char c)
-{
-    if (ft_ispipe(c) || ft_isquote(c))
         return (1);
     return (0);
 }
@@ -30,13 +23,27 @@ int	ft_count_nodes(const char *s)
 	count = 0;
 	while (*s)
 	{
-		while (*s && (ft_isnode(*s)))
+		if (*s && (ft_isquote(*s)))
+			{
 			s++;
+			while(*s && !ft_isquote(*s))
+			s++;
+			if(ft_isquote(*s))
+				{
+					count++;
+					s++;
+				}
+			}
+		while (*s && (ft_ispipe(*s)))
+			{
+				s++;
 		if (*s)
 			count++;
-		while (!ft_isnode(*s) && *s)
+			}
+		while (!ft_ispipe(*s) && *s)
 			s++;
 	}
+	printf("Counted nodes: %d\n", count);
 	return (count);
 }
 

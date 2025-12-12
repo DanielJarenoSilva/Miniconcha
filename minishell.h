@@ -30,10 +30,12 @@ typedef struct s_mini
     t_node			*nodes;
 }   t_mini;
 
-char	**parser(const char *s);
-int        ft_isnode(char c);
-int        ft_count_nodes(const char *s);
+char	**get_nodes(const char *s);
+int     ft_isnode(char c);
+int     ft_count_nodes(const char *s);
 char    *word_dup(const char *start, int len);
-
+void    parser(const char *s);
+int    ft_ispipe(char c);
+int    ft_isquote(char c);
 
 #endif
