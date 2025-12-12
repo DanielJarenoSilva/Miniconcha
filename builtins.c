@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 12:40:10 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/11 14:14:55 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/12 11:34:27 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,31 @@ int	set_env(char **envp, const char *key, const char *value)
 	return (1);
 }
 
-void	cd(char **envp, char *route)
+void	cd(char **envp, char **cmd)
 {
 	char	*tmp;
 
-	tmp = getenv("PWD");
-	set_env(envp, "OLDPWD", tmp);
-	free(tmp);
-	chdir(route);
-	
+	if (!cmd[1])
+	{
+		tmp = ft_getenv(envp, "PWD");
+		set_env(envp, "OLDPWD", tmp);
+		free(tmp);
+		tmp = ft_getenv(envp, "HOME");
+		tmp = ft_strjoin("/", tmp);
+		chdir(tmp);
+		set_env(envp, "PWD", tmp);
+		free(tmp);
+	}
+	else
+	{
+		tmp = ft_getenv(envp, "PWD");
+		set_env(envp, "OLDPWD", tmp);
+		free(tmp);
+		chdir(cmd[1]);
+		tmp = malloc(1024);
+		getcwd(tmp, 1024);
+		printf("PWD=%s\n", tmp);
+		set_env(envp, "PWD", tmp);
+		free(tmp);
+	}
 }

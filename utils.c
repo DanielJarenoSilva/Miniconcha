@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/11 12:32:27 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/12 12:17:48 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ char	*ft_getenv(char **envp, char *env)
 
 	i = 0;
 	x = 0;
+	if (!envp)
+		return (NULL);
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], env, ft_strlen(env)) == 0)
