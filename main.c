@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+void print_nodes(t_mini mini)
+{
+	int i = 0;
+	int j;
+
+	while (mini.nodes[i].tokens)
+	{
+		j = 0;
+		printf("Node %d:\n", i);
+		while (mini.nodes[i].tokens[j])
+		{
+			printf("  Token %d: %s\n", j, mini.nodes[i].tokens[j]);
+			j++;
+		}
+		i++;
+	}
+}
+
 int	main(void)
 {
 	char	*rl;

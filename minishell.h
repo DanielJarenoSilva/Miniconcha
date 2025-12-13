@@ -37,5 +37,6 @@ char    *word_dup(const char *start, int len);
 void    parser(const char *s);
 int    ft_ispipe(char c);
 int    ft_isquote(char c);
+void    print_nodes(t_mini mini);
 
 #endif

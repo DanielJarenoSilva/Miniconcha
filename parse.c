@@ -72,6 +72,8 @@ int get_quotes(char *s)
 	return 0;
 }
 
+
+
 char	**get_nodes(const char *s)
 {
 	int i = 0;
@@ -83,23 +85,39 @@ char	**get_nodes(const char *s)
 		return (NULL);
 	if (get_quotes((char *)s) == 1)
 	{
-		while (s[i])
+		while (*s)
 		{
-			if (ft_isquote(s[i]))
-			{
-				start = &s[i + 1];
-				i++;
-				while (s[i] && s[i] != '\"' && s[i] != '\'')
-					i++;
-				len = &s[i] - start;
+			while (*s && ft_isquote(*s))
+				s++;
+			if (*s && !ft_isquote(*s))
+			{	
+				start = s;
+				len = 0;
+				while (s[len] && !ft_isquote(s[len]))
+					len++;
 				nodes[i++] = word_dup(start, len);
-				printf("node with quotes: %s\n", nodes[i - 1]);
+				s += len;
 			}
-			s++;
-		}
+			}
 	}
 	else
-	
+	{
+	while (*s)
+	{
+		while (*s && (ft_isspace(*s) || ft_ispipe(*s)))
+			s++;
+		if (*s && !ft_isspace(*s) && !ft_ispipe(*s))
+		{
+			start = s;
+			len = 0;
+			while (s[len] && !ft_ispipe(s[len]))
+				len++;
+			nodes[i++] = word_dup(start, len);
+			s += len;
+		}
+	}
+	}
+	nodes[i] = NULL;
 	return (nodes);
 }
 
