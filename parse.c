@@ -1,39 +1,67 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/04 13:36:23 by pabalvar         ###   ########.fr       */
+/*   Updated: 2025/12/15 15:16:29 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
-void parser(const char *s)
-{
-	char	**t;
-	int		j = 0;
+//TODO: cambiar tokenizer para que gestione comillas ademas de espacios, y pasando por argumento el struct mini para guardar los tokens en el nodo correspondiente
 
-	t_mini mini;
-	mini.nodes = malloc(sizeof(t_node) * 1024);
-	mini.nodes->tokens = malloc(sizeof(char *) * 1024);
-	
-	t = get_nodes(s);
-	for (int i = 0; t[i] && t[j]; i++)
+
+void	get_tookens(t_mini *mini)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (mini->nodes[i])
 	{
 		j = 0;
-		while (t[j])
+		while (mini->nodes[i]->tokens[j])
 		{
-			mini.nodes[i].tokens[j] = ft_strdup(t[j]);
-			printf("node %d: %s\n", j,	mini.nodes[i].tokens[j]);
+			mini->nodes[i]->tokens = tokenizer(mini->nodes[i]->tokens[j]);
 			j++;
 		}
+		i++;
 	}
 }
 
-static int ft_count_words(const char *s)
+void	parser(const char *s)
+{
+	char	**t;
+	int		i;
+	int		j;
+	t_mini	mini;
+
+	i = 0;
+	j = 0;
+	mini.nodes = malloc(sizeof(t_node *) * 1024);
+	t = get_nodes(s);
+	if (!t)
+		return ;
+	while (t[i])
+	{
+		mini.nodes[i] = malloc(sizeof(t_node));
+		mini.nodes[i]->tokens = malloc(sizeof(char *) * 1024);
+		j = 0;
+		mini.nodes[i]->tokens[j++] = ft_strdup(t[i]);
+		mini.nodes[i]->tokens[j] = NULL;
+		// printf("node %d: %s\n", i, mini.nodes[i]->tokens[0]);
+		i++;
+	}
+	mini.nodes[i] = NULL;
+	get_tookens(&mini);
+	print_nodes(mini);
+}
+
+static int	ft_count_words(const char *s)
 {
 	int	count;
 
@@ -52,74 +80,121 @@ static int ft_count_words(const char *s)
 	return (count);
 }
 
-int get_quotes(char *s)
+int	get_quotes(char *s)
 {
-	int quote = 0;
-	int i = 0;
+	int	quote;
+	int	i;
+
+	quote = 0;
+	i = 0;
 	while (s[i])
 	{
 		if (ft_isquote(s[i]))
-			{
-				quote++;
-				i++;
-			}
+		{
+			quote++;
+			i++;
+		}
 		i++;
 	}
 	if (quote == 0)
-		return -1;
+		return (-1);
 	if (quote != 0 && quote % 2 == 0)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
-
-
 
 char	**get_nodes(const char *s)
 {
-	int i = 0;
-	char **nodes;
-	const char *start;
-	int len;
+	int			i;
+	int			len;
+	char		quote;
+	char		**nodes;
+	const char	*start;
+
+	i = 0;
 	nodes = malloc(sizeof(char *) * 1024);
 	if (!nodes)
 		return (NULL);
-	if (get_quotes((char *)s) == 1)
-	{
-		while (*s)
-		{
-			while (*s && ft_isquote(*s))
-				s++;
-			if (*s && !ft_isquote(*s))
-			{	
-				start = s;
-				len = 0;
-				while (s[len] && !ft_isquote(s[len]))
-					len++;
-				nodes[i++] = word_dup(start, len);
-				s += len;
-			}
-			}
-	}
-	else
-	{
+	if (get_quotes((char *)s) == 0)
+		return (NULL);
 	while (*s)
 	{
-		while (*s && (ft_isspace(*s) || ft_ispipe(*s)))
+		while (*s && ft_isspace(*s))
 			s++;
-		if (*s && !ft_isspace(*s) && !ft_ispipe(*s))
+		if (!*s)
+			break ;
+		if (*s == '|')
 		{
-			start = s;
-			len = 0;
-			while (s[len] && !ft_ispipe(s[len]))
-				len++;
-			nodes[i++] = word_dup(start, len);
-			s += len;
+			s++;
 		}
-	}
+		start = s;
+		len = 0;
+		quote = 0;
+		while (s[len])
+		{
+			if (!quote && ft_isquote(s[len]))
+				quote = s[len];
+			else if (quote && s[len] == quote)
+				quote = 0;
+			else if (!quote && s[len] == '|')
+				break ;
+			len++;
+		}
+		nodes[i++] = word_dup(start, len);
+		s += len;
 	}
 	nodes[i] = NULL;
 	return (nodes);
 }
+
+// char	**get_nodes(const char *s)
+// {
+// 	int			i;
+// 	char		**nodes;
+// 	const char	*start;
+// 	int			len;
+
+// 	i = 0;
+// 	nodes = malloc(sizeof(char *) * 1024);
+// 	if (!nodes)
+// 		return (NULL);
+// 	if (get_quotes((char *)s) == 1)
+// 	{
+// 		while (*s)
+// 		{
+// 			while (*s && ft_isquote(*s))
+// 				s++;
+// 			if (*s && !ft_isquote(*s))
+// 			{
+// 				start = s;
+// 				len = 0;
+// 				while (s[len] && !ft_isquote(s[len]))
+// 					len++;
+// 				nodes[i++] = word_dup(start, len);
+// 				s += len;
+// 			}
+// 		}
+// 	}
+// 	else
+// 	{
+// 		while (s[i])
+// 		{
+// 			while (s[i] && (ft_isspace(s[i]) || ft_ispipe(s[i])))
+// 				s++;
+// 			if (s[i] && !ft_isspace(s[i]) && !ft_ispipe(s[i]))
+// 			{
+// 				start = s;
+// 				len = 0;
+// 				while (s[len] && !ft_ispipe(s[len]))
+// 					len++;
+// 				nodes[i++] = word_dup(start, len);
+// 				i += len;
+// 			}
+// 		}
+// 	}
+// 	nodes[i] = NULL;
+// 	return (nodes);
+// }
 
 char	**tokenizer(const char *s)
 {
@@ -152,4 +227,4 @@ char	**tokenizer(const char *s)
 	return (tokens);
 }
 
-//Hacer que divida por pipes etc y demas, pipex????????¿¿¿¿¿¿
+// Hacer que divida por pipes etc y demas, pipex????????¿¿¿¿¿¿
