@@ -1,13 +1,13 @@
 NAME = minishell
 
-LIBFT_DIR = ./libft
+LIBFT_DIR = ../libft
 
 CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
 SRCS = main.c \
 		parse.c \
-		helper.c
+		parseutils.c
 
 OBJS = $(SRCS:.c=.o)
 

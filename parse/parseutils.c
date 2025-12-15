@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "parse.h"
 
 int ft_ispipe(char c)
 {

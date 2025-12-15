@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "parse.h"
 
 void print_nodes(t_mini mini)
 {
@@ -23,7 +23,7 @@ void print_nodes(t_mini mini)
 		printf("Node %d:\n", i);
 		while (mini.nodes[i]->tokens[j])
 		{
-			printf("  Token %d: %s\n", j, mini.nodes[i]->tokens[j]);
+			printf("  Token %d: %s\n", j, mini.nodes[i]->tokens[j]);					// Opcional eh
 			j++;
 		}
 		i++;
