@@ -11,6 +11,7 @@ SRCS = main.c \
 		cmd.c \
 		builtins.c \
 		utils.c \
+		pipex.c \
 
 OBJS = $(SRCS:.c=.o)
 

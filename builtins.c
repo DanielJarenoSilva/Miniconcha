@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 12:40:10 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/12 11:34:27 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/15 13:09:50 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,34 @@ void	cd(char **envp, char **cmd)
 		chdir(cmd[1]);
 		tmp = malloc(1024);
 		getcwd(tmp, 1024);
-		printf("PWD=%s\n", tmp);
 		set_env(envp, "PWD", tmp);
 		free(tmp);
 	}
+}
+
+void	pwd(char **envp)
+{
+	char	*tmp;
+
+	tmp = ft_getenv(envp, "PWD");
+	printf("%s\n", tmp);
+	free(tmp);
+}
+
+void	env(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		ft_putstr_fd(envp[i], 1);
+		printf("\n");
+		i++;
+	}
+}
+
+void	my_exit(void)
+{
+	exit(0);
 }

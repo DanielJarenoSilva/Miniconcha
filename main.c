@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:54:49 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/12 12:19:46 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/15 13:11:40 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,14 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(rl);
 			t = tokenizer(rl);
-			if (ft_strncmp(t[0], "cd", 1) == 0)
+			if (ft_strncmp(t[0], "cd", 2) == 0)
 				cd(menvp, t);
+			else if (ft_strncmp(t[0], "pwd", 3) == 0)
+				pwd(menvp);
+			else if (ft_strncmp(t[0], "env", 3) == 0)
+				env(menvp);
+			else if (ft_strncmp(t[0], "exit", 4) == 0)
+				my_exit();
 			else
 			{
 				pid = fork();
@@ -45,8 +51,7 @@ int	main(int argc, char **argv, char **envp)
 				}
 				else
 					waitpid(pid, NULL, 0);
-			}
-			/*
+			}/*
 			for (int i = 0; t[i]; i++)
 			{
 				expanded = expand_token(t[i], envp);
