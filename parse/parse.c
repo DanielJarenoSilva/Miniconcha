@@ -118,7 +118,10 @@ char	**get_nodes(const char *s)
 	if (!nodes)
 		return (NULL);
 	if (get_quotes((char *)s) == 0)
+	{	
+		printf("Error: Unmatched quotes\n");
 		return (NULL);
+	}
 	while (*s)
 	{
 		while (*s && ft_isspace(*s))
