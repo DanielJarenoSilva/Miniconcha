@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/15 12:05:29 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/16 12:23:09 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,16 @@ int	**create_pipes(int n)
 	return (pipes);
 }
 
-void	run_pipex(char **cmd, char **envp)
+char	*run_pipex(char **cmd, char **envp)
 {
 	int		i;
 	int		fd[2];
 	int		prev_fd;
 	pid_t	pid;
+	char	*res;
 
 	i = 0;
+	res  = NULL;
 	prev_fd = STDIN_FILENO;
 	while (cmd[i])
 	{
@@ -56,7 +58,7 @@ void	run_pipex(char **cmd, char **envp)
 				close(fd[0]);
 				close(fd[1]);
 			}
-			exec_cmd(cmd[i], envp);
+			res = save_exec_cmd(cmd[i], envp);
 			perror("exec");
 			exit(1);
 		}
@@ -71,6 +73,7 @@ void	run_pipex(char **cmd, char **envp)
 	}
 	while (wait(NULL) > 0)
 		;
+	return (res);
 }
 
 char	*get_path(char **envp)

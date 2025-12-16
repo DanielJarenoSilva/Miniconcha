@@ -12,6 +12,9 @@ SRCS = main.c \
 		builtins.c \
 		utils.c \
 		pipex.c \
+		./gnl/get_next_line.c \
+		./gnl/get_next_line_utils.c \
+		signals.c \
 
 OBJS = $(SRCS:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 11:00:58 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/09 11:28:53 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/16 11:27:48 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*get_env_value(char **envp, char *key)
 	return (ft_strdup(""));
 }
 
-char	*expand_var(char	*str, int *i, char **envp)
+char	*expand_var(char	*str, int *i, t_mini mini)
 {
 	char	*key;
 	char	*value;
@@ -83,7 +83,7 @@ char	*expand_var(char	*str, int *i, char **envp)
 	if (str[*i] == '?')
 	{
 		(*i)++;
-		printf("0");//Cambiar 0 por exit_code
+		printf("%i", mini.exit_code);
 		return (ft_strdup("0"));
 	}
 	start = *i;
@@ -100,11 +100,11 @@ char	*expand_var(char	*str, int *i, char **envp)
 		j++;
 	}
 	key[len] = '\0';
-	value = get_env_value(envp, key);
+	value = get_env_value(mini.envp, key);
 	return (free(key), value);
 }
 
-char	*expand_token(char *str, char **envp)
+char	*expand_token(char *str, t_mini mini)
 {
 	int		i;
 	char	*result;
@@ -140,7 +140,7 @@ char	*expand_token(char *str, char **envp)
 			while (str[i] && str[i] != '"')
 			{
 				if (str[i] == '$')
-					result = ft_strjoin_free(result, expand_var(str, &i, envp));
+					result = ft_strjoin_free(result, expand_var(str, &i, mini));
 				else
 					result = ft_strjoin_char_free(result, str[i++]);
 			}
@@ -150,7 +150,7 @@ char	*expand_token(char *str, char **envp)
 		}
 		if (str[i] == '$')
 		{
-			result = ft_strjoin_free(result, expand_var(str, &i, envp));
+			result = ft_strjoin_free(result, expand_var(str, &i, mini));
 			continue ;
 		}
 		result = ft_strjoin_char_free(result, str[i++]);

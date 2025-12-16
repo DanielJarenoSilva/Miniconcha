@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/10 10:44:37 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/16 12:51:50 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,21 @@ char	*find_cmd(char *cmd, char **path_dirs)
 	return (NULL);
 }
 
+char	*read_fd(int fd)
+{
+	char	*line;
+	char	*res;
+
+	res = NULL;
+	line = get_next_line(fd);
+	while (line)
+	{
+		res = ft_strjoin_free(res, line);
+		line = get_next_line(fd);
+	}
+	return (res);
+}
+
 void	exec_cmd(const char *cmdline, char **envp)
 {
 	char	**split;
@@ -80,4 +95,31 @@ void	exec_cmd(const char *cmdline, char **envp)
 	execve(path_cmd, split, envp);
 	perror("execve");
 	exit(1);
+}
+
+char	*save_exec_cmd(const char *cmdline, char **envp)
+{
+	int		fd[2];
+	char	*res;
+	pid_t	pid;
+	int		status;
+
+	if (pipe(fd) == -1)
+		return (NULL);
+	pid = fork();
+	if (pid == -1)
+		return (NULL);
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		exec_cmd(cmdline, envp);
+	}
+	close(fd[1]);
+	res = read_fd(fd[0]);
+	close(fd[0]);
+	waitpid(pid, &status, 0);
+	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 12:40:10 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/15 13:09:50 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/16 11:22:38 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,57 +40,57 @@ int	set_env(char **envp, const char *key, const char *value)
 	return (1);
 }
 
-void	cd(char **envp, char **cmd)
+void	cd(t_mini mini, char **cmd)
 {
 	char	*tmp;
 
 	if (!cmd[1])
 	{
-		tmp = ft_getenv(envp, "PWD");
-		set_env(envp, "OLDPWD", tmp);
+		tmp = ft_getenv(mini.envp, "PWD");
+		set_env(mini.envp, "OLDPWD", tmp);
 		free(tmp);
-		tmp = ft_getenv(envp, "HOME");
+		tmp = ft_getenv(mini.envp, "HOME");
 		tmp = ft_strjoin("/", tmp);
 		chdir(tmp);
-		set_env(envp, "PWD", tmp);
+		set_env(mini.envp, "PWD", tmp);
 		free(tmp);
 	}
 	else
 	{
-		tmp = ft_getenv(envp, "PWD");
-		set_env(envp, "OLDPWD", tmp);
+		tmp = ft_getenv(mini.envp, "PWD");
+		set_env(mini.envp, "OLDPWD", tmp);
 		free(tmp);
 		chdir(cmd[1]);
 		tmp = malloc(1024);
 		getcwd(tmp, 1024);
-		set_env(envp, "PWD", tmp);
+		set_env(mini.envp, "PWD", tmp);
 		free(tmp);
 	}
 }
 
-void	pwd(char **envp)
+void	pwd(t_mini mini)
 {
 	char	*tmp;
 
-	tmp = ft_getenv(envp, "PWD");
+	tmp = ft_getenv(mini.envp, "PWD");
 	printf("%s\n", tmp);
 	free(tmp);
 }
 
-void	env(char **envp)
+void	env(t_mini mini)
 {
 	int	i;
 
 	i = 0;
-	while (envp[i])
+	while (mini.envp[i])
 	{
-		ft_putstr_fd(envp[i], 1);
+		ft_putstr_fd(mini.envp[i], 1);
 		printf("\n");
 		i++;
 	}
 }
 
-void	my_exit(void)
+void	my_exit(t_mini mini)
 {
-	exit(0);
+	exit(mini.exit_code);
 }
