@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:54:49 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/19 11:16:45 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/19 13:42:45 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*rl;
 	char	**t;
-	//char	*expanded;
+	char	*expanded;
 	//char	*temp;
 	t_mini	mini;
-	char	*cmd;
+	//char	*cmd;
 
 	argc = 0;
 	argv = NULL;
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **envp)
 		if (*rl)
 		{
 			add_history(rl);
-			t = tokenizer(rl);
+			t = tokenizer(rl);/*
 			if (ft_strncmp(t[0], "cd", 2) == 0)
 				cd(mini, t);
 			else if (ft_strncmp(t[0], "pwd", 3) == 0)
@@ -50,14 +50,14 @@ int	main(int argc, char **argv, char **envp)
 			{
 				cmd = save_exec_cmd(rl, mini);
 				//ft_putstr_fd(cmd, 1);
-			}
-			/*
+			}*/
+			
 			for (int i = 0; t[i]; i++)
 			{
-				expanded = expand_token(t[i], envp);
+				expanded = expand_token(t[i], mini);
 				t[i] = expanded;
 				printf("token %d: %s\n", i, t[i]);
-			}*/
+			}
 		}
 	}
 	return (0);
