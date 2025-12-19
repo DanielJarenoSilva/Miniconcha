@@ -7,6 +7,7 @@ CC = cc
 
 SRCS = main.c \
 		parse.c \
+		expand.c \
 		parseutils.c
 
 OBJS = $(SRCS:.c=.o)
