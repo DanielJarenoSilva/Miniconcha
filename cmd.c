@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/16 12:51:50 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/19 11:18:19 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	exec_cmd(const char *cmdline, char **envp)
 	exit(1);
 }
 
-char	*save_exec_cmd(const char *cmdline, char **envp)
+char	*save_exec_cmd(const char *cmdline, t_mini mini)
 {
 	int		fd[2];
 	char	*res;
@@ -112,14 +112,23 @@ char	*save_exec_cmd(const char *cmdline, char **envp)
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[0]);
 		close(fd[1]);
-		exec_cmd(cmdline, envp);
+		exec_cmd(cmdline, mini.envp);
 	}
 	close(fd[1]);
 	res = read_fd(fd[0]);
 	close(fd[0]);
 	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+		{
+			ft_putstr_fd("Quit (core dumped)\n", 2);
+			mini.exit_code = 131;
+		}
+	}
 	return (res);
 }

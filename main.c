@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:54:49 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/16 12:49:22 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/19 11:16:45 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,12 @@ int	main(int argc, char **argv, char **envp)
 	mini.exit_code = 0;
 	mini.envp = dup_env(envp);
 	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
+		g_signal_state = 1;
 		rl = readline("minishell > ");
+		g_signal_state = 0;
 		if (!rl)
 			break ;
 		if (*rl)
@@ -45,7 +48,7 @@ int	main(int argc, char **argv, char **envp)
 				my_exit(mini);
 			else
 			{
-				cmd = save_exec_cmd(rl, envp);
+				cmd = save_exec_cmd(rl, mini);
 				//ft_putstr_fd(cmd, 1);
 			}
 			/*
