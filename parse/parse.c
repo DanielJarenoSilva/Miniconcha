@@ -150,32 +150,32 @@ char	**get_nodes(const char *s)
 	return (nodes);
 }
 
-void	parser(const char *s)
+void parser(const char *s, struct s_mini *mini)
 {
-	char	**cmds;
-	int		i;
-	t_mini	mini;
+    char    **cmds;
+    int     i;
 
-	i = 0;
-	mini.nodes = malloc(sizeof(t_node *) * 1024);
-	if (!mini.nodes)
-		return ;
-	cmds = get_nodes(s);
-	if (!cmds)
-		return ;
-	while (cmds[i])
-	{
-		mini.nodes[i] = malloc(sizeof(t_node));
-		if (!mini.nodes[i])
-			return ;
-		mini.nodes[i]->tokens = tokenizer(cmds[i]);
-		if (has_single_quotes(cmds[i]))
-			mini.nodes[i]->expand = 0;
-		else
-			mini.nodes[i]->expand = 1;
-		expand_tokens(mini.nodes[i], mini);
-		i++;
-	}
-	mini.nodes[i] = NULL;
-	print_nodes(mini);
+    cmds = get_nodes(s);
+    if (!cmds)
+        return ;
+    int num_cmds = 0;
+    while (cmds[num_cmds])
+        num_cmds++;
+    mini->nodes = malloc(sizeof(struct s_node *) * (num_cmds + 1));
+    if (!mini->nodes)
+        return ;
+
+    i = 0;
+    while (cmds[i])
+    {
+        // printf("parse\n");
+        mini->nodes[i] = malloc(sizeof(struct s_node));
+        if (!mini->nodes[i])
+            return ;
+        mini->nodes[i]->tokens = tokenizer(cmds[i]);
+        mini->nodes[i]->expand = !has_single_quotes(cmds[i]);
+        expand_tokens(mini->nodes[i], *mini);
+        i++;
+    }
+    mini->nodes[i] = NULL;
 }

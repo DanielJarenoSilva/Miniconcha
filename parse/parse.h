@@ -28,7 +28,7 @@ char		**get_nodes(const char *s);
 int			ft_isnode(char c);
 int			ft_count_nodes(const char *s);
 char		*word_dup(const char *start, int len);
-void		parser(const char *s);
+void		parser(const char *s, t_mini	*mini);
 int			ft_ispipe(char c);
 int			ft_isquote(char c);
 char		**tokenizer(const char *s);

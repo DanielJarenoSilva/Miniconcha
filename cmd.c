@@ -76,59 +76,42 @@ char	*read_fd(int fd)
 	return (res);
 }
 
-void	exec_cmd(const char *cmdline, char **envp)
+void exec_cmd(char **tokens, char **envp)
 {
-	char	**split;
-	char	**path_dirs;
-	char	*path_cmd;
-
-	split = ft_split(cmdline, ' ');
-	path_dirs = get_path_dirs(envp);
-	path_cmd = find_cmd(split[0], path_dirs);
-	if (!path_cmd)
-	{
-		ft_putstr_fd("Command not found: ", 2);
-		ft_putstr_fd(split[0], 2);
-		ft_putstr_fd("\n", 2);
-		exit(127);
-	}
-	execve(path_cmd, split, envp);
-	perror("execve");
-	exit(1);
+    char **path_dirs = get_path_dirs(envp);
+    char *path_cmd = find_cmd(tokens[0], path_dirs);
+    if (!path_cmd)
+    {
+        fprintf(stderr, "Command not found: %s\n", tokens[0]);
+        exit(127);
+    }
+    execve(path_cmd, tokens, envp);
+    perror("execve");
+    exit(1);
 }
 
-char	*save_exec_cmd(const char *cmdline, t_mini mini)
+char *save_exec_cmd(char **tokens, t_mini mini)
 {
-	int		fd[2];
-	char	*res;
-	pid_t	pid;
-	int		status;
+    int fd[2];
+    pid_t pid;
+    int status;
+    char *res;
 
-	if (pipe(fd) == -1)
-		return (NULL);
-	pid = fork();
-	if (pid == -1)
-		return (NULL);
-	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[0]);
-		close(fd[1]);
-		exec_cmd(cmdline, mini.envp);
-	}
-	close(fd[1]);
-	res = read_fd(fd[0]);
-	close(fd[0]);
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status))
-	{
-		if (WTERMSIG(status) == SIGQUIT)
-		{
-			ft_putstr_fd("Quit (core dumped)\n", 2);
-			mini.exit_code = 131;
-		}
-	}
-	return (res);
+    if (pipe(fd) == -1)
+        return NULL;
+    pid = fork();
+    if (pid == 0)
+    {
+        dup2(fd[1], STDOUT_FILENO);
+        close(fd[0]);
+        close(fd[1]);
+        exec_cmd(tokens, mini.envp);
+        perror("execve");
+        exit(1);
+    }
+    close(fd[1]);
+    res = read_fd(fd[0]);
+    close(fd[0]);
+    waitpid(pid, &status, 0);
+    return res;
 }
