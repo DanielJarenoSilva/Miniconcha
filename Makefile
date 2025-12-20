@@ -5,15 +5,15 @@ LIBFT_DIR = ./libft
 CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
-SRCS =  main.c \
+SRCS =  ./exec/main.c \
         ./parse/parse.c \
         ./parse/expand.c \
         ./parse/parseutils.c \
-        builtins.c \
-        cmd.c \
-        pipex.c \
-        signals.c \
-        utils.c \
+        ./exec/builtins.c \
+        ./exec/cmd.c \
+        ./exec/pipex.c \
+        ./exec/signals.c \
+        ./exec/utils.c \
         ./gnl/get_next_line.c \
         ./gnl/get_next_line_utils.c
 

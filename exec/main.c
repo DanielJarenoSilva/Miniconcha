@@ -10,12 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parse/parse.h"
-#include "minishell.h"
-#include <signal.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdio.h>
+#include "exec.h"
+#include "../parse/parse.h"
 
 void	print_nodes(struct s_mini mini)
 {

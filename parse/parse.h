@@ -12,14 +12,8 @@
 
 #ifndef PARSE_H
 # define PARSE_H
-# include "../libft/libft.h"
+
 # include "../minishell.h"
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <signal.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
 
 typedef struct s_node t_node;
 typedef struct s_mini t_mini;
