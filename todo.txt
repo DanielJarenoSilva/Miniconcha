@@ -1,4 +1,3 @@
 --REDIRECCIONES     ------>>>>>     parseo, ejecucion comprobar con Dani el lunes, donde guardo el output, en el struct???
---VARIABLES DE ENTORNO      ------>>>>>     creo que funciona bien ya
 --IMPLEMENTAR LOS BUILTINS      ------>>>>>     echo, export, unset, exit?
 --JUNTAR TODO     ------>>>>>   hacer que funcione todo, codigo junto, git merge??
