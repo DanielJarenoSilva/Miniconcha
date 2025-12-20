@@ -27,6 +27,20 @@
 
 extern int	g_signal_state;
 
+typedef struct s_node
+{
+	int		expand;
+	char	**tokens;
+}			t_node;
+
+typedef struct s_mini
+{
+	t_node	**nodes;
+	int		exit_code;
+	char	*output;
+	char	**envp;
+}			t_mini;
+
 char	**tokenizer(const char *s);
 char	*expand_token(char *str, t_mini mini);
 void	exec_cmd(const char *cmdline, char **envp);

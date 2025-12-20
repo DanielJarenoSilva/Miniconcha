@@ -13,26 +13,13 @@
 #ifndef PARSE_H
 # define PARSE_H
 # include "../libft/libft.h"
+# include "../minishell.h"
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-
-typedef struct s_node
-{
-	int		expand;
-	char	**tokens;
-}			t_node;
-
-typedef struct s_mini
-{
-	t_node	**nodes;
-	int		exit_code;
-	char	*output;
-	char	**envp;
-}			t_mini;
 
 char		**get_nodes(const char *s);
 int			ft_isnode(char c);
