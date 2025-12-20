@@ -14,7 +14,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft/libft.h"
-# include "parse/parse.h"
 # include "gnl/get_next_line.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -42,7 +41,7 @@ typedef struct s_mini
 }			t_mini;
 
 char	**tokenizer(const char *s);
-char	*expand_token(char *str, t_mini mini);
+// char	*expand_token(char *str, t_mini mini);
 void	exec_cmd(const char *cmdline, char **envp);
 int		set_env(char **envp, const char *key, const char *value);
 char	*ft_strjoin_free(char *s1, char *s2);

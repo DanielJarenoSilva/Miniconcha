@@ -1,3 +1,3 @@
 --REDIRECCIONES     ------>>>>>     parseo, ejecucion comprobar con Dani el lunes, donde guardo el output, en el struct???
 --IMPLEMENTAR LOS BUILTINS      ------>>>>>     echo, export, unset, exit?
---JUNTAR TODO     ------>>>>>   hacer que funcione todo, codigo junto, git merge??
+--JUNTAR TODO     ------>>>>>   compila, hace mi parte pero no he conseguido implementar la de Dani aun.

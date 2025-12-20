@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "parse.h"
+#include "../minishell.h"	//provisional para que funcione print_nodes
 
 void print_nodes(t_mini mini)
 {

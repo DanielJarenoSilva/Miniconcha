@@ -6,9 +6,18 @@ CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
 SRCS =  ./parse/main.c \
-		./parse/parse.c \
-		./parse/expand.c \
-		./parse/parseutils.c
+        ./parse/parse.c \
+        ./parse/expand.c \
+        ./parse/parseutils.c \
+        builtins.c \
+        cmd.c \
+        pipex.c \
+        signals.c \
+        utils.c \
+        ./gnl/get_next_line.c \
+        ./gnl/get_next_line_utils.c
+
+
 
 OBJS = $(SRCS:.c=.o)
 

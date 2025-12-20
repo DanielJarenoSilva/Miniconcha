@@ -21,6 +21,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+typedef struct s_node t_node;
+typedef struct s_mini t_mini;
+
 char		**get_nodes(const char *s);
 int			ft_isnode(char c);
 int			ft_count_nodes(const char *s);
@@ -28,7 +31,6 @@ char		*word_dup(const char *start, int len);
 void		parser(const char *s);
 int			ft_ispipe(char c);
 int			ft_isquote(char c);
-void		print_nodes(t_mini mini);
 char		**tokenizer(const char *s);
 void		get_tookens(t_mini *mini);
 int			has_single_quotes(char *s);
@@ -38,5 +40,7 @@ char		*ft_strjoin_free(char *s1, char *s2);
 char		*ft_strjoin_char_free(char *s, char c);
 char		*get_env_value(char **envp, char *key);
 char		*expand_var(char *str, int *i, t_mini mini);
+
+void 		print_nodes(t_mini mini); 		//opcional eh(borrar luego)
 
 #endif
