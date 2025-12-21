@@ -25,7 +25,7 @@ char		*word_dup(const char *start, int len);
 void		parser(const char *s, t_mini	*mini);
 int			ft_ispipe(char c);
 int			ft_isquote(char c);
-char		**tokenizer(const char *s);
+char        **tokenizer(const char *s, t_node *node);
 void		get_tookens(t_mini *mini);
 int			has_single_quotes(char *s);
 void		expand_tokens(t_node *node, t_mini mini);
@@ -34,6 +34,10 @@ char		*ft_strjoin_free(char *s1, char *s2);
 char		*ft_strjoin_char_free(char *s, char c);
 char		*get_env_value(char **envp, char *key);
 char		*expand_var(char *str, int *i, t_mini mini);
+int         ft_ischev(char c);
+int         handle_redir(const char *s, int *i, t_node *node);
+char        *get_next_word(const char *s, int *i);
+void        add_redir(t_node *node, t_redir_type type, char *file);
 
 void 		print_nodes(t_mini mini); 		//opcional eh(borrar luego)
 

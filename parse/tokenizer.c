@@ -80,5 +80,3 @@ char	**tokenizer(const char *s)
 	tokens[i] = NULL;
 	return (tokens);
 }
-
-//Hacer que divida por pipes etc y demas, pipex????????¿¿¿¿¿¿

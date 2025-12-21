@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **envp)
 	mini.output = NULL;
 	mini.nodes = NULL;
 	
-	//TESTEAR $$$$$$$$$$$$$$$$$$$$$$$
+	//TESTEAR $///////////////////////
 	
 	mini.envp[0] = ft_strdup("TEST=42");
 
@@ -66,13 +66,13 @@ int	main(int argc, char **argv, char **envp)
 		if (*rl)
 		{
 			add_history(rl);		
-			parser(rl, &mini);		
+			parser(rl, &mini);
 			// print_nodes(mini);		
 			i = 0;
 			while (mini.nodes && mini.nodes[i])
 			{	
 				if (mini.nodes[i]->tokens && mini.nodes[i]->tokens[0])
-				{	
+				{
 					if (ft_strncmp(mini.nodes[i]->tokens[0], "cd", 2) == 0)
 						cd(mini, mini.nodes[i]->tokens);
 					else if (ft_strncmp(mini.nodes[i]->tokens[0], "pwd", 3) == 0)
@@ -83,8 +83,12 @@ int	main(int argc, char **argv, char **envp)
 						my_exit(mini);
 					else
 					{
-						cmd = save_exec_cmd(mini.nodes[i]->tokens, mini);
-						ft_putstr_fd(cmd, 1);
+						cmd = save_exec_cmd(mini.nodes[i], mini);
+						if (cmd && *cmd)  // Solo imprimir si no es NULL y no está vacío
+						{
+						    ft_putstr_fd(cmd, 1);
+						}
+						free(cmd);
 					}
 				}
 				i++;

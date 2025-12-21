@@ -12,77 +12,66 @@
 
 #include "parse.h"
 
-static int	count_tokens(const char *s)
+// static int	count_tokens(const char *s)
+// {
+// 	int	count;
+// 	int	quote;
+
+// 	count = 0;
+// 	while (*s)
+// 	{
+// 		while (*s && (ft_isspace(*s) || ft_ischev(*s)))
+// 			s++;
+// 		if (!*s)
+// 			break ;
+// 		count++;
+// 		quote = 0;
+// 		while (*s)
+// 		{
+// 			if (!quote && ft_isquote(*s))
+// 				quote = *s;
+// 			else if (quote && *s == quote)
+// 			{
+// 				s++;
+// 				break ;
+// 			}
+// 			else if (!quote && ft_isspace(*s))
+// 				break ;
+// 			s++;
+// 		}
+// 	}
+// 	return (count);
+// }
+
+char **tokenizer(const char *s, t_node *node)
 {
-	int	count;
-	int	quote;
+    char    **tokens;
+    int     i;
+    int     j;
+    int     start;
 
-	count = 0;
-	while (*s)
-	{
-		while (*s && ft_isspace(*s))
-			s++;
-		if (!*s)
-			break ;
-		count++;
-		quote = 0;
-		while (*s)
-		{
-			if (!quote && ft_isquote(*s))
-				quote = *s;
-			else if (quote && *s == quote)
-			{
-				s++;
-				break ;
-			}
-			else if (!quote && ft_isspace(*s))
-				break ;
-			s++;
-		}
-	}
-	return (count);
-}
+    i = 0;
+    j = 0;
+    tokens = malloc(sizeof(char *) * 1024);
+    if (!tokens)
+        return (NULL);
 
-char	**tokenizer(const char *s)
-{
-	char		**tokens;
-	int			i;
-	int			len;
-	char		quote;
-	const char	*start;
-
-	i = 0;
-	tokens = malloc(sizeof(char *) * (count_tokens(s) + 1));
-	if (!tokens)
-		return (NULL);
-	while (*s)
-	{
-		while (*s && ft_isspace(*s))
-			s++;
-		if (!*s)
-			break ;
-		start = s;
-		len = 0;
-		quote = 0;
-		if (ft_isquote(*s))
-		{
-			quote = *s++;
-			start = s;
-			while (s[len] && s[len] != quote)
-				len++;
-			tokens[i++] = word_dup(start, len);
-			s += len + 1;
-		}
-		else
-		{
-			while (s[len] && !ft_isspace(s[len]) && !ft_isquote(s[len]))
-				len++;
-			tokens[i++] = word_dup(start, len);
-			s += len;
-		}
-	}
-	tokens[i] = NULL;
-	return (tokens);
+    while (s[i])
+    {
+        if (ft_isspace(s[i]))
+        {
+            i++;
+            continue;
+        }
+        if (handle_redir(s, &i, node))
+            continue;
+        start = i;
+        while (s[i] && !ft_isspace(s[i]) && !ft_ischev(s[i]))
+            i++;
+        tokens[j++] = word_dup(s + start, i - start);
+    }
+    tokens[j] = NULL;
+    return (tokens);
 }
 
 int	get_quotes(const char *s)
@@ -168,14 +157,16 @@ void parser(const char *s, struct s_mini *mini)
     i = 0;
     while (cmds[i])
     {
-        // printf("parse\n");
         mini->nodes[i] = malloc(sizeof(struct s_node));
         if (!mini->nodes[i])
             return ;
-        mini->nodes[i]->tokens = tokenizer(cmds[i]);
+        mini->nodes[i]->redirs = NULL;
+		mini->nodes[i]->redir_count = 0;
+		mini->nodes[i]->tokens = tokenizer(cmds[i], mini->nodes[i]);
         mini->nodes[i]->expand = !has_single_quotes(cmds[i]);
         expand_tokens(mini->nodes[i], *mini);
         i++;
     }
     mini->nodes[i] = NULL;
+	// print_nodes(*mini); //opcional eh(borrar luego)
 }

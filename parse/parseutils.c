@@ -17,6 +17,13 @@ int	ft_isquote(char c)
 	return (0);
 }
 
+int ft_ischev(char c)
+{
+	if (c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
 int	ft_count_nodes(const char *s)
 {
 	int count;

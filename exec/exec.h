@@ -19,7 +19,6 @@
 typedef struct s_node t_node;
 typedef struct s_mini t_mini;
 
-char	**tokenizer(const char *s);
 // char	*expand_token(char *str, t_mini mini);
 void	exec_cmd(char **cmdline, char **envp);
 int		set_env(char **envp, const char *key, const char *value);
@@ -32,6 +31,10 @@ char    *run_pipex(t_node **nodes, t_mini mini);
 void	pwd(t_mini mini);
 void	env(t_mini mini);
 void	my_exit(t_mini mini);
-char	*save_exec_cmd(char **cmdline, t_mini mini);
+char	*save_exec_cmd(t_node *node, t_mini mini);
 void	sigint_handler(int signo);
+void      apply_redirs(t_node *node);
+int     has_redir_out(t_node *node);
+int     handle_heredoc(const char *delimiter);
+
 #endif

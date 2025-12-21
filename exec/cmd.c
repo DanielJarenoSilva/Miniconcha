@@ -61,20 +61,29 @@ char	*find_cmd(char *cmd, char **path_dirs)
 	return (NULL);
 }
 
-char	*read_fd(int fd)
+char *read_fd(int fd)
 {
-	char	*line;
-	char	*res;
+    char *line;
+    char *res = ft_strdup(""); 
+    char *tmp;
 
-	res = NULL;
-	line = get_next_line(fd);
-	while (line)
-	{
-		res = ft_strjoin_free(res, line);
-		line = get_next_line(fd);
-	}
-	return (res);
+    if (!res)
+        return NULL;
+
+    while ((line = get_next_line(fd)))
+    {
+        tmp = ft_strjoin_free(res, line); 
+        if (!tmp)
+        {
+            free(res);
+            return NULL;
+        }
+        res = tmp;
+    }
+    close(fd); 
+    return res;
 }
+
 
 void exec_cmd(char **tokens, char **envp)
 {
@@ -90,28 +99,52 @@ void exec_cmd(char **tokens, char **envp)
     exit(1);
 }
 
-char *save_exec_cmd(char **tokens, t_mini mini)
+char *save_exec_cmd(t_node *node, t_mini mini)
 {
-    int fd[2];
+    int fd[2] = {-1, -1};
     pid_t pid;
-    int status;
-    char *res;
+    char *res = NULL;
 
-    if (pipe(fd) == -1)
-        return NULL;
-    pid = fork();
-    if (pid == 0)
+    if (!has_redir_out(node))
     {
-        dup2(fd[1], STDOUT_FILENO);
-        close(fd[0]);
-        close(fd[1]);
-        exec_cmd(tokens, mini.envp);
+        if (pipe(fd) == -1)
+        {
+            perror("pipe");
+            return NULL;
+        }
+    }
+
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("fork");
+        if (fd[0] != -1) close(fd[0]);
+        if (fd[1] != -1) close(fd[1]);
+        return NULL;
+    }
+
+    if (pid == 0) 
+    {
+        if (node->redir_count > 0)
+            apply_redirs(node);
+        else if (!has_redir_out(node))
+        {
+            dup2(fd[1], STDOUT_FILENO);
+            close(fd[0]);
+            close(fd[1]);
+        }
+
+        exec_cmd(node->tokens, mini.envp);
         perror("execve");
         exit(1);
     }
-    close(fd[1]);
-    res = read_fd(fd[0]);
-    close(fd[0]);
-    waitpid(pid, &status, 0);
-    return res;
+
+    if (!has_redir_out(node))
+    {
+        close(fd[1]);         
+        res = read_fd(fd[0]); 
+    }
+
+    waitpid(pid, NULL, 0);
+    return res; 
 }

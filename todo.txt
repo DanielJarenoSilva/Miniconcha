@@ -1,14 +1,10 @@
 //////////////////////////              finde               //////////////////////////             
 
 
---REDIRECCIONES     ------>>>>>     parseo, ejecucion comprobar con Dani el lunes, donde guardo el output, en el struct???
---BUILTINS      ------>>>>>     echo, export, unset
-
+--BUILTINS      ------>>>>>     echo, export, unset.
 
 
 //////////////////////////              lunes               //////////////////////////             
 
 
-
---Variables de Entorno con export. 
 --Explicar que cambios he hecho pa q funcione. Revisar que no haya cosas que no cuadren, cosas repetidas.
