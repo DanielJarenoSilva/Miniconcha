@@ -43,8 +43,8 @@ typedef struct s_redir
 
 typedef struct s_node
 {
-    char    **tokens;      // argv limpio
-    t_redir *redirs;       // redirecciones
+    char    **tokens;    
+    t_redir *redirs;       
     int     redir_count;
     int     expand;
 } t_node;

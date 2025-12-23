@@ -1,10 +1,4 @@
 //////////////////////////              finde               //////////////////////////             
 
 
---BUILTINS      ------>>>>>     echo, export, unset.
-
-
-//////////////////////////              lunes               //////////////////////////             
-
-
---Explicar que cambios he hecho pa q funcione. Revisar que no haya cosas que no cuadren, cosas repetidas.
+--BUILTINS      ------>>>>>      unset.

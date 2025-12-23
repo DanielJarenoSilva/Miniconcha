@@ -3,14 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 12:40:10 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/19 12:50:07 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/23 13:27:39 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+void	echo(t_mini *mini, int j)
+{
+	int i;
+
+	i = 1;
+	while (mini->nodes[j]->tokens[i])
+	{
+		if (i > 1)
+			ft_putstr_fd(" ", 1);
+		if (mini->nodes[j]->tokens[i][0] == '$')
+			ft_putstr_fd(ft_getenv(mini->envp, mini->nodes[j]->tokens[i]), 1);
+		ft_putstr_fd(mini->nodes[j]->tokens[i], 1);
+		i++;
+	}
+	if (mini->nodes[j]->tokens[i] == NULL)
+		ft_putstr_fd("\n", 1);
+}
+
+void export(t_mini *mini, int j)
+{
+	int i;
+
+	i = 1;
+	while (mini->nodes[j]->tokens[i])
+	{
+		char *arg;
+		char *equal_sign;
+		arg = mini->nodes[j]->tokens[i];
+	    equal_sign = ft_strchr(arg, '=');
+
+		if (equal_sign)
+		{
+			mini->envp[i] = ft_substr(arg, 0, ft_strlen(arg) - i + 1);
+			set_env(mini->envp, mini->envp[i], equal_sign + 1);
+		}
+		i++;
+	}
+}
+
+// void	unset(t_mini *mini)
+// {
+	
+// }
 
 int	set_env(char **envp, const char *key, const char *value)
 {

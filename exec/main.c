@@ -81,10 +81,14 @@ int	main(int argc, char **argv, char **envp)
 						env(mini);
 					else if (ft_strncmp(mini.nodes[i]->tokens[0], "exit", 4) == 0)
 						my_exit(mini);
+					else if (ft_strncmp(mini.nodes[i]->tokens[0], "echo", 4) == 0)
+						echo(&mini, i);
+					else if (ft_strncmp(mini.nodes[i]->tokens[0], "export", 6) == 0)
+						export(&mini, i);
 					else
 					{
 						cmd = save_exec_cmd(mini.nodes[i], mini);
-						if (cmd && *cmd)  // Solo imprimir si no es NULL y no está vacío
+						if (cmd && *cmd) 
 						{
 						    ft_putstr_fd(cmd, 1);
 						}

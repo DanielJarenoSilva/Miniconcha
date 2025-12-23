@@ -6,7 +6,7 @@
 /*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/19 15:27:50 by pabalvar         ###   ########.fr       */
+/*   Updated: 2025/12/23 12:20:25 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char **tokenizer(const char *s, t_node *node)
     tokens = malloc(sizeof(char *) * 1024);
     if (!tokens)
         return (NULL);
-
+	
     while (s[i])
     {
         if (ft_isspace(s[i]))
