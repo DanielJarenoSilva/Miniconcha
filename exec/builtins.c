@@ -6,7 +6,7 @@
 /*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 12:40:10 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/23 13:27:39 by pabalvar         ###   ########.fr       */
+/*   Updated: 2025/12/23 15:07:30 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,28 @@ void export(t_mini *mini, int j)
 	}
 }
 
-// void	unset(t_mini *mini)
-// {
+void	unset(t_mini *mini, int j)
+{
+	int i;
+	int k;
 	
-// }
+	i = 0;
+	k = 1;
+	while (mini->envp[i])
+	{
+		k = 1;
+		if ((ft_strncmp(mini->nodes[j]->tokens[k], mini->envp[i], ft_strlen(mini->nodes[j]->tokens[k])) ) == 0)				//BORRA TODO POQUE GUARDA LA VARIABLE Y UN IGUAL TAMBIEN
+		{
+			printf("unset\n");
+			ft_putstr_fd(mini->envp[i],1);
+			printf("\n");
+			mini->envp[i] = NULL;  
+			// free(mini->envp[i]);
+			k++;
+		}
+		i++;
+	}
+}
 
 int	set_env(char **envp, const char *key, const char *value)
 {

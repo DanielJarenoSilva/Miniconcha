@@ -85,6 +85,8 @@ int	main(int argc, char **argv, char **envp)
 						echo(&mini, i);
 					else if (ft_strncmp(mini.nodes[i]->tokens[0], "export", 6) == 0)
 						export(&mini, i);
+					else if (ft_strncmp(mini.nodes[i]->tokens[0], "unset", 5) == 0)
+						unset(&mini, i);
 					else
 					{
 						cmd = save_exec_cmd(mini.nodes[i], mini);

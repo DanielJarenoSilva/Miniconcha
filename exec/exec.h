@@ -39,5 +39,6 @@ int						has_redir_out(t_node *node);
 int						handle_heredoc(const char *delimiter);
 void					echo(t_mini *mini, int j);
 void					export(t_mini *mini, int j);
+void	                unset(t_mini *mini, int j);
 
 #endif
