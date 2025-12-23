@@ -28,26 +28,26 @@ extern int	g_signal_state;
 
 typedef enum e_redir_type
 {
-    REDIR_IN,
-    REDIR_OUT,
-    REDIR_APPEND,
-    HEREDOC
-} t_redir_type;
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	HEREDOC
+}	t_redir_type;
 
 typedef struct s_redir
 {
-    t_redir_type   type;
-    char           *file;
-} t_redir;
+	t_redir_type	type;
+	char			*file;
+}	t_redir;
 
 
 typedef struct s_node
 {
-    char    **tokens;      // argv limpio
-    t_redir *redirs;       // redirecciones
-    int     redir_count;
-    int     expand;
-} t_node;
+	char	**tokens;      // argv limpio
+	t_redir	*redirs;       // redirecciones
+	int		redir_count;
+	int		expand;
+}	t_node;
 
 typedef struct s_mini
 {

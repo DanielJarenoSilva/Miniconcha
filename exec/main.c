@@ -69,7 +69,9 @@ int	main(int argc, char **argv, char **envp)
 			parser(rl, &mini);
 			// print_nodes(mini);		
 			i = 0;
-			while (mini.nodes && mini.nodes[i])
+			run_pipes(&mini);
+			cmd = NULL;
+			/*while (mini.nodes && mini.nodes[i])
 			{	
 				if (mini.nodes[i]->tokens && mini.nodes[i]->tokens[0])
 				{
@@ -83,7 +85,7 @@ int	main(int argc, char **argv, char **envp)
 						my_exit(mini);
 					else
 					{
-						cmd = save_exec_cmd(mini.nodes[i], mini);
+						cmd = save_exec_cmd(mini.nodes[i]->tokens, mini);
 						if (cmd && *cmd)  // Solo imprimir si no es NULL y no está vacío
 						{
 						    ft_putstr_fd(cmd, 1);
@@ -92,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 					}
 				}
 				i++;
-			}
+			}*/
 		}
 	}
 	// print_nodes(mini);
