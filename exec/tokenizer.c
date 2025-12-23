@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/10 10:47:34 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/15 11:35:49 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "exec.h"
 
 static int	ft_count_words(const char *s)
 {
@@ -21,7 +21,7 @@ static int	ft_count_words(const char *s)
 	count = 0;
 	while (*s)
 	{
-		while (*s && ft_isspace(*s))
+		while (*s &&ft_isspace(*s))
 			s++;
 		if (*s)
 			count++;
@@ -69,6 +69,7 @@ char	**tokenizer(const char *s)
 		if (*s && !ft_isspace(*s))
 		{
 			start = s;
+
 			len = 0;
 			while (s[len] && !ft_isspace(s[len]))
 				len++;
@@ -79,3 +80,5 @@ char	**tokenizer(const char *s)
 	tokens[i] = NULL;
 	return (tokens);
 }
+
+//Hacer que divida por pipes etc y demas, pipex????????¿¿¿¿¿¿

@@ -6,7 +6,7 @@
 #    By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/11 13:13:43 by djareno           #+#    #+#              #
-#    Updated: 2025/12/04 11:17:59 by djareno          ###   ########.fr        #
+#    Updated: 2025/12/01 13:28:42 by djareno          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,6 @@ SRC = ft_atoi.c \
 		ft_putendl_fd.c \
 		ft_putnbr_fd.c \
 		ft_isspace.c \
-		ft_realloc.c \
 
 SRC_BONUS = ft_lstnew_bonus.c \
 				ft_lstadd_front_bonus.c \

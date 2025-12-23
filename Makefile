@@ -5,16 +5,21 @@ LIBFT_DIR = ./libft
 CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
-SRCS = main.c \
-		tokenizer.c \
-		expand.c \
-		cmd.c \
-		builtins.c \
-		utils.c \
-		pipex.c \
-		./gnl/get_next_line.c \
-		./gnl/get_next_line_utils.c \
-		signals.c \
+SRCS =  ./exec/main.c \
+        ./parse/parse.c \
+        ./parse/expand.c \
+        ./parse/parseutils.c \
+        ./exec/builtins.c \
+        ./exec/cmd.c \
+        ./exec/pipex.c \
+        ./exec/signals.c \
+        ./exec/utils.c \
+        ./gnl/get_next_line.c \
+        ./gnl/get_next_line_utils.c \
+        ./exec/redir.c \
+        ./parse/redir_parser.c 
+
+
 
 OBJS = $(SRCS:.c=.o)
 

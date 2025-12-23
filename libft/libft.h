@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 16:44:28 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/09 11:14:09 by djareno          ###   ########.fr       */
+/*   Updated: 2025/12/01 13:29:03 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,4 @@ void			ft_lstclear(t_list **lst, void (*del)(void*));
 void			ft_lstiter(t_list *lst, void (*f)(void*));
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void*));
 int				ft_isspace(char c);
-void			*ft_realloc(void *ptr, size_t old, size_t new);
 #endif
