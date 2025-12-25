@@ -30,49 +30,88 @@ void	echo(t_mini *mini, int j)
 		ft_putstr_fd("\n", 1);
 }
 
+static int env_len(char **envp)
+{
+    int i = 0;
+    while (envp && envp[i])
+        i++;
+    return i;
+}
+
 void export(t_mini *mini, int j)
 {
-	int i;
+    int     i = 1;
+    char    *key;
+    char    *value;
+    char    *eq;
 
-	i = 1;
-	while (mini->nodes[j]->tokens[i])
-	{
-		char *arg;
-		char *equal_sign;
-		arg = mini->nodes[j]->tokens[i];
-	    equal_sign = ft_strchr(arg, '=');
+    while (mini->nodes[j]->tokens[i])
+    {
+        eq = ft_strchr(mini->nodes[j]->tokens[i], '=');
+        if (!eq)
+        {
+            i++;
+            continue;
+        }
 
-		if (equal_sign)
-		{
-			mini->envp[i] = ft_substr(arg, 0, ft_strlen(arg) - i + 1);
-			set_env(mini->envp, mini->envp[i], equal_sign + 1);
-		}
-		i++;
-	}
+        key = ft_substr(mini->nodes[j]->tokens[i], 0,
+                         eq - mini->nodes[j]->tokens[i]);
+        value = eq + 1;
+
+        if (set_env(mini->envp, key, value) == 1)
+        {
+            int len = env_len(mini->envp);
+            char **new_env = malloc(sizeof(char *) * (len + 2));
+
+            for (int k = 0; k < len; k++)
+                new_env[k] = mini->envp[k];
+
+            new_env[len] = ft_strjoin(key, "=");
+            new_env[len] = ft_strjoin_free(new_env[len], ft_strdup(value));
+            new_env[len + 1] = NULL;
+
+            free(mini->envp);
+            mini->envp = new_env;
+        }
+        free(key);
+        i++;
+    }
 }
 
-void	unset(t_mini *mini, int j)
+void unset(t_mini *mini, int j)
 {
-	int i;
-	int k;
-	
-	i = 0;
-	k = 1;
-	while (mini->envp[i])
-	{
-		k = 1;
-		if ((ft_strncmp(mini->nodes[j]->tokens[k], mini->envp[i], ft_strlen(mini->nodes[j]->tokens[k])) ) == 0)				//BORRA TODO POQUE GUARDA LA VARIABLE Y UN IGUAL TAMBIEN
-		{
-			printf("unset\n");
-			ft_putstr_fd(mini->envp[i],1);
-			printf("\n");
-			mini->envp[i] = NULL;  
-			// free(mini->envp[i]);
-			k++;
-		}
-		i++;
-	}
+    int arg;
+    int i;
+    int k;
+    int len;
+
+    arg = 1;
+    while (mini->nodes[j]->tokens[arg])
+    {
+        len = ft_strlen(mini->nodes[j]->tokens[arg]);
+        i = 0;
+        while (mini->envp[i])
+        {
+            if (ft_strncmp(mini->envp[i],
+                           mini->nodes[j]->tokens[arg],
+                           len) == 0
+                && mini->envp[i][len] == '=')
+            {
+                free(mini->envp[i]);
+                k = i;
+                while (mini->envp[k])
+                {
+                    mini->envp[k] = mini->envp[k + 1];
+                    k++;
+                }
+                break; 
+            }
+            i++;
+        }
+        arg++;
+    }
 }
+
 
 int	set_env(char **envp, const char *key, const char *value)
 {
