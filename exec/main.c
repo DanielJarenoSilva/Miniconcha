@@ -34,7 +34,7 @@ void	print_nodes(struct s_mini mini)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char			*cmd;
+	//char			*cmd;
 	char			*rl;
 	struct s_mini	mini;
 	int				i;
@@ -49,7 +49,7 @@ int	main(int argc, char **argv, char **envp)
 	
 	//TESTEAR $///////////////////////
 	
-	mini.envp[0] = ft_strdup("TEST=42");
+	//mini.envp[0] = ft_strdup("TEST=42");
 
 	/////////////////////////////////////////
 
@@ -62,36 +62,28 @@ int	main(int argc, char **argv, char **envp)
 		rl = readline("minishell > ");
 		g_signal_state = 0;
 		if (!rl)
+		{
+			ft_putstr_fd("exit\n", 1);
+			free_mini(&mini);
 			break ;
+		}
 		if (*rl)
 		{
 			add_history(rl);		
 			parser(rl, &mini);
+			run_pipes(&mini);
 			// print_nodes(mini);		
 			i = 0;
-			run_pipes(&mini);
-			cmd = NULL;
 			/*while (mini.nodes && mini.nodes[i])
-			{	
+			{
 				if (mini.nodes[i]->tokens && mini.nodes[i]->tokens[0])
 				{
-					if (ft_strncmp(mini.nodes[i]->tokens[0], "cd", 2) == 0)
-						cd(mini, mini.nodes[i]->tokens);
-					else if (ft_strncmp(mini.nodes[i]->tokens[0], "pwd", 3) == 0)
-						pwd(mini);
-					else if (ft_strncmp(mini.nodes[i]->tokens[0], "env", 3) == 0)
-						env(mini);
-					else if (ft_strncmp(mini.nodes[i]->tokens[0], "exit", 4) == 0)
-						my_exit(mini);
-					else
+					cmd = save_exec_cmd(mini.nodes[i], &mini);
+					if (cmd && *cmd) 
 					{
-						cmd = save_exec_cmd(mini.nodes[i]->tokens, mini);
-						if (cmd && *cmd)  // Solo imprimir si no es NULL y no está vacío
-						{
 						    ft_putstr_fd(cmd, 1);
-						}
-						free(cmd);
 					}
+					free(cmd);
 				}
 				i++;
 			}*/

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/23 15:35:01 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/07 16:45:44 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	run_pipes(t_mini *mini)
 	int		fd[2];
 	int		in_fd;
 	pid_t	pid;
+	int		status;
 
 	i = 0;
 	in_fd = 0;
@@ -38,13 +39,20 @@ void	run_pipes(t_mini *mini)
 				dup2(in_fd, STDIN_FILENO);
 				close(in_fd);
 			}
+			if (mini->nodes[i]->redir_count > 0)
+				apply_redirs(mini->nodes[i]);
+			else if (mini->nodes[i + 1])
+				dup2(fd[1], STDOUT_FILENO);
 			if (mini->nodes[i + 1])
 			{
 				dup2(fd[1], STDOUT_FILENO);
 				close(fd[0]);
 				close(fd[1]);
 			}
-			exec_cmd(mini->nodes[i]->tokens, *mini);
+			if (is_builtin(mini->nodes[i]->tokens[0]))
+				exec_builtin(mini->nodes[i]->tokens, mini);
+			else
+				exec_cmd(mini->nodes[i]->tokens, *mini);
 			exit(1);
 		}
 		else
@@ -59,6 +67,11 @@ void	run_pipes(t_mini *mini)
 		}
 		i++;
 	}
-	while (wait(NULL) > 0)
-		;
+	while (wait(&status) > 0)
+	{
+		if (WIFEXITED(status))
+			mini->exit_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			mini->exit_code = 128 + WTERMSIG(status);
+	}
 }

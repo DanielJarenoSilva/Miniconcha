@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/23 12:08:29 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/07 15:16:08 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	**dup_env(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		copy[i] = strdup(envp[i]);
+		copy[i] = ft_strdup(envp[i]);
 		i++;
 	}
 	copy[i] = NULL;
@@ -51,11 +51,7 @@ char	*ft_getenv(char **envp, char *env)
 			y = ft_strlen(env) + 2;
 			tmp = malloc(ft_strlen(envp[i]) - ft_strlen(env) + 1);
 			while (y < ft_strlen(envp[i]))
-			{
-				tmp[x] = envp[i][y];
-				x++;
-				y++;
-			}
+				tmp[x++] = envp[i][y++];
 			tmp[x] = '\0';
 			return (tmp);
 		}

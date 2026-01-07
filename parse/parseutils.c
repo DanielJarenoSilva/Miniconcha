@@ -83,10 +83,10 @@ int	has_single_quotes(char *s)
 			return (1);
 		s++;
 	}
-	return (0);
+	return (1);
 }
 
-void	expand_tokens(t_node *node, t_mini mini)
+void	expand_tokens(t_node *node, t_mini *mini)
 {
 	int		i;
 	char	*tmp;
@@ -94,7 +94,7 @@ void	expand_tokens(t_node *node, t_mini mini)
 	if (!node->expand)
 		return ;
 
-	i = 0;
+	i = 1;
 	while (node->tokens[i])
 	{
 		tmp = expand_token(node->tokens[i], mini);

@@ -2,23 +2,31 @@ NAME = minishell
 
 LIBFT_DIR = ./libft
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3
 CC = cc
 
 SRCS =  ./exec/main.c \
         ./parse/parse.c \
         ./parse/expand.c \
         ./parse/parseutils.c \
-        ./exec/builtins.c \
-        ./exec/cmd.c \
+        ./exec/exec_cmd/cmd.c \
+        ./exec/exec_cmd/exec_utils.c \
         ./exec/pipex.c \
         ./exec/signals.c \
         ./exec/utils.c \
         ./gnl/get_next_line.c \
         ./gnl/get_next_line_utils.c \
         ./exec/redir.c \
-        ./parse/redir_parser.c 
-
+        ./parse/redir_parser.c \
+        ./exec/builtins/echo.c \
+        ./exec/builtins/pwd.c \
+        ./exec/builtins/cd.c \
+        ./exec/builtins/export.c \
+        ./exec/builtins/unset.c \
+        ./exec/builtins/env.c \
+        ./exec/builtins/exit.c \
+        ./exec/builtins/exec_builtin.c \
+        ./exec/free_mini.c \
 
 
 OBJS = $(SRCS:.c=.o)

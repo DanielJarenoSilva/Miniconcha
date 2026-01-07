@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/19 15:27:50 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/07 15:25:31 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,21 +152,23 @@ void parser(const char *s, struct s_mini *mini)
         num_cmds++;
     mini->nodes = malloc(sizeof(struct s_node *) * (num_cmds + 1));
     if (!mini->nodes)
-        return ;
+		return (ft_free_matrix(cmds));
+        
 
     i = 0;
     while (cmds[i])
     {
         mini->nodes[i] = malloc(sizeof(struct s_node));
         if (!mini->nodes[i])
-            return ;
+            return (ft_free_matrix(cmds));
         mini->nodes[i]->redirs = NULL;
 		mini->nodes[i]->redir_count = 0;
 		mini->nodes[i]->tokens = tokenizer(cmds[i], mini->nodes[i]);
-        mini->nodes[i]->expand = !has_single_quotes(cmds[i]);
-        expand_tokens(mini->nodes[i], *mini);
+        mini->nodes[i]->expand = has_single_quotes(cmds[i]);
+        expand_tokens(mini->nodes[i], mini);
         i++;
     }
     mini->nodes[i] = NULL;
+	return (ft_free_matrix(cmds));
 	// print_nodes(*mini); //opcional eh(borrar luego)
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 11:00:58 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/19 15:01:07 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/07 12:41:43 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*get_env_value(char **envp, char *key)
 	return (ft_strdup(""));
 }
 
-char	*expand_var(char	*str, int *i, t_mini mini)
+char	*expand_var(char	*str, int *i, t_mini *mini)
 {
 	char	*key;
 	char	*value;
@@ -83,8 +83,7 @@ char	*expand_var(char	*str, int *i, t_mini mini)
 	if (str[*i] == '?')
 	{
 		(*i)++;
-		printf("%i", mini.exit_code);
-		return (ft_strdup("0"));
+		return (ft_itoa((*mini).exit_code));
 	}
 	start = *i;
 	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
@@ -100,47 +99,46 @@ char	*expand_var(char	*str, int *i, t_mini mini)
 		j++;
 	}
 	key[len] = '\0';
-	value = get_env_value(mini.envp, key);
+	value = get_env_value((*mini).envp, key);
 	return (free(key), value);
 }
 
-char	*expand_token(char *str, t_mini mini)
+char	*expand_token(char *str, t_mini *mini)
 {
 	int		i;
 	char	*result;
 	char	*tmp;
 	int		start;
-	int		j;
 
 	result = ft_strdup("");
 	i = 0;
 	while (str[i])
 	{
+		/* ---------- COMILLAS SIMPLES ---------- */
 		if (str[i] == '\'')
 		{
 			start = ++i;
 			while (str[i] && str[i] != '\'')
 				i++;
-			tmp = malloc(i - start + 1);
-			j = 0;
-			while (j < i - start)
-			{
-				tmp[j] = str[start + j];
-				j++;
-			}
-			tmp[i - start] = '\0';
+			tmp = ft_substr(str, start, i - start);
 			result = ft_strjoin_free(result, tmp);
 			if (str[i] == '\'')
 				i++;
 			continue ;
 		}
+
+		/* ---------- COMILLAS DOBLES ---------- */
 		if (str[i] == '"')
 		{
 			i++;
 			while (str[i] && str[i] != '"')
 			{
-				if (str[i] == '$')
-					result = ft_strjoin_free(result, expand_var(str, &i, mini));
+				if (str[i] == '$' && str[i + 1]
+					&& (ft_isalnum(str[i + 1])
+						|| str[i + 1] == '_'
+						|| str[i + 1] == '?'))
+					result = ft_strjoin_free(result,
+							expand_var(str, &i, mini));
 				else
 					result = ft_strjoin_char_free(result, str[i++]);
 			}
@@ -148,11 +146,19 @@ char	*expand_token(char *str, t_mini mini)
 				i++;
 			continue ;
 		}
-		if (str[i] == '$')
+
+		/* ---------- EXPANSIÓN NORMAL ---------- */
+		if (str[i] == '$' && str[i + 1]
+			&& (ft_isalnum(str[i + 1])
+				|| str[i + 1] == '_'
+				|| str[i + 1] == '?'))
 		{
-			result = ft_strjoin_free(result, expand_var(str, &i, mini));
+			result = ft_strjoin_free(result,
+					expand_var(str, &i, mini));
 			continue ;
 		}
+
+		/* ---------- CARÁCTER NORMAL ---------- */
 		result = ft_strjoin_char_free(result, str[i++]);
 	}
 	return (result);
