@@ -1,0 +1,165 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/04 11:00:58 by djareno           #+#    #+#             */
+/*   Updated: 2026/01/07 12:41:43 by djareno          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "parse.h"
+
+char	*ft_strjoin_free(char *s1, char *s2)
+{
+	size_t		len1;
+	size_t		len2;
+	char		*str;
+	size_t		i;
+
+	if (!s1)
+		s1 = ft_strdup("");
+	if (!s2)
+		s2 = ft_strdup("");
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	str = malloc(len1 + len2 + 1);
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (i < len1)
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	i = 0;
+
+	while (i < len2)
+	{
+		str[len1 + i] = s2[i];
+		i++;
+	}
+	str[len1 + len2] = '\0';
+	return (free(s1), free(s2), str);
+}
+
+char	*ft_strjoin_char_free(char *s, char c)
+{
+	char	*s2;
+
+	s2 = malloc(2);
+	s2[0] = c;
+	s2[1] = '\0';
+	return (ft_strjoin_free(s, s2));
+}
+
+char	*get_env_value(char **envp, char *key)
+{
+	int		i;
+	size_t	key_len;
+
+	i = 0;
+	key_len = ft_strlen(key);
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
+			return (ft_strdup(envp[i] + key_len + 1));
+		i++;
+	}
+	return (ft_strdup(""));
+}
+
+char	*expand_var(char	*str, int *i, t_mini *mini)
+{
+	char	*key;
+	char	*value;
+	int		start;
+	int		len;
+	int		j;
+
+	(*i)++;
+	if (str[*i] == '?')
+	{
+		(*i)++;
+		return (ft_itoa((*mini).exit_code));
+	}
+	start = *i;
+	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
+		(*i)++;
+	len = *i - start;
+	key = malloc(len + 1);
+	if (!key)
+		return (NULL);
+	j = 0;
+	while (j < len)
+	{
+		key[j] = str[start + j];
+		j++;
+	}
+	key[len] = '\0';
+	value = get_env_value((*mini).envp, key);
+	return (free(key), value);
+}
+
+char	*expand_token(char *str, t_mini *mini)
+{
+	int		i;
+	char	*result;
+	char	*tmp;
+	int		start;
+
+	result = ft_strdup("");
+	i = 0;
+	while (str[i])
+	{
+		/* ---------- COMILLAS SIMPLES ---------- */
+		if (str[i] == '\'')
+		{
+			start = ++i;
+			while (str[i] && str[i] != '\'')
+				i++;
+			tmp = ft_substr(str, start, i - start);
+			result = ft_strjoin_free(result, tmp);
+			if (str[i] == '\'')
+				i++;
+			continue ;
+		}
+
+		/* ---------- COMILLAS DOBLES ---------- */
+		if (str[i] == '"')
+		{
+			i++;
+			while (str[i] && str[i] != '"')
+			{
+				if (str[i] == '$' && str[i + 1]
+					&& (ft_isalnum(str[i + 1])
+						|| str[i + 1] == '_'
+						|| str[i + 1] == '?'))
+					result = ft_strjoin_free(result,
+							expand_var(str, &i, mini));
+				else
+					result = ft_strjoin_char_free(result, str[i++]);
+			}
+			if (str[i] == '"')
+				i++;
+			continue ;
+		}
+
+		/* ---------- EXPANSIÓN NORMAL ---------- */
+		if (str[i] == '$' && str[i + 1]
+			&& (ft_isalnum(str[i + 1])
+				|| str[i + 1] == '_'
+				|| str[i + 1] == '?'))
+		{
+			result = ft_strjoin_free(result,
+					expand_var(str, &i, mini));
+			continue ;
+		}
+
+		/* ---------- CARÁCTER NORMAL ---------- */
+		result = ft_strjoin_char_free(result, str[i++]);
+	}
+	return (result);
+}
