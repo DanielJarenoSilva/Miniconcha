@@ -34,7 +34,7 @@ void	print_nodes(struct s_mini mini)
 
 int	main(int argc, char **argv, char **envp)
 {
-	//char			*cmd;
+	char			*cmd;
 	char			*rl;
 	struct s_mini	mini;
 	int				i;
@@ -69,24 +69,30 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (*rl)
 		{
-			add_history(rl);		
+			add_history(rl);	
 			parser(rl, &mini);
-			run_pipes(&mini);
-			// print_nodes(mini);		
-			i = 0;
-			/*while (mini.nodes && mini.nodes[i])
+			if (ft_strchr(rl, '|'))
 			{
-				if (mini.nodes[i]->tokens && mini.nodes[i]->tokens[0])
+				run_pipes(&mini);
+			}
+			else
+			{
+				// print_nodes(mini);		
+				i = 0;
+				while (mini.nodes && mini.nodes[i])
 				{
-					cmd = save_exec_cmd(mini.nodes[i], &mini);
-					if (cmd && *cmd) 
+					if (mini.nodes[i]->tokens && mini.nodes[i]->tokens[0])
 					{
-						    ft_putstr_fd(cmd, 1);
+						cmd = save_exec_cmd(mini.nodes[i], &mini);
+						if (cmd && *cmd)
+						{
+							ft_putstr_fd(cmd, 1);
+						}
+						free(cmd);
 					}
-					free(cmd);
+					i++;
 				}
-				i++;
-			}*/
+			}
 		}
 	}
 	// print_nodes(mini);

@@ -47,5 +47,6 @@ char	*find_cmd(char *cmd, char **path_dirs);
 void	free_mini(t_mini *mini);
 void	export(t_mini *mini, char	**tokens);
 void	unset(t_mini *mini, char **tokens);
+void	free_nodes(t_node **nodes);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:43:59 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/16 12:11:46 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/08 11:47:22 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static void	ft_make_lst(int fd, t_gnllist **list)
 char	*get_next_line(int fd)
 {
 	static t_gnllist	*list;
-	char			*next_line;
+	char				*next_line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);

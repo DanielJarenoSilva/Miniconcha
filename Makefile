@@ -11,7 +11,7 @@ SRCS =  ./exec/main.c \
         ./parse/parseutils.c \
         ./exec/exec_cmd/cmd.c \
         ./exec/exec_cmd/exec_utils.c \
-        ./exec/pipex.c \
+        ./exec/exec_cmd/pipex.c \
         ./exec/signals.c \
         ./exec/utils.c \
         ./gnl/get_next_line.c \

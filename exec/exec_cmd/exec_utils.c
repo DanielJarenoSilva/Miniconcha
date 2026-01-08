@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:30:56 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 14:31:27 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/08 13:26:01 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ char	*read_fd(int fd)
 	res = ft_strdup("");
 	if (!res)
 		return (NULL);
-
-	while ((line = get_next_line(fd)))
+	line = get_next_line(fd);
+	while (line)
 	{
 		tmp = ft_strjoin_free(res, line);
 		if (!tmp)
@@ -89,6 +89,7 @@ char	*read_fd(int fd)
 			return (NULL);
 		}
 		res = tmp;
+		line = get_next_line(fd);
 	}
 	close(fd);
 	return (res);
