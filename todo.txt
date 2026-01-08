@@ -1,4 +1,0 @@
-//////////////////////////              Navidad               //////////////////////////             
-
-
---Var ----->>>>>>> Hacer que funcione $?, atteglar pipes. Con eso esta a mini terminada como tal.
