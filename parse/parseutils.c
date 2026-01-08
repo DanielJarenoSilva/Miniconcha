@@ -17,7 +17,7 @@ int	ft_isquote(char c)
 	return (0);
 }
 
-int ft_ischev(char c)
+int	ft_ischev(char c)
 {
 	if (c == '<' || c == '>')
 		return (1);
@@ -88,8 +88,8 @@ int	has_single_quotes(char *s)
 
 void	expand_tokens(t_node *node, t_mini mini)
 {
-	int		i;
-	char	*tmp;
+	int i;
+	char *tmp;
 
 	if (!node->expand)
 		return ;

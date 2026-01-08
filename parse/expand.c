@@ -14,10 +14,10 @@
 
 char	*ft_strjoin_free(char *s1, char *s2)
 {
-	size_t		len1;
-	size_t		len2;
-	char		*str;
-	size_t		i;
+	size_t	len1;
+	size_t	len2;
+	char	*str;
+	size_t	i;
 
 	if (!s1)
 		s1 = ft_strdup("");
@@ -35,7 +35,6 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		i++;
 	}
 	i = 0;
-
 	while (i < len2)
 	{
 		str[len1 + i] = s2[i];
@@ -71,7 +70,7 @@ char	*get_env_value(char **envp, char *key)
 	return (ft_strdup(""));
 }
 
-char	*expand_var(char	*str, int *i, t_mini mini)
+char	*expand_var(char *str, int *i, t_mini mini)
 {
 	char	*key;
 	char	*value;
