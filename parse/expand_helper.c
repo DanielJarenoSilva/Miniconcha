@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:17:25 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/08 19:30:52 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/09 01:09:18 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,33 +50,19 @@ char	*ft_strjoin_char_free(char *s, char c)
 	return (ft_strjoin_free(s, s2));
 }
 
-char	*handle_single_quote(char *str, int *i, char *result)
+void	expand_tokens(t_node *node, t_mini *mini)
 {
-	int		start;
+	int		i;
 	char	*tmp;
 
-	start = ++(*i);
-	while (str[*i] && str[*i] != '\'')
-		(*i)++;
-	tmp = ft_substr(str, start, *i - start);
-	result = ft_strjoin_free(result, tmp);
-	if (str[*i] == '\'')
-		(*i)++;
-	return (result);
-}
-
-char	*handle_double_quote(char *str, int *i, char *result, t_mini *mini)
-{
-	(*i)++;
-	while (str[*i] && str[*i] != '"')
+	if (!node->expand)
+		return ;
+	i = 1;
+	while (node->tokens[i])
 	{
-		if (str[*i] == '$' && str[*i + 1] && (ft_isalnum(str[*i + 1])
-				|| str[*i + 1] == '_' || str[*i + 1] == '?'))
-			result = ft_strjoin_free(result, expand_var(str, i, mini));
-		else
-			result = ft_strjoin_char_free(result, str[(*i)++]);
+		tmp = expand_token(node->tokens[i], mini);
+		free(node->tokens[i]);
+		node->tokens[i] = tmp;
+		i++;
 	}
-	if (str[*i] == '"')
-		(*i)++;
-	return (result);
 }

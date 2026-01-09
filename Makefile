@@ -9,6 +9,7 @@ SRCS =  ./exec/main.c \
         ./parse/parse.c \
         ./parse/expand.c \
         ./parse/parseutils.c \
+        ./parse/parseutils2.c \
         ./exec/exec_cmd/cmd.c \
         ./exec/exec_cmd/exec_utils.c \
         ./exec/pipex.c \
@@ -27,6 +28,7 @@ SRCS =  ./exec/main.c \
         ./exec/builtins/exit.c \
         ./exec/builtins/exec_builtin.c \
         ./exec/free_mini.c \
+        ./parse/expand_helper.c
 
 
 OBJS = $(SRCS:.c=.o)
