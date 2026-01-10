@@ -18,6 +18,7 @@ SRCS =  ./exec/main.c \
         ./gnl/get_next_line.c \
         ./gnl/get_next_line_utils.c \
         ./exec/redir.c \
+        ./exec/redir_utils.c \
         ./parse/redir_parser.c \
         ./exec/builtins/echo.c \
         ./exec/builtins/pwd.c \

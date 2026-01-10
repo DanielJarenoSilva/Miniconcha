@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/08 20:46:49 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/10 23:20:08 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,9 @@ char					*find_cmd(char *cmd, char **path_dirs);
 void					free_mini(t_mini *mini);
 void					export(t_mini *mini, char **tokens);
 void					unset(t_mini *mini, char **tokens);
+void					apply_redir_in(t_node *node, int i);
+void					apply_redir_out(t_node *node, int i);
+void					apply_redir_append(t_node *node, int i);
+void					apply_heredoc(t_node *node, int i);
 
 #endif
