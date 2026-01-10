@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:17:25 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/09 01:09:18 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/10 20:50:36 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		i++;
 	}
 	str[ft_strlen(s1) + ft_strlen(s2)] = '\0';
-	return (free(s1), free(s2), str);
+	return (free(s1), str);
 }
 
 char	*ft_strjoin_char_free(char *s, char c)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:07:10 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:41:33 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/10 20:41:01 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	echo(t_mini *mini, char **tokens)
 	{
 		if (i > 1)
 			ft_putstr_fd(" ", 1);
-
 		if (tokens[i][0] == '$')
 		{
 			value = ft_getenv(mini->envp, tokens[i] + 1);

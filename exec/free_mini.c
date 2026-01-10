@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_mini.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 15:02:36 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:11:28 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/10 20:52:36 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	free_redirs(t_redir *redirs, int count)
 	i = 0;
 	if (!redirs)
 		return ;
-
 	while (i < count)
 	{
 		if (redirs[i].file)
@@ -82,10 +81,8 @@ void	free_mini(t_mini *mini)
 		return ;
 	free_nodes(mini->nodes);
 	mini->nodes = NULL;
-
 	free_env(mini->envp);
 	mini->envp = NULL;
-
 	if (mini->output)
 	{
 		free(mini->output);
