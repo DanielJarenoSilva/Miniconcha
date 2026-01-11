@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/10 20:51:14 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/11 03:11:54 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char	*save_exec_cmd(t_node *node, t_mini *mini)
 			return (NULL);
 		}
 	}
-	if (is_builtin(node->tokens[0]))
+	if (is_builtin(node->tokens[0]) && !mini->is_pipe)
 	{
 		exec_builtin(node->tokens, mini);
 		return (NULL);

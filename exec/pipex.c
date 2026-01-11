@@ -3,14 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 16:45:44 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/11 01:59:52 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+static void	execute_node(t_mini *mini, int i)
+{
+	if (is_builtin(mini->nodes[i]->tokens[0]))
+		exec_builtin(mini->nodes[i]->tokens, mini);
+	else
+		exec_cmd(mini->nodes[i]->tokens, *mini);
+	exit(1);
+}
+
+static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (in_fd != 0)
+	{
+		dup2(in_fd, STDIN_FILENO);
+		close(in_fd);
+	}
+	if (mini->nodes[i]->redir_count > 0)
+		apply_redirs(mini->nodes[i]);
+	else if (mini->nodes[i + 1])
+		dup2(fd[1], STDOUT_FILENO);
+	if (mini->nodes[i + 1])
+	{
+		close(fd[0]);
+		close(fd[1]);
+	}
+	execute_node(mini, i);
+}
+
+static void	setup_parent(int *in_fd, int fd[2], int has_next)
+{
+	if (*in_fd != 0)
+		close(*in_fd);
+	if (has_next)
+	{
+		close(fd[1]);
+		*in_fd = fd[0];
+	}
+}
+
+static void	wait_children(t_mini *mini)
+{
+	int	status;
+
+	while (wait(&status) > 0)
+	{
+		if (WIFEXITED(status))
+			mini->exit_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			mini->exit_code = 128 + WTERMSIG(status);
+	}
+}
 
 void	run_pipes(t_mini *mini)
 {
@@ -18,7 +72,6 @@ void	run_pipes(t_mini *mini)
 	int		fd[2];
 	int		in_fd;
 	pid_t	pid;
-	int		status;
 
 	i = 0;
 	in_fd = 0;
@@ -31,47 +84,10 @@ void	run_pipes(t_mini *mini)
 		}
 		pid = fork();
 		if (pid == 0)
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			if (in_fd != 0)
-			{
-				dup2(in_fd, STDIN_FILENO);
-				close(in_fd);
-			}
-			if (mini->nodes[i]->redir_count > 0)
-				apply_redirs(mini->nodes[i]);
-			else if (mini->nodes[i + 1])
-				dup2(fd[1], STDOUT_FILENO);
-			if (mini->nodes[i + 1])
-			{
-				dup2(fd[1], STDOUT_FILENO);
-				close(fd[0]);
-				close(fd[1]);
-			}
-			if (is_builtin(mini->nodes[i]->tokens[0]))
-				exec_builtin(mini->nodes[i]->tokens, mini);
-			else
-				exec_cmd(mini->nodes[i]->tokens, *mini);
-			exit(1);
-		}
+			setup_child(mini, i, in_fd, fd);
 		else
-		{
-			if (in_fd != 0)
-				close(in_fd);
-			if (mini->nodes[i + 1])
-			{
-				close(fd[1]);
-				in_fd = fd[0];
-			}
-		}
+			setup_parent(&in_fd, fd, mini->nodes[i + 1] != NULL);
 		i++;
 	}
-	while (wait(&status) > 0)
-	{
-		if (WIFEXITED(status))
-			mini->exit_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			mini->exit_code = 128 + WTERMSIG(status);
-	}
+	wait_children(mini);
 }

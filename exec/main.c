@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/10 22:55:43 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/11 03:03:32 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static void	init_mini(t_mini *mini, char **envp)
 	mini->envp = dup_env(envp);
 	mini->output = NULL;
 	mini->nodes = NULL;
+	mini->is_pipe = 0;
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
@@ -43,16 +44,24 @@ static void	process_nodes(t_mini *mini)
 	int		i;
 
 	i = 0;
-	while (mini->nodes && mini->nodes[i])
+	if (mini->is_pipe == 1)
 	{
-		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+		run_pipes(mini);
+		return ;
+	}
+	else
+	{
+		while (mini->nodes && mini->nodes[i])
 		{
-			cmd = save_exec_cmd(mini->nodes[i], mini);
-			if (cmd && *cmd)
-				ft_putstr_fd(cmd, 1);
-			free(cmd);
+			if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+			{
+				cmd = save_exec_cmd(mini->nodes[i], mini);
+				if (cmd && *cmd)
+					ft_putstr_fd(cmd, 1);
+				free(cmd);
+			}
+			i++;
 		}
-		i++;
 	}
 }
 

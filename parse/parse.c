@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/09 00:50:43 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/11 02:51:14 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**tokenizer(const char *s, t_node *node)
 	return (tokens);
 }
 
-static void	do_nodes(char **nodes, const char *s, int *i)
+static void	do_nodes(char **nodes, const char *s, int *i, struct s_mini *mini)
 {
 	const char	*start;
 	int			len;
@@ -49,7 +49,7 @@ static void	do_nodes(char **nodes, const char *s, int *i)
 	{
 		while (*s && ft_isspace(*s))
 			s++;
-		if (*s == '|')
+		if (ft_ispipe(*s, mini))
 			s++;
 		start = s;
 		len = 0;
@@ -67,7 +67,7 @@ static void	do_nodes(char **nodes, const char *s, int *i)
 	}
 }
 
-char	**get_nodes(const char *s)
+char	**get_nodes(const char *s, struct s_mini *mini)
 {
 	int		i;
 	char	**nodes;
@@ -81,7 +81,7 @@ char	**get_nodes(const char *s)
 		printf("Error: Unmatched quotes\n");
 		return (NULL);
 	}
-	do_nodes(nodes, s, &i);
+	do_nodes(nodes, s, &i, mini);
 	nodes[i] = NULL;
 	return (nodes);
 }
@@ -112,7 +112,7 @@ void	parser(const char *s, struct s_mini *mini)
 	char	**cmds;
 	int		num_cmds;
 
-	cmds = get_nodes(s);
+	cmds = get_nodes(s, mini);
 	if (!cmds)
 		return ;
 	num_cmds = 0;

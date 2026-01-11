@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/10 21:01:06 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/11 02:08:20 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_mini
 {
 	t_node			**nodes;
 	int				exit_code;
+	int				is_pipe;
 	char			*output;
 	char			**envp;
 }					t_mini;

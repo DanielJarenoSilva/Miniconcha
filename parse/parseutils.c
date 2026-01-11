@@ -2,23 +2,23 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parseutils.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2026/01/08 23:31:32 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/08 23:31:32 by kfuto            ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/11 02:22:54 by kfuto             #+#    #+#             */
+/*   Updated: 2026/01/11 02:22:54 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-int	ft_ispipe(char c)
+int	ft_ispipe(char c, t_mini *mini)
 {
 	if (c == '|')
+	{
+		mini->is_pipe = 1;
 		return (1);
+	}
 	return (0);
 }
 

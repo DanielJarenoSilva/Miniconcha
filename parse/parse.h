@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/09 01:09:45 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/11 02:32:12 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@
 typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
-char					**get_nodes(const char *s);
+char					**get_nodes(const char *s, struct s_mini *mini);
 int						ft_isnode(char c);
 int						ft_count_nodes(const char *s);
 char					*word_dup(const char *start, int len);
 void					parser(const char *s, t_mini *mini);
-int						ft_ispipe(char c);
+int						ft_ispipe(char c, t_mini *mini);
 int						ft_isquote(char c);
 char					**tokenizer(const char *s, t_node *node);
 void					get_tookens(t_mini *mini);
