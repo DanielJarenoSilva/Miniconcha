@@ -6,21 +6,18 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:53 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:48:47 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/12 15:52:11 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../exec.h"
 
-void	aux(t_mini *mini)
+void	aux(t_mini *mini, int i)
 {
-	int	k;
-
-	k = 0;
-	while (mini->envp[k])
+	while (mini->envp[i])
 	{
-		mini->envp[k] = mini->envp[k + 1];
-		k++;
+		mini->envp[i] = mini->envp[i + 1];
+		i++;
 	}
 }
 
@@ -41,7 +38,7 @@ void	unset(t_mini *mini, char **tokens)
 				&& mini->envp[i][len] == '=')
 			{
 				free(mini->envp[i]);
-				aux(mini);
+				aux(mini, i);
 				break ;
 			}
 			i++;
