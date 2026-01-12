@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/11 02:51:14 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 02:35:26 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,15 @@ char	**tokenizer(const char *s, t_node *node)
 		return (NULL);
 	while (s[i])
 	{
-		if (ft_isspace(s[i]))
+		while (ft_isspace(s[i]))
 			i++;
 		if (handle_redir(s, &i, node))
 			continue ;
 		start = i;
 		while (s[i] && !ft_isspace(s[i]) && !ft_ischev(s[i]))
 			i++;
-		tokens[j++] = word_dup(s + start, i - start);
+		if (i > start)
+			tokens[j++] = word_dup(s + start, i - start);
 	}
 	tokens[j] = NULL;
 	return (tokens);

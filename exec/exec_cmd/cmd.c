@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/11 03:11:54 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 02:57:35 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,10 @@ char	*save_exec_cmd(t_node *node, t_mini *mini)
 	int		fd[2];
 	char	*res;
 
-	res = NULL;
 	fd[0] = -1;
 	fd[1] = -1;
-	if (!has_redir_out(node))
+	res = NULL;
+	if (!has_redir_out(node) && mini->is_pipe)
 	{
 		if (pipe(fd) == -1)
 		{

@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/11 03:03:32 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 02:20:17 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	process_nodes(t_mini *mini)
 	if (mini->is_pipe == 1)
 	{
 		run_pipes(mini);
+		mini->is_pipe = 0;
 		return ;
 	}
 	else
