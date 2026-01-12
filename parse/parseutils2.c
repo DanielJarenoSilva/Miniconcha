@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 19:49:35 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/11 02:22:26 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 16:18:23 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,46 @@ int	get_quotes(const char *s)
 	if (quote)
 		return (0);
 	return (1);
+}
+
+char	*word_dup_no_quotes(const char *s, int len)
+{
+	char	*out;
+	int		i;
+	int		j;
+	char	quote;
+
+	quote = 0;
+	out = malloc(len + 1);
+	i = 0;
+	j = 0;
+	while (i < len)
+	{
+		if (!quote && (s[i] == '"' || s[i] == '\''))
+			quote = s[i++];
+		else if (quote && s[i] == quote)
+		{
+			quote = 0;
+			i++;
+		}
+		else
+			out[j++] = s[i++];
+	}
+	out[j] = '\0';
+	return (out);
+}
+
+void	skip_token_quotes(const char *s, int *i)
+{
+	char	quote;
+
+	quote = 0;
+	while (s[*i] && (quote || (!ft_isspace(s[*i]) && !ft_ischev(s[*i]))))
+	{
+		if (!quote && (s[*i] == '"' || s[*i] == '\''))
+			quote = s[*i];
+		else if (quote && s[*i] == quote)
+			quote = 0;
+		(*i)++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/11 02:32:12 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 16:18:27 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,7 @@ char					*handle_single_quote(char *str, int *i, char *result);
 char					*handle_double_quote(char *str, int *i, char *result,
 							t_mini *mini);
 int						get_quotes(const char *s);
+char					*word_dup_no_quotes(const char *s, int len);
+void					skip_token_quotes(const char *s, int *i);
 
 #endif

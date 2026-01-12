@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 02:35:26 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 16:19:58 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,9 @@ char	**tokenizer(const char *s, t_node *node)
 		if (handle_redir(s, &i, node))
 			continue ;
 		start = i;
-		while (s[i] && !ft_isspace(s[i]) && !ft_ischev(s[i]))
-			i++;
+		skip_token_quotes(s, &i);
 		if (i > start)
-			tokens[j++] = word_dup(s + start, i - start);
+			tokens[j++] = word_dup_no_quotes(s + start, i - start);
 	}
 	tokens[j] = NULL;
 	return (tokens);
