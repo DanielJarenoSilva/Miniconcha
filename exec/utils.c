@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:16:08 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/10 20:58:10 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ char	**dup_env(char **envp)
 
 char	*ft_getenv(char **envp, char *env)
 {
-	int			i;
-	char		*tmp;
-	size_t		y;
-	int			x;
+	int		i;
+	char	*tmp;
+	size_t	y;
+	int		x;
 
 	i = 0;
 	x = 0;

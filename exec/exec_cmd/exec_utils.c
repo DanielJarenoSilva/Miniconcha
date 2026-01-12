@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:30:56 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/08 13:26:01 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/10 20:56:34 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	**get_path_dirs(char **envp)
 	return (dirs);
 }
 
-char	*join_path(char	*dir, char *cmd)
+char	*join_path(char *dir, char *cmd)
 {
 	int		len_dir;
 	int		len_cmd;
@@ -73,24 +73,22 @@ char	*find_cmd(char *cmd, char **path_dirs)
 char	*read_fd(int fd)
 {
 	char	*line;
-	char	*res;
-	char	*tmp;
+	char	*buffer;
 
-	res = ft_strdup("");
-	if (!res)
+	buffer = ft_strdup("");
+	if (!buffer)
 		return (NULL);
 	line = get_next_line(fd);
 	while (line)
 	{
-		tmp = ft_strjoin_free(res, line);
-		if (!tmp)
-		{
-			free(res);
-			return (NULL);
-		}
-		res = tmp;
+		buffer = ft_strjoin_free(buffer, line);
+		free(line);
 		line = get_next_line(fd);
 	}
-	close(fd);
-	return (res);
+	if (!*buffer)
+	{
+		free(buffer);
+		return (NULL);
+	}
+	return (buffer);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:43:59 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/08 11:47:22 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/10 20:59:33 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ static void	ft_clean_list(t_gnllist **list)
 {
 	t_gnllist	*last;
 	t_gnllist	*new;
-	int		x;
-	int		y;
-	char	*buffer;
+	int			x;
+	int			y;
+	char		*buffer;
 
 	if (!list || !*list)
 		return ;
@@ -83,8 +83,8 @@ static char	*ft_make_newline(t_gnllist *list)
 
 static void	ft_make_lst(int fd, t_gnllist **list)
 {
-	char	*buffer;
-	int		bytes;
+	char		*buffer;
+	int			bytes;
 	t_gnllist	*lst;
 
 	while (!ft_find_next_line(*list))
@@ -95,7 +95,7 @@ static void	ft_make_lst(int fd, t_gnllist **list)
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes <= 0)
 		{
-			free (buffer);
+			free(buffer);
 			return ;
 		}
 		buffer[bytes] = '\0';

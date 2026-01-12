@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:38 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:41:47 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/10 20:40:51 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ void	env(t_mini *mini)
 		printf("\n");
 		i++;
 	}
-    mini->exit_code = 0;
+	mini->exit_code = 0;
 }

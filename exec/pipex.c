@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/08 11:44:13 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/12 02:40:58 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../exec.h"
+#include "exec.h"
 
-void	make_child(t_mini *mini, int i, int *fd)
+static void	execute_node(t_mini *mini, int i)
 {
-	if (mini->nodes[i + 1] && pipe(fd) == -1)
-	{
-		perror("pipe");
-		exit(1);
-	}
+	if (is_builtin(mini->nodes[i]->tokens[0]))
+		exec_builtin(mini->nodes[i]->tokens, mini);
+	else
+		exec_cmd(mini->nodes[i]->tokens, *mini);
+	exit(1);
 }
 
-void	run_child_pipes(t_mini *mini, int in_fd, int *fd, int i)
+static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -36,20 +36,26 @@ void	run_child_pipes(t_mini *mini, int in_fd, int *fd, int i)
 		dup2(fd[1], STDOUT_FILENO);
 	if (mini->nodes[i + 1])
 	{
-		dup2(fd[1], STDOUT_FILENO);
 		close(fd[0]);
 		close(fd[1]);
 	}
-	if (is_builtin(mini->nodes[i]->tokens[0]))
-		exec_builtin(mini->nodes[i]->tokens, mini);
-	else
-		exec_cmd(mini->nodes[i]->tokens, *mini);
-	exit(1);
+	execute_node(mini, i);
 }
 
-void	wait_child(t_mini *mini)
+static void	setup_parent(int *in_fd, int fd[2], int has_next)
 {
-	int		status;
+	if (*in_fd != 0)
+		close(*in_fd);
+	if (has_next)
+	{
+		close(fd[1]);
+		*in_fd = fd[0];
+	}
+}
+
+static void	wait_children(t_mini *mini)
+{
+	int	status;
 
 	while (wait(&status) > 0)
 	{
@@ -58,12 +64,6 @@ void	wait_child(t_mini *mini)
 		else if (WIFSIGNALED(status))
 			mini->exit_code = 128 + WTERMSIG(status);
 	}
-}
-
-void	close_fd(int in_fd)
-{
-	if (in_fd != 0)
-		close(in_fd);
 }
 
 void	run_pipes(t_mini *mini)
@@ -77,20 +77,17 @@ void	run_pipes(t_mini *mini)
 	in_fd = 0;
 	while (mini->nodes[i])
 	{
-		make_child(mini, i, fd);
+		if (mini->nodes[i + 1] && pipe(fd) == -1)
+		{
+			perror("pipe");
+			exit(1);
+		}
 		pid = fork();
 		if (pid == 0)
-			run_child_pipes(mini, in_fd, fd, i);
+			setup_child(mini, i, in_fd, fd);
 		else
-		{
-			close_fd(in_fd);
-			if (mini->nodes[i + 1])
-			{
-				close(fd[1]);
-				in_fd = fd[0];
-			}
-		}
+			setup_parent(&in_fd, fd, mini->nodes[i + 1] != NULL);
 		i++;
 	}
-	wait_child(mini);
+	wait_children(mini);
 }

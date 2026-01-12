@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/08 13:24:47 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/12 02:57:35 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	child(t_node *node, t_mini *mini, int *fd)
 	exec_cmd(node->tokens, *mini);
 	perror("execve");
 	exit(1);
-
 }
 
 void	error_child(int *fd)
@@ -97,10 +96,10 @@ char	*save_exec_cmd(t_node *node, t_mini *mini)
 	int		fd[2];
 	char	*res;
 
-	res = NULL;
 	fd[0] = -1;
 	fd[1] = -1;
-	if (!has_redir_out(node))
+	res = NULL;
+	if (!has_redir_out(node) && mini->is_pipe)
 	{
 		if (pipe(fd) == -1)
 		{
@@ -108,7 +107,7 @@ char	*save_exec_cmd(t_node *node, t_mini *mini)
 			return (NULL);
 		}
 	}
-	if (is_builtin(node->tokens[0]))
+	if (is_builtin(node->tokens[0]) && !mini->is_pipe)
 	{
 		exec_builtin(node->tokens, mini);
 		return (NULL);

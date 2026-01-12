@@ -1,10 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parseutils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/11 02:22:54 by kfuto             #+#    #+#             */
+/*   Updated: 2026/01/11 02:22:54 by kfuto            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse.h"
 
-
-int	ft_ispipe(char c)
+int	ft_ispipe(char c, t_mini *mini)
 {
 	if (c == '|')
+	{
+		mini->is_pipe = 1;
 		return (1);
+	}
 	return (0);
 }
 
@@ -17,50 +31,17 @@ int	ft_isquote(char c)
 	return (0);
 }
 
-int ft_ischev(char c)
+int	ft_ischev(char c)
 {
 	if (c == '<' || c == '>')
 		return (1);
 	return (0);
 }
 
-int	ft_count_nodes(const char *s)
-{
-	int count;
-
-	if (!*s)
-		return (0);
-	count = 0;
-	while (*s)
-	{
-		if (*s && (ft_isquote(*s)))
-		{
-			s++;
-			while (*s && !ft_isquote(*s))
-				s++;
-			if (ft_isquote(*s))
-			{
-				count++;
-				s++;
-			}
-		}
-		while (*s && (ft_ispipe(*s)))
-		{
-			s++;
-			if (*s)
-				count++;
-		}
-		while (!ft_ispipe(*s) && *s)
-			s++;
-	}
-	printf("Counted nodes: %d\n", count);
-	return (count);
-}
-
 char	*word_dup(const char *start, int len)
 {
-	char *word;
-	int i;
+	char	*word;
+	int		i;
 
 	i = 0;
 	word = malloc(len + 1);
@@ -84,22 +65,4 @@ int	has_single_quotes(char *s)
 		s++;
 	}
 	return (1);
-}
-
-void	expand_tokens(t_node *node, t_mini *mini)
-{
-	int		i;
-	char	*tmp;
-
-	if (!node->expand)
-		return ;
-
-	i = 1;
-	while (node->tokens[i])
-	{
-		tmp = expand_token(node->tokens[i], mini);
-		free(node->tokens[i]);
-		node->tokens[i] = tmp;
-		i++;
-	}
 }

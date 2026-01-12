@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:50 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/08 10:58:38 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/07 16:19:39 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,4 @@ void	pwd(t_mini *mini)
 	tmp = ft_getenv(mini->envp, "PWD");
 	printf("%s\n", tmp);
 	free(tmp);
-	mini->exit_code = 0;
 }

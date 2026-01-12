@@ -3,98 +3,94 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>         +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/01 10:54:49 by djareno           #+#    #+#             */
-/*   Updated: 2025/12/20 12:30:00 by pabalvar         ###   ########.fr       */
+/*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
+/*   Updated: 2026/01/12 02:20:17 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
 #include "../parse/parse.h"
+#include "exec.h"
 
-void	print_nodes(struct s_mini mini)
+static void	init_mini(t_mini *mini, char **envp)
 {
-	int	i;
-	int	j;
+	mini->exit_code = 0;
+	mini->envp = dup_env(envp);
+	mini->output = NULL;
+	mini->nodes = NULL;
+	mini->is_pipe = 0;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+static int	handle_readline(t_mini *mini, char **rl)
+{
+	g_signal_state = 1;
+	*rl = readline("minishell > ");
+	g_signal_state = 0;
+	if (!*rl)
+	{
+		ft_putstr_fd("exit\n", 1);
+		free_mini(mini);
+		return (0);
+	}
+	return (1);
+}
+
+static void	process_nodes(t_mini *mini)
+{
+	char	*cmd;
+	int		i;
 
 	i = 0;
-	while (mini.nodes && mini.nodes[i])
+	if (mini->is_pipe == 1)
 	{
-		j = 0;
-		printf("Node %d:\n", i);
-		while (mini.nodes[i]->tokens && mini.nodes[i]->tokens[j])
+		run_pipes(mini);
+		mini->is_pipe = 0;
+		return ;
+	}
+	else
+	{
+		while (mini->nodes && mini->nodes[i])
 		{
-			printf("  Token %d: %s\n", j, mini.nodes[i]->tokens[j]);
-			j++;
+			if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+			{
+				cmd = save_exec_cmd(mini->nodes[i], mini);
+				if (cmd && *cmd)
+					ft_putstr_fd(cmd, 1);
+				free(cmd);
+			}
+			i++;
 		}
-		i++;
+	}
+}
+
+static void	mini_loop(t_mini *mini)
+{
+	char	*rl;
+
+	while (1)
+	{
+		if (!handle_readline(mini, &rl))
+			break ;
+		if (*rl)
+		{
+			add_history(rl);
+			parser(rl, mini);
+			process_nodes(mini);
+		}
+		free(rl);
 	}
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	char			*cmd;
-	char			*rl;
-	struct s_mini	mini;
-	int				i;
+	t_mini	mini;
 
 	(void)argc;
 	(void)argv;
-
-	mini.exit_code = 0;
-	mini.envp = dup_env(envp);
-	mini.output = NULL;
-	mini.nodes = NULL;
-	
-	//TESTEAR $///////////////////////
-	
-	//mini.envp[0] = ft_strdup("TEST=42");
-
-	/////////////////////////////////////////
-
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-
-	while (1)
-	{
-		g_signal_state = 1;
-		rl = readline("minishell > ");
-		g_signal_state = 0;
-		if (!rl)
-		{
-			ft_putstr_fd("exit\n", 1);
-			free_mini(&mini);
-			break ;
-		}
-		if (*rl)
-		{
-			add_history(rl);	
-			parser(rl, &mini);
-			if (ft_strchr(rl, '|'))
-			{
-				run_pipes(&mini);
-			}
-			else
-			{
-				// print_nodes(mini);		
-				i = 0;
-				while (mini.nodes && mini.nodes[i])
-				{
-					if (mini.nodes[i]->tokens && mini.nodes[i]->tokens[0])
-					{
-						cmd = save_exec_cmd(mini.nodes[i], &mini);
-						if (cmd && *cmd)
-						{
-							ft_putstr_fd(cmd, 1);
-						}
-						free(cmd);
-					}
-					i++;
-				}
-			}
-		}
-	}
-	// print_nodes(mini);
+	init_mini(&mini, envp);
+	mini_loop(&mini);
 	return (0);
 }
