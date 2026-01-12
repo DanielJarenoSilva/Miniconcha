@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/11 02:32:12 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 13:20:46 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,7 @@ char					*handle_single_quote(char *str, int *i, char *result);
 char					*handle_double_quote(char *str, int *i, char *result,
 							t_mini *mini);
 int						get_quotes(const char *s);
+char					*handle_dollar_single_quote(char *str, int *i,
+							char *result);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 02:40:58 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 12:21:43 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 
 static void	execute_node(t_mini *mini, int i)
 {
+	if (!mini->nodes[i] || !mini->nodes[i]->tokens
+		|| !mini->nodes[i]->tokens[0])
+		exit(0);
 	if (is_builtin(mini->nodes[i]->tokens[0]))
 		exec_builtin(mini->nodes[i]->tokens, mini);
 	else
 		exec_cmd(mini->nodes[i]->tokens, *mini);
-	exit(1);
+	exit(mini->exit_code);
 }
 
 static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (in_fd != 0)
+	if (in_fd != STDIN_FILENO)
 	{
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
@@ -53,16 +56,23 @@ static void	setup_parent(int *in_fd, int fd[2], int has_next)
 	}
 }
 
-static void	wait_children(t_mini *mini)
+static void	wait_children(t_mini *mini, int last_pid)
 {
-	int	status;
+	int		status;
+	pid_t	pid;
 
-	while (wait(&status) > 0)
+	while (1)
 	{
-		if (WIFEXITED(status))
-			mini->exit_code = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			mini->exit_code = 128 + WTERMSIG(status);
+		pid = wait(&status);
+		if (pid <= 0)
+			break ;
+		if (pid == last_pid)
+		{
+			if (WIFEXITED(status))
+				mini->exit_code = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				mini->exit_code = 128 + WTERMSIG(status);
+		}
 	}
 }
 
@@ -72,6 +82,7 @@ void	run_pipes(t_mini *mini)
 	int		fd[2];
 	int		in_fd;
 	pid_t	pid;
+	pid_t	last_pid;
 
 	i = 0;
 	in_fd = 0;
@@ -87,7 +98,9 @@ void	run_pipes(t_mini *mini)
 			setup_child(mini, i, in_fd, fd);
 		else
 			setup_parent(&in_fd, fd, mini->nodes[i + 1] != NULL);
+		if (!mini->nodes[i + 1])
+			last_pid = pid;
 		i++;
 	}
-	wait_children(mini);
+	wait_children(mini, last_pid);
 }

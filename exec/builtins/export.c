@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:46 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:48:00 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/12 15:20:41 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,19 @@ char	**new_env(t_mini *mini, char *key, char *value)
 	return (new_env);
 }
 
+void	empty_export(t_mini *mini)
+{
+	int	i;
+
+	i = 0;
+	while (mini->envp && mini->envp[i])
+	{
+		printf("declare -x \"%s\"\n", mini->envp[i]);
+		i++;
+	}
+	return ;
+}
+
 void	export(t_mini *mini, char	**tokens)
 {
 	int		i;
@@ -50,6 +63,8 @@ void	export(t_mini *mini, char	**tokens)
 	char	*value;
 	char	*eq;
 
+	if (!tokens[1])
+		empty_export(mini);
 	i = 1;
 	while (tokens[i])
 	{
