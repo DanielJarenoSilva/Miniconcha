@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/10 23:20:08 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 15:25:55 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,6 @@ void					apply_redir_in(t_node *node, int i);
 void					apply_redir_out(t_node *node, int i);
 void					apply_redir_append(t_node *node, int i);
 void					apply_heredoc(t_node *node, int i);
+void					update_shlvl(t_mini *mini);
 
 #endif

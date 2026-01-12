@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/12 02:20:17 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 15:26:27 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	init_mini(t_mini *mini, char **envp)
 {
 	mini->exit_code = 0;
 	mini->envp = dup_env(envp);
+	update_shlvl(mini);
 	mini->output = NULL;
 	mini->nodes = NULL;
 	mini->is_pipe = 0;

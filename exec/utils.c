@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/10 20:58:10 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 15:28:13 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*ft_getenv(char **envp, char *env)
 	{
 		if (ft_strncmp(envp[i], env, ft_strlen(env)) == 0)
 		{
-			y = ft_strlen(env) + 2;
+			y = ft_strlen(env) + 1;
 			tmp = malloc(ft_strlen(envp[i]) - ft_strlen(env) + 1);
 			while (y < ft_strlen(envp[i]))
 				tmp[x++] = envp[i][y++];
@@ -77,4 +77,21 @@ void	print_error_cmd(char *cmd)
 {
 	write(2, cmd, ft_strlen(cmd));
 	write(2, ": command not found\n", 20);
+}
+
+void	update_shlvl(t_mini *mini)
+{
+	char	*lvl;
+	int		n;
+
+	lvl = ft_getenv(mini->envp, "SHLVL");
+	if (!lvl)
+	{
+		set_env(mini->envp, "SHLVL", "1");
+		return ;
+	}
+	n = ft_atoi(lvl);
+	free(lvl);
+	n++;
+	set_env(mini->envp, "SHLVL", ft_itoa(n));
 }
