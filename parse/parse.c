@@ -6,13 +6,13 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 16:19:58 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 16:49:38 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-char	**tokenizer(const char *s, t_node *node)
+char	**tokenizer(const char *s, t_node *node, t_mini mini)
 {
 	char	**tokens;
 	int		i;
@@ -31,7 +31,7 @@ char	**tokenizer(const char *s, t_node *node)
 		if (handle_redir(s, &i, node))
 			continue ;
 		start = i;
-		skip_token_quotes(s, &i);
+		skip_token_quotes(s, &i, &mini);
 		if (i > start)
 			tokens[j++] = word_dup_no_quotes(s + start, i - start);
 	}
@@ -98,7 +98,7 @@ static int	init_nodes(char **cmds, struct s_mini *mini, int num_cmds)
 			return (0);
 		mini->nodes[i]->redirs = NULL;
 		mini->nodes[i]->redir_count = 0;
-		mini->nodes[i]->tokens = tokenizer(cmds[i], mini->nodes[i]);
+		mini->nodes[i]->tokens = tokenizer(cmds[i], mini->nodes[i], *mini);
 		mini->nodes[i]->expand = has_single_quotes(cmds[i]);
 		expand_tokens(mini->nodes[i], mini);
 		i++;

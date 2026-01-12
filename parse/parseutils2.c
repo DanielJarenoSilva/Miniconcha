@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 19:49:35 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/12 16:18:23 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 16:45:36 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*word_dup_no_quotes(const char *s, int len)
 	return (out);
 }
 
-void	skip_token_quotes(const char *s, int *i)
+void	skip_token_quotes(const char *s, int *i, struct s_mini *mini)
 {
 	char	quote;
 
@@ -101,4 +101,6 @@ void	skip_token_quotes(const char *s, int *i)
 			quote = 0;
 		(*i)++;
 	}
+	if (quote != 0)
+		mini->builtin_quote = 1;
 }

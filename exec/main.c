@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/12 16:23:34 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/12 16:37:46 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void	init_mini(t_mini *mini, char **envp)
 	mini->output = NULL;
 	mini->nodes = NULL;
 	mini->is_pipe = 0;
+	mini->builtin_quote = 0;
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
