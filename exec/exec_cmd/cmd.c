@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 16:04:46 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/13 10:43:25 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ void	exec_cmd(char **tokens, t_mini mini)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	path_dirs = get_path_dirs(mini.envp);
+	if (!path_dirs)
+	{
+		print_error_cmd(tokens[0]);
+		exit(127);
+	}
 	path_cmd = find_cmd(tokens[0], path_dirs);
 	if (path_dirs)
 		ft_free_matrix(path_dirs);
