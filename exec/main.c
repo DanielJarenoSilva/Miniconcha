@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/12 02:20:17 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/13 11:24:20 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ static void	init_mini(t_mini *mini, char **envp)
 {
 	mini->exit_code = 0;
 	mini->envp = dup_env(envp);
+	update_shlvl(mini);
 	mini->output = NULL;
 	mini->nodes = NULL;
 	mini->is_pipe = 0;
+	mini->builtin_quote = 0;
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }

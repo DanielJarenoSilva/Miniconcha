@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:24:49 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 02:40:54 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/13 12:20:04 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,23 @@ int	is_builtin(char *cmd)
 			ft_strlen("env")) == 0);
 }
 
-int	exec_builtin(char **tokens, t_mini *mini)
+int	exec_builtin(t_node *node, t_mini *mini)
 {
-	if (!tokens || !tokens[0])
+	if (!node->tokens || !node->tokens[0])
 		return (1);
-	if (ft_strncmp(tokens[0], "pwd", ft_strlen("pwd")) == 0)
+	if (ft_strncmp(node->tokens[0], "pwd", ft_strlen("pwd")) == 0)
 		return (pwd(mini), 0);
-	else if (ft_strncmp(tokens[0], "cd", ft_strlen("cd")) == 0)
-		return (cd(mini, tokens), 0);
-	else if (ft_strncmp(tokens[0], "exit", ft_strlen("exit")) == 0)
-		return (my_exit(mini, tokens), 0);
-	else if (ft_strncmp(tokens[0], "echo", ft_strlen("echo")) == 0)
-		return (echo(mini, tokens), 0);
-	else if (ft_strncmp(tokens[0], "env", ft_strlen("env")) == 0)
+	else if (ft_strncmp(node->tokens[0], "cd", ft_strlen("cd")) == 0)
+		return (cd(mini, node->tokens), 0);
+	else if (ft_strncmp(node->tokens[0], "exit", ft_strlen("exit")) == 0)
+		return (my_exit(mini, node->tokens), 0);
+	else if (ft_strncmp(node->tokens[0], "echo", ft_strlen("echo")) == 0)
+		return (echo(mini, node), 0);
+	else if (ft_strncmp(node->tokens[0], "env", ft_strlen("env")) == 0)
 		return (env(mini), 0);
-	else if (ft_strncmp(tokens[0], "export", ft_strlen("export")) == 0)
-		return (export(mini, tokens), 0);
-	else if (ft_strncmp(tokens[0], "unset", ft_strlen("unset")) == 0)
-		return (unset(mini, tokens), 0);
+	else if (ft_strncmp(node->tokens[0], "export", ft_strlen("export")) == 0)
+		return (export(mini, node->tokens), 0);
+	else if (ft_strncmp(node->tokens[0], "unset", ft_strlen("unset")) == 0)
+		return (unset(mini, node->tokens), 0);
 	return (1);
 }

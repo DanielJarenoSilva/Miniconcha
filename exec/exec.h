@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/10 23:20:08 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/13 12:21:00 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ int						handle_heredoc(const char *delimiter);
 void					ft_free_matrix(char **strs);
 void					print_error_cmd(char *cmd);
 int						is_builtin(char *cmd);
-int						exec_builtin(char **tokens, t_mini *mini);
-void					echo(t_mini *mini, char **tokens);
+int						exec_builtin(t_node *node, t_mini *mini);
+void					echo(t_mini *mini, t_node *node);
 char					*read_fd(int fd);
 char					**get_path_dirs(char **envp);
 char					*find_cmd(char *cmd, char **path_dirs);
@@ -51,5 +51,6 @@ void					apply_redir_in(t_node *node, int i);
 void					apply_redir_out(t_node *node, int i);
 void					apply_redir_append(t_node *node, int i);
 void					apply_heredoc(t_node *node, int i);
+void					update_shlvl(t_mini *mini);
 
 #endif

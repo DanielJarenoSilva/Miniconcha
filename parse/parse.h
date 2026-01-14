@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 13:20:46 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/13 11:47:54 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char					*word_dup(const char *start, int len);
 void					parser(const char *s, t_mini *mini);
 int						ft_ispipe(char c, t_mini *mini);
 int						ft_isquote(char c);
-char					**tokenizer(const char *s, t_node *node);
+char					**tokenizer(const char *s, t_node *node, t_mini mini);
 void					get_tookens(t_mini *mini);
 int						has_single_quotes(char *s);
 void					expand_tokens(t_node *node, t_mini *mini);
@@ -44,7 +44,7 @@ char					*handle_single_quote(char *str, int *i, char *result);
 char					*handle_double_quote(char *str, int *i, char *result,
 							t_mini *mini);
 int						get_quotes(const char *s);
-char					*handle_dollar_single_quote(char *str, int *i,
-							char *result);
+char					*word_dup_no_quotes(const char *s, int len);
+void					skip_token_quotes(const char *s, int *i, t_mini *mini);
 
 #endif

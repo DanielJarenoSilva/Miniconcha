@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 19:49:35 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/12 15:18:37 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/13 11:48:12 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,48 @@ int	get_quotes(const char *s)
 	if (quote)
 		return (0);
 	return (1);
+}
+
+char	*word_dup_no_quotes(const char *s, int len)
+{
+	char	*out;
+	int		i;
+	int		j;
+	char	quote;
+
+	quote = 0;
+	out = malloc(len + 1);
+	i = 0;
+	j = 0;
+	while (i < len)
+	{
+		if (!quote && (s[i] == '"' || s[i] == '\''))
+			quote = s[i++];
+		else if (quote && s[i] == quote)
+		{
+			quote = 0;
+			i++;
+		}
+		else
+			out[j++] = s[i++];
+	}
+	out[j] = '\0';
+	return (out);
+}
+
+void	skip_token_quotes(const char *s, int *i, struct s_mini *mini)
+{
+	char	quote;
+
+	quote = 0;
+	while (s[*i] && (quote || (!ft_isspace(s[*i]) && !ft_ischev(s[*i]))))
+	{
+		if (!quote && (s[*i] == '"' || s[*i] == '\''))
+			quote = s[*i];
+		else if (quote && s[*i] == quote)
+			quote = 0;
+		(*i)++;
+	}
+	if (quote != 0)
+		mini->builtin_quote = 1;
 }

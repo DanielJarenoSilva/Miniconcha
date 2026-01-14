@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/13 10:43:25 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/13 12:49:48 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,8 @@ void	exec_cmd(char **tokens, t_mini mini)
 void	child(t_node *node, t_mini *mini, int *fd)
 {
 	if (node->redir_count > 0)
-	{
 		apply_redirs(node);
-	}
-	else if (!has_redir_out(node))
+	if (mini->is_pipe && !has_redir_out(node))
 	{
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[0]);
@@ -112,9 +110,10 @@ char	*save_exec_cmd(t_node *node, t_mini *mini)
 			return (NULL);
 		}
 	}
-	if (is_builtin(node->tokens[0]) && !mini->is_pipe)
+	if (is_builtin(node->tokens[0]) && !mini->is_pipe && !mini->builtin_quote
+		&& node->redir_count == 0)
 	{
-		exec_builtin(node->tokens, mini);
+		exec_builtin(node, mini);
 		return (NULL);
 	}
 	res = exec_child(node, mini, fd);

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 12:21:43 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/13 12:18:23 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	execute_node(t_mini *mini, int i)
 		|| !mini->nodes[i]->tokens[0])
 		exit(0);
 	if (is_builtin(mini->nodes[i]->tokens[0]))
-		exec_builtin(mini->nodes[i]->tokens, mini);
+		exec_builtin(mini->nodes[i], mini);
 	else
 		exec_cmd(mini->nodes[i]->tokens, *mini);
 	exit(mini->exit_code);
