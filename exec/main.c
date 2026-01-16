@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/16 15:38:51 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/16 15:49:17 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,12 @@ void	process_nodes(t_mini *mini)
 				mini->heredoc_interrupted = 0;
 				return ;
 			}
+		}
+		if (mini->is_pipe == 1)
+		{
+			run_pipes(mini);
+			mini->is_pipe = 0;
+			return ;
 		}
 		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
 		{
