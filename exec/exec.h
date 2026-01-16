@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/13 12:21:00 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/16 03:42:27 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
-// char	*expand_token(char *str, t_mini mini);
+// char					*expand_token(char *str, t_mini mini);
 void					exec_cmd(char **tokens, t_mini mini);
 int						set_env(char **envp, const char *key,
 							const char *value);
@@ -33,9 +33,10 @@ void					env(t_mini *mini);
 int						my_exit(t_mini *mini, char **args);
 char					*save_exec_cmd(t_node *node, t_mini *mini);
 void					sigint_handler(int signo);
-void					apply_redirs(t_node *node);
+void					apply_redirs(t_node *node, t_mini *mini);
 int						has_redir_out(t_node *node);
-int						handle_heredoc(const char *delimiter);
+int						handle_heredoc(const char *delimiter, int expand,
+							t_mini *mini);
 void					ft_free_matrix(char **strs);
 void					print_error_cmd(char *cmd);
 int						is_builtin(char *cmd);
@@ -50,7 +51,8 @@ void					unset(t_mini *mini, char **tokens);
 void					apply_redir_in(t_node *node, int i);
 void					apply_redir_out(t_node *node, int i);
 void					apply_redir_append(t_node *node, int i);
-void					apply_heredoc(t_node *node, int i);
+void					apply_heredoc(t_node *node, int i, t_mini *mini);
 void					update_shlvl(t_mini *mini);
+void					sigint_heredoc(int sig);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/13 11:24:20 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/16 03:42:48 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,28 @@ static int	handle_readline(t_mini *mini, char **rl)
 	return (1);
 }
 
-static void	process_nodes(t_mini *mini)
+void	process_nodes(t_mini *mini)
 {
-	char	*cmd;
 	int		i;
+	char	*cmd;
+	int		stdin_backup;
 
 	i = 0;
-	if (mini->is_pipe == 1)
+	while (mini->nodes && mini->nodes[i])
 	{
-		run_pipes(mini);
-		mini->is_pipe = 0;
-		return ;
-	}
-	else
-	{
-		while (mini->nodes && mini->nodes[i])
+		stdin_backup = dup(STDIN_FILENO);
+		if (mini->nodes[i]->redir_count > 0)
+			apply_redirs(mini->nodes[i], mini);
+		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
 		{
-			if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
-			{
-				cmd = save_exec_cmd(mini->nodes[i], mini);
-				if (cmd && *cmd)
-					ft_putstr_fd(cmd, 1);
-				free(cmd);
-			}
-			i++;
+			cmd = save_exec_cmd(mini->nodes[i], mini);
+			if (cmd && *cmd)
+				ft_putstr_fd(cmd, 1);
+			free(cmd);
 		}
+		dup2(stdin_backup, STDIN_FILENO);
+		close(stdin_backup);
+		i++;
 	}
 }
 

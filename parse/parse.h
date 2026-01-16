@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/13 11:47:54 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/16 03:30:18 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ char					*expand_var(char *str, int *i, t_mini *mini);
 int						ft_ischev(char c);
 int						handle_redir(const char *s, int *i, t_node *node);
 char					*get_next_word(const char *s, int *i);
-void					add_redir(t_node *node, t_redir_type type, char *file);
+void					add_redir(t_node *node, t_redir_type type, char *file,
+							int expand);
 void					print_nodes(t_mini mini);
 char					*handle_single_quote(char *str, int *i, char *result);
 char					*handle_double_quote(char *str, int *i, char *result,
@@ -46,5 +47,6 @@ char					*handle_double_quote(char *str, int *i, char *result,
 int						get_quotes(const char *s);
 char					*word_dup_no_quotes(const char *s, int len);
 void					skip_token_quotes(const char *s, int *i, t_mini *mini);
+int						is_quoted_delimiter(const char *s, int i);
 
 #endif

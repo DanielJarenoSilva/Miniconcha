@@ -30,7 +30,8 @@ SRCS =  ./exec/main.c \
         ./exec/builtins/exec_builtin.c \
         ./exec/free_mini.c \
         ./parse/expand_helper.c \
-        ./parse/print_nodes.c
+        ./parse/print_nodes.c \
+        ./parse/redirparseutils.c
 
 
 OBJS = $(SRCS:.c=.o)
