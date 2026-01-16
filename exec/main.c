@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/16 03:42:48 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/16 15:38:51 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,13 @@ void	process_nodes(t_mini *mini)
 	{
 		stdin_backup = dup(STDIN_FILENO);
 		if (mini->nodes[i]->redir_count > 0)
-			apply_redirs(mini->nodes[i], mini);
+		{
+			if (apply_redirs(mini->nodes[i], mini) < 0)
+			{
+				mini->heredoc_interrupted = 0;
+				return ;
+			}
+		}
 		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
 		{
 			cmd = save_exec_cmd(mini->nodes[i], mini);

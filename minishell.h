@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:48:59 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/16 15:32:18 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ typedef struct s_mini
 	int				builtin_quote;
 	char			*output;
 	char			**envp;
+	int				heredoc_interrupted;
+
 }					t_mini;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:42:27 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/16 15:38:45 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void					env(t_mini *mini);
 int						my_exit(t_mini *mini, char **args);
 char					*save_exec_cmd(t_node *node, t_mini *mini);
 void					sigint_handler(int signo);
-void					apply_redirs(t_node *node, t_mini *mini);
+int						apply_redirs(t_node *node, t_mini *mini);
 int						has_redir_out(t_node *node);
 int						handle_heredoc(const char *delimiter, int expand,
 							t_mini *mini);

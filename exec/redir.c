@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/16 03:58:17 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/16 15:41:06 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,20 @@
 // 	return (fd[0]);
 // }
 
-int	handle_heredoc(const char *delimiter, int expand, t_mini *mini)
+static void	heredoc_loop(const char *delimiter, int expand, t_mini *mini,
+		int write_fd)
 {
-	int		fd[2];
 	char	*line;
 	char	*expanded;
 
-	if (pipe(fd) == -1)
-		exit(1);
-	signal(SIGINT, sigint_heredoc);
+	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
+		if (!line || ft_strncmp(line, (char *)delimiter, ft_strlen(delimiter)
+				+ 1) == 0)
 			break ;
-		if (ft_strncmp(line, (char *)delimiter, ft_strlen(delimiter) + 1) == 0)
-		{
-			free(line);
-			break ;
-		}
 		if (expand)
 		{
 			expanded = expand_token(line, mini);
@@ -65,12 +59,37 @@ int	handle_heredoc(const char *delimiter, int expand, t_mini *mini)
 		}
 		else
 			expanded = line;
-		write(fd[1], expanded, ft_strlen(expanded));
-		write(fd[1], "\n", 1);
+		write(write_fd, expanded, ft_strlen(expanded));
+		write(write_fd, "\n", 1);
 		if (expand)
 			free(expanded);
 	}
+}
+
+int	handle_heredoc(const char *delimiter, int expand, t_mini *mini)
+{
+	int		fd[2];
+	pid_t	pid;
+	int		status;
+
+	if (pipe(fd) == -1)
+		exit(1);
+	pid = fork();
+	if (pid == 0)
+	{
+		close(fd[0]);
+		heredoc_loop(delimiter, expand, mini, fd[1]);
+		exit(0);
+	}
 	close(fd[1]);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		mini->exit_code = 130;
+		mini->heredoc_interrupted = 1;
+		close(fd[0]);
+		return (-1);
+	}
 	return (fd[0]);
 }
 
@@ -89,7 +108,7 @@ int	has_redir_out(t_node *node)
 	return (0);
 }
 
-void	apply_redirs(t_node *node, t_mini *mini)
+int	apply_redirs(t_node *node, t_mini *mini)
 {
 	int	i;
 
@@ -97,21 +116,18 @@ void	apply_redirs(t_node *node, t_mini *mini)
 	while (i < node->redir_count)
 	{
 		if (node->redirs[i].type == REDIR_IN)
-		{
 			apply_redir_in(node, i);
-		}
 		else if (node->redirs[i].type == REDIR_OUT)
-		{
 			apply_redir_out(node, i);
-		}
 		else if (node->redirs[i].type == REDIR_APPEND)
-		{
 			apply_redir_append(node, i);
-		}
 		else if (node->redirs[i].type == HEREDOC)
 		{
 			apply_heredoc(node, i, mini);
+			if (mini->heredoc_interrupted)
+				return (-1);
 		}
 		i++;
 	}
+	return (0);
 }
