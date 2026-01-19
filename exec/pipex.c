@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:43:05 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/19 14:37:17 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-static void	execute_node(t_mini *mini, int i)
+void	execute_node(t_mini *mini, int i)
 {
 	if (!mini->nodes[i] || !mini->nodes[i]->tokens
 		|| !mini->nodes[i]->tokens[0])
@@ -20,7 +20,7 @@ static void	execute_node(t_mini *mini, int i)
 	if (is_builtin(mini->nodes[i]->tokens[0]))
 		exec_builtin(mini->nodes[i], mini);
 	else
-		exec_cmd(mini->nodes[i]->tokens, *mini);
+		exec_cmd(mini->nodes[i]->tokens, mini);
 	exit(mini->exit_code);
 }
 
@@ -33,15 +33,13 @@ static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
 	}
-	if (mini->nodes[i]->redir_count > 0)
-		apply_redirs(mini->nodes[i], mini);
-	else if (mini->nodes[i + 1])
-		dup2(fd[1], STDOUT_FILENO);
-	if (mini->nodes[i + 1])
+	if (mini->nodes[i + 1] && !has_redir_out(mini->nodes[i]))
 	{
-		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 	}
+	if (mini->nodes[i]->redir_count > 0)
+		apply_redirs(mini->nodes[i], mini);
 	execute_node(mini, i);
 }
 
@@ -53,6 +51,13 @@ static void	setup_parent(int *in_fd, int fd[2], int has_next)
 	{
 		close(fd[1]);
 		*in_fd = fd[0];
+	}
+	else
+	{
+		if (fd[0] != -1)
+			close(fd[0]);
+		if (fd[1] != -1)
+			close(fd[1]);
 	}
 }
 

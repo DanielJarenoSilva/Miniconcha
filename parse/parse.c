@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/13 12:07:22 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/19 12:36:04 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ void	parser(const char *s, struct s_mini *mini)
 	mini->nodes = malloc(sizeof(struct s_node *) * (num_cmds + 1));
 	if (!mini->nodes)
 		return (ft_free_matrix(cmds));
+	mini->nodes[num_cmds] = NULL;
 	if (!init_nodes(cmds, mini, num_cmds))
 		return (ft_free_matrix(cmds));
 	ft_free_matrix(cmds);

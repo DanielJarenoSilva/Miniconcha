@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:42:56 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/19 14:49:50 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../exec.h"
 
-void	exec_cmd(char **tokens, t_mini mini)
+void	exec_cmd(char **tokens, t_mini *mini)
 {
 	char	**path_dirs;
 	char	*path_cmd;
@@ -21,7 +21,7 @@ void	exec_cmd(char **tokens, t_mini mini)
 		exit(0);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	path_dirs = get_path_dirs(mini.envp);
+	path_dirs = get_path_dirs(mini->envp);
 	if (!path_dirs)
 	{
 		print_error_cmd(tokens[0]);
@@ -35,7 +35,7 @@ void	exec_cmd(char **tokens, t_mini mini)
 		print_error_cmd(tokens[0]);
 		exit(127);
 	}
-	execve(path_cmd, tokens, mini.envp);
+	execve(path_cmd, tokens, mini->envp);
 	perror("execve");
 	free(path_cmd);
 	exit(1);
@@ -51,7 +51,7 @@ void	child(t_node *node, t_mini *mini, int *fd)
 		close(fd[0]);
 		close(fd[1]);
 	}
-	exec_cmd(node->tokens, *mini);
+	exec_cmd(node->tokens, mini);
 	perror("execve");
 	exit(1);
 }
@@ -74,17 +74,14 @@ char	*exec_child(t_node *node, t_mini *mini, int *fd)
 	res = NULL;
 	pid = fork();
 	if (pid < 0)
-	{
 		return (error_child(fd), NULL);
-	}
 	if (pid == 0)
-	{
 		child(node, mini, fd);
-	}
-	if (!has_redir_out(node))
+	if (fd[0] >= 0 && fd[1] >= 0 && !has_redir_out(node))
 	{
 		close(fd[1]);
 		res = read_fd(fd[0]);
+		close(fd[0]);
 	}
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))

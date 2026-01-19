@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/16 03:42:48 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/19 15:23:59 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,47 @@ static int	handle_readline(t_mini *mini, char **rl)
 
 void	process_nodes(t_mini *mini)
 {
+	int		num_nodes;
 	int		i;
-	char	*cmd;
-	int		stdin_backup;
+	t_node	*node;
 
-	i = 0;
-	while (mini->nodes && mini->nodes[i])
+	if (!mini->nodes || !mini->nodes[0])
+		return ;
+	num_nodes = 0;
+	while (mini->nodes[num_nodes])
+		num_nodes++;
+	node = mini->nodes[0];
+	if (num_nodes > 1 && node->tokens && node->tokens[0]
+		&& is_parent_builtin(node->tokens[0]))
 	{
-		stdin_backup = dup(STDIN_FILENO);
-		if (mini->nodes[i]->redir_count > 0)
-			apply_redirs(mini->nodes[i], mini);
-		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+		if (node->redir_count > 0)
+			apply_redirs(node, mini);
+		exec_builtin(node, mini);
+		i = 1;
+		while (mini->nodes[i])
 		{
-			cmd = save_exec_cmd(mini->nodes[i], mini);
-			if (cmd && *cmd)
-				ft_putstr_fd(cmd, 1);
-			free(cmd);
+			mini->nodes[i - 1] = mini->nodes[i];
+			i++;
 		}
-		dup2(stdin_backup, STDIN_FILENO);
-		close(stdin_backup);
-		i++;
+		mini->nodes[i - 1] = NULL;
+		num_nodes--;
+	}
+	if (num_nodes > 1)
+		run_pipes(mini);
+	else
+	{
+		node = mini->nodes[0];
+		if (!node)
+			return ;
+		if (node->redir_count > 0)
+			apply_redirs(node, mini);
+		if (node->tokens && node->tokens[0])
+		{
+			if (is_builtin(node->tokens[0]))
+				exec_builtin(node, mini);
+			else
+				save_exec_cmd(node, mini);
+		}
 	}
 }
 
@@ -76,6 +97,8 @@ static void	mini_loop(t_mini *mini)
 		if (*rl)
 		{
 			add_history(rl);
+			free_nodes(mini->nodes);
+			mini->nodes = NULL;
 			parser(rl, mini);
 			process_nodes(mini);
 		}

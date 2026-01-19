@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:41:10 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/19 14:55:25 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	cd(t_mini *mini, char **cmd)
 		set_env(mini->envp, "OLDPWD", tmp);
 		free(tmp);
 		tmp = ft_getenv(mini->envp, "HOME");
-		tmp = ft_strjoin("/", tmp);
 		chdir(tmp);
 		set_env(mini->envp, "PWD", tmp);
 		free(tmp);

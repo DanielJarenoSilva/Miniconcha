@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:24:49 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/13 12:20:04 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/19 15:18:45 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,14 @@ int	exec_builtin(t_node *node, t_mini *mini)
 	else if (ft_strncmp(node->tokens[0], "unset", ft_strlen("unset")) == 0)
 		return (unset(mini, node->tokens), 0);
 	return (1);
+}
+
+int	is_parent_builtin(char *cmd)
+{
+	if (!cmd)
+		return (0);
+	return (ft_strncmp(cmd, "cd", 3) == 0
+		|| ft_strncmp(cmd, "export", 6) == 0
+		|| ft_strncmp(cmd, "unset", 5) == 0
+		|| ft_strncmp(cmd, "exit", 4) == 0);
 }

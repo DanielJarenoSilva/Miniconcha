@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:42:27 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/19 15:10:04 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
 // char					*expand_token(char *str, t_mini mini);
-void					exec_cmd(char **tokens, t_mini mini);
+void					exec_cmd(char **tokens, t_mini *mini);
 int						set_env(char **envp, const char *key,
 							const char *value);
 char					*ft_strjoin_free(char *s1, char *s2);
@@ -54,5 +54,8 @@ void					apply_redir_append(t_node *node, int i);
 void					apply_heredoc(t_node *node, int i, t_mini *mini);
 void					update_shlvl(t_mini *mini);
 void					sigint_heredoc(int sig);
+void					free_nodes(t_node **nodes);
+void					execute_node(t_mini *mini, int i);
+int						is_parent_builtin(char *cmd);
 
 #endif
