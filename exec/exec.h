@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 15:10:04 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/20 12:09:14 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void					update_shlvl(t_mini *mini);
 void					sigint_heredoc(int sig);
 void					free_nodes(t_node **nodes);
 void					execute_node(t_mini *mini, int i);
-int						is_parent_builtin(char *cmd);
+int						pb(char *cmd);
+void					process_utils(t_mini *mini, t_node *node,
+							int num_nodes);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 14:55:25 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/20 12:38:36 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,80 @@ int	set_env(char **envp, const char *key, const char *value)
 	return (1);
 }
 
-void	cd(t_mini *mini, char **cmd)
+static char	*get_cd_path(char **cmd)
 {
-	char	*tmp;
+	char	*path;
 
 	if (!cmd[1])
 	{
-		tmp = ft_getenv(mini->envp, "PWD");
-		set_env(mini->envp, "OLDPWD", tmp);
-		free(tmp);
-		tmp = ft_getenv(mini->envp, "HOME");
-		chdir(tmp);
-		set_env(mini->envp, "PWD", tmp);
-		free(tmp);
+		path = ft_getenv(NULL, "HOME");
+		if (!path)
+		{
+			write(2, "cd: HOME not set\n", 17);
+			return (NULL);
+		}
 	}
 	else
+		path = cmd[1];
+	return (path);
+}
+
+static int	change_dir(char *path, t_mini *mini)
+{
+	char	*oldpwd;
+
+	oldpwd = ft_getenv(mini->envp, "PWD");
+	if (chdir(path) == -1)
 	{
-		tmp = ft_getenv(mini->envp, "PWD");
-		set_env(mini->envp, "OLDPWD", tmp);
-		free(tmp);
-		chdir(cmd[1]);
-		tmp = malloc(1024);
-		getcwd(tmp, 1024);
-		set_env(mini->envp, "PWD", tmp);
-		free(tmp);
+		perror("cd");
+		free(oldpwd);
+		return (1);
 	}
+	set_env(mini->envp, "OLDPWD", oldpwd);
+	free(oldpwd);
+	return (0);
+}
+
+static int	update_pwd(t_mini *mini)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		perror("cd");
+		return (1);
+	}
+	set_env(mini->envp, "PWD", cwd);
+	free(cwd);
+	return (0);
+}
+
+void	cd(t_mini *mini, char **cmd)
+{
+	char	*path;
+
+	path = get_cd_path(cmd);
+	if (!path)
+	{
+		mini->exit_code = 1;
+		return ;
+	}
+	if (change_dir(path, mini))
+	{
+		if (!cmd[1])
+			free(path);
+		mini->exit_code = 1;
+		return ;
+	}
+	if (update_pwd(mini))
+	{
+		if (!cmd[1])
+			free(path);
+		mini->exit_code = 1;
+		return ;
+	}
+	if (!cmd[1])
+		free(path);
 	mini->exit_code = 0;
 }

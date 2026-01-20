@@ -1,9 +1,0 @@
-exec
-gnl
-libft
-Makefile
-minishell
-minishell.h
-out.txt
-parse
-test

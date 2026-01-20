@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/19 15:23:59 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/20 12:10:17 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ void	process_nodes(t_mini *mini)
 	while (mini->nodes[num_nodes])
 		num_nodes++;
 	node = mini->nodes[0];
-	if (num_nodes > 1 && node->tokens && node->tokens[0]
-		&& is_parent_builtin(node->tokens[0]))
+	if (num_nodes > 1 && node->tokens && node->tokens[0] && pb(node->tokens[0]))
 	{
 		if (node->redir_count > 0)
 			apply_redirs(node, mini);
@@ -67,23 +66,7 @@ void	process_nodes(t_mini *mini)
 		mini->nodes[i - 1] = NULL;
 		num_nodes--;
 	}
-	if (num_nodes > 1)
-		run_pipes(mini);
-	else
-	{
-		node = mini->nodes[0];
-		if (!node)
-			return ;
-		if (node->redir_count > 0)
-			apply_redirs(node, mini);
-		if (node->tokens && node->tokens[0])
-		{
-			if (is_builtin(node->tokens[0]))
-				exec_builtin(node, mini);
-			else
-				save_exec_cmd(node, mini);
-		}
-	}
+	process_utils(mini, node, num_nodes);
 }
 
 static void	mini_loop(t_mini *mini)

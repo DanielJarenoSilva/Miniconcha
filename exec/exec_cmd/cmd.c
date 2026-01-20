@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 14:49:50 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/20 11:48:53 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ void	exec_cmd(char **tokens, t_mini *mini)
 		exit(127);
 	}
 	path_cmd = find_cmd(tokens[0], path_dirs);
-	if (path_dirs)
-		ft_free_matrix(path_dirs);
+	ft_free_matrix(path_dirs);
 	if (!path_cmd)
 	{
 		print_error_cmd(tokens[0]);
