@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 14:42:58 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/21 15:01:19 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,7 @@ void					update_shlvl(t_mini *mini);
 void					sigint_heredoc(int sig);
 void					empty_heredoc(t_mini *mini);
 void					exec_heredoc_cmd(char **tokens, t_mini mini);
+void					heredoc_loop(const char *delimiter, int expand,
+							t_mini *mini);
 
 #endif

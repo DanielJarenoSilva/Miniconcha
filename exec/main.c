@@ -6,7 +6,7 @@
 /*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/21 12:48:51 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/21 15:43:40 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,21 @@ void	process_nodes(t_mini *mini)
 	while (mini->nodes && mini->nodes[i])
 	{
 		stdin_backup = dup(STDIN_FILENO);
-		if ((mini->nodes[i]->tokens && mini->nodes[i]->tokens[0]) || (mini->nodes[i]->redirs->type = HEREDOC))
+		if ((mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+			|| (mini->nodes[i]->redirs))
 		{
-			cmd = save_exec_cmd(mini->nodes[i], mini);
-			if (cmd && *cmd)
-				ft_putstr_fd(cmd, 1);
-			free(cmd);
+			if (mini->nodes[i]->redirs
+				&& mini->nodes[i]->redirs->type == HEREDOC)
+			{
+				apply_redirs(mini->nodes[i], mini);
+			}
+			else
+			{
+				cmd = save_exec_cmd(mini->nodes[i], mini);
+				if (cmd && *cmd)
+					ft_putstr_fd(cmd, 1);
+				free(cmd);
+			}
 		}
 		dup2(stdin_backup, STDIN_FILENO);
 		close(stdin_backup);

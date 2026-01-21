@@ -6,7 +6,7 @@
 /*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 23:08:41 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/21 12:58:16 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/21 15:43:03 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,44 @@ void	apply_redir_append(t_node *node, int i)
 
 void	apply_heredoc(t_node *node, int i, t_mini *mini)
 {
-	int	fd;
+	int		fd[2];
+	pid_t	pid;
+	int		status;
 
-	fd = handle_heredoc(node->redirs[i].file, node->redirs[i].expand, mini);
-	if (fd < 0)
+	if (!mini->nodes[0]->tokens || !mini->nodes[0]->tokens[0])
+	{
+		heredoc_loop(node->redirs[i].file, node->redirs[i].expand, mini);
 		return ;
-	dup2(fd, STDIN_FILENO);
-	close(fd);
-}
-
-void	empty_heredoc(t_mini *mini)
-{
-	if (mini)
-	printf("cualquier cosa \n");
+	}
+	if (pipe(fd) == -1)
+		return ;
+	pid = fork();
+	if (pid == -1)
+		return ;
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_IGN);
+		close(fd[0]);
+		heredoc_loop(node->redirs[i].file, node->redirs[i].expand, mini);
+		exec_heredoc_cmd(mini->nodes[0]->tokens, *mini);
+		close(fd[1]);
+		exit(0);
+	}
+	else
+	{
+		close(fd[1]);
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		{
+			mini->exit_code = 130;
+			mini->heredoc_interrupted = 1;
+			close(fd[0]);
+			return ;
+		}
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+	}
 }
 
 void	exec_heredoc_cmd(char **tokens, t_mini mini)
@@ -76,12 +101,6 @@ void	exec_heredoc_cmd(char **tokens, t_mini mini)
 	char	**path_dirs;
 	char	*path_cmd;
 
-	if (!tokens || !tokens[0])
-	{
-		empty_heredoc(&mini);
-	}
-	// signal(SIGINT, SIG_DFL);
-	// signal(SIGQUIT, SIG_DFL);
 	path_dirs = get_path_dirs(mini.envp);
 	if (!path_dirs)
 	{
