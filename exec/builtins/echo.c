@@ -6,27 +6,23 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:07:10 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 12:43:57 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/21 14:46:26 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../exec.h"
 
-static void	print_tokens(t_mini *mini, char **tokens, int expand, int i)
+static void	print_tokens(t_mini *mini, char **tokens, int start, int print_nl)
 {
+	int		i;
 	char	*value;
-	int		aux;
-	int		i_start;
 
-	i_start = i;
-	aux = 0;
-	if (i > 1)
-		aux = 1;
+	i = start;
 	while (tokens[i])
 	{
-		if (i > i_start)
+		if (i > start)
 			ft_putstr_fd(" ", 1);
-		if (expand && tokens[i][0] == '$')
+		if (tokens[i][0] == '$')
 		{
 			value = ft_getenv(mini->envp, tokens[i] + 1);
 			if (value)
@@ -34,45 +30,49 @@ static void	print_tokens(t_mini *mini, char **tokens, int expand, int i)
 		}
 		else
 			ft_putstr_fd(tokens[i], 1);
-		if (!expand && aux == 0)
-			ft_putstr_fd("\n", 1);
 		i++;
 	}
-	if (expand && aux == 0)
+	if (print_nl)
 		ft_putstr_fd("\n", 1);
+}
+
+static int	is_n_flag(char *str)
+{
+	int	i;
+
+	if (str[0] != '-')
+		return (0);
+	i = 1;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	check_tokens(t_node *node)
 {
-	int	x;
+	int	i;
 
-	x = 1;
-	while (node->tokens[x])
-	{
-		if (node->tokens[x][0] != '-' && node->tokens[x][1] != 'n'
-			&& node->tokens[x][x] != 'n')
-		{
-			x--;
-			break ;
-		}
-		x++;
-	}
-	return (x);
+	i = 1;
+	while (node->tokens[i] && is_n_flag(node->tokens[i]))
+		i++;
+	return (i);
 }
 
 void	echo(t_mini *mini, t_node *node)
 {
-	int	x;
+	int	i;
+	int	print_nl;
 
-	x = 0;
 	if (!node || !node->tokens)
-	{
-		mini->exit_code = 1;
-		ft_putstr_fd("echo: argumentos inválidos\n", 2);
 		return ;
-	}
-	x = 1;
-	x = check_tokens(node);
-	print_tokens(mini, node->tokens, node->expand, x);
+	i = check_tokens(node);
+	print_nl = (i == 1);
+	print_tokens(mini, node->tokens, i, print_nl);
 	mini->exit_code = 0;
 }

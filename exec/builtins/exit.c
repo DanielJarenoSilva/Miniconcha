@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:43 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/07 15:09:15 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/21 14:52:59 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ int	my_exit(t_mini *mini, char	**args)
 		(*mini).exit_code = 1;
 		return (1);
 	}
-	free_exit(mini, mini->exit_code);
+	free_exit(mini, ft_atoi(args[1]));
 	return (0);
 }
