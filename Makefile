@@ -13,12 +13,12 @@ SRCS =  ./exec/main.c \
         ./exec/exec_cmd/cmd.c \
         ./exec/exec_cmd/exec_utils.c \
         ./exec/pipex.c \
-        ./exec/signals.c \
+        ./exec/signals_n_init.c \
         ./exec/utils.c \
         ./gnl/get_next_line.c \
         ./gnl/get_next_line_utils.c \
         ./exec/redir.c \
-        ./exec/redir_utils.c \
+        ./exec/heredoc.c \
         ./parse/redir_parser.c \
         ./exec/builtins/echo.c \
         ./exec/builtins/pwd.c \

@@ -3,28 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/21 15:43:40 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/21 16:44:45 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
-
-static void	init_mini(t_mini *mini, char **envp)
-{
-	mini->exit_code = 0;
-	mini->envp = dup_env(envp);
-	update_shlvl(mini);
-	mini->output = NULL;
-	mini->nodes = NULL;
-	mini->is_pipe = 0;
-	mini->builtin_quote = 0;
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
 
 static int	handle_readline(t_mini *mini, char **rl)
 {
@@ -40,11 +27,20 @@ static int	handle_readline(t_mini *mini, char **rl)
 	return (1);
 }
 
+void	process_cmd(t_mini *mini, int i)
+{
+	char	*cmd;
+
+	cmd = save_exec_cmd(mini->nodes[i], mini);
+	if (cmd && *cmd)
+		ft_putstr_fd(cmd, 1);
+	free(cmd);
+}
+
 void	process_nodes(t_mini *mini)
 {
-	int		i;
-	char	*cmd;
-	int		stdin_backup;
+	int	i;
+	int	stdin_backup;
 
 	i = 0;
 	while (mini->nodes && mini->nodes[i])
@@ -55,16 +51,9 @@ void	process_nodes(t_mini *mini)
 		{
 			if (mini->nodes[i]->redirs
 				&& mini->nodes[i]->redirs->type == HEREDOC)
-			{
 				apply_redirs(mini->nodes[i], mini);
-			}
 			else
-			{
-				cmd = save_exec_cmd(mini->nodes[i], mini);
-				if (cmd && *cmd)
-					ft_putstr_fd(cmd, 1);
-				free(cmd);
-			}
+				process_cmd(mini, i);
 		}
 		dup2(stdin_backup, STDIN_FILENO);
 		close(stdin_backup);

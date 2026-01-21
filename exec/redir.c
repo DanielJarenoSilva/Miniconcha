@@ -3,39 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/21 15:43:25 by pabalvar         ###   ########.fr       */
+/*   Created: 2026/01/10 23:08:41 by kfuto             #+#    #+#             */
+/*   Updated: 2026/01/21 17:02:16 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../parse/parse.h"
 #include "exec.h"
 
-void	heredoc_loop(const char *delimiter, int expand, t_mini *mini)
+void	apply_redir_in(t_node *node, int i)
 {
-	char	*line;
-	char	*expanded;
+	int	fd;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
-	while (1)
+	fd = open(node->redirs[i].file, O_RDONLY);
+	if (fd < 0)
 	{
-		line = readline("> ");
-		if (!line || ft_strncmp(line, (char *)delimiter, ft_strlen(delimiter)
-				+ 1) == 0)
-			break ;
-		if (expand)
-		{
-			expanded = expand_token(line, mini);
-			free(line);
-		}
-		else
-			expanded = line;
-		if (expand)
-			free(expanded);
+		perror(node->redirs[i].file);
+		exit(1);
 	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+}
+
+void	apply_redir_out(t_node *node, int i)
+{
+	int	fd;
+
+	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror(node->redirs[i].file);
+		exit(1);
+	}
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+}
+
+void	apply_redir_append(t_node *node, int i)
+{
+	int	fd;
+
+	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (fd < 0)
+	{
+		perror(node->redirs[i].file);
+		exit(1);
+	}
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
 }
 
 int	has_redir_out(t_node *node)
