@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/20 12:38:36 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/21 10:59:38 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ int	set_env(char **envp, const char *key, const char *value)
 	return (1);
 }
 
-static char	*get_cd_path(char **cmd)
+static char	*get_cd_path(char **cmd, char **envp)
 {
 	char	*path;
 
 	if (!cmd[1])
 	{
-		path = ft_getenv(NULL, "HOME");
+		path = ft_getenv(envp, "HOME");
 		if (!path)
 		{
 			write(2, "cd: HOME not set\n", 17);
@@ -93,7 +93,7 @@ void	cd(t_mini *mini, char **cmd)
 {
 	char	*path;
 
-	path = get_cd_path(cmd);
+	path = get_cd_path(cmd, mini->envp);
 	if (!path)
 	{
 		mini->exit_code = 1;
