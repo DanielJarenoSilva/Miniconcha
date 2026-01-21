@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/19 14:41:07 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/21 12:48:51 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	process_nodes(t_mini *mini)
 	while (mini->nodes && mini->nodes[i])
 	{
 		stdin_backup = dup(STDIN_FILENO);
-		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+		if ((mini->nodes[i]->tokens && mini->nodes[i]->tokens[0]) || (mini->nodes[i]->redirs->type = HEREDOC))
 		{
 			cmd = save_exec_cmd(mini->nodes[i], mini);
 			if (cmd && *cmd)

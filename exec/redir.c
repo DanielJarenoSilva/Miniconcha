@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/19 15:07:09 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/21 13:00:56 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,15 +73,15 @@ int	handle_heredoc(const char *delimiter, int expand, t_mini *mini)
 	int		status;
 
 	if (pipe(fd) == -1)
-		exit(1);
-	pid = fork();
-	if (pid == 0)
+	exit(1);
+	close(fd[0]);
+	heredoc_loop(delimiter, expand, mini, fd[1]);
+	if (!mini->nodes[0]->tokens || !mini->nodes[0]->tokens[0])
 	{
-		close(fd[0]);
-		heredoc_loop(delimiter, expand, mini, fd[1]);
-		exec_heredoc_cmd(mini->nodes[0]->tokens, *mini);
-		exit(0);
+		empty_heredoc(&mini);
 	}
+	exec_heredoc_cmd(mini->nodes[0]->tokens, *mini);
+	exit(0);
 	close(fd[1]);
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 23:08:41 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/19 15:08:48 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/21 12:58:16 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,8 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 
 void	empty_heredoc(t_mini *mini)
 {
-	mini->nodes[0]->tokens = malloc(sizeof(char *) * 2);
-	mini->nodes[0]->tokens[0] = ft_strdup("cat");
-	mini->nodes[0]->tokens[1] = NULL;
-	save_exec_cmd(mini->nodes[0], mini);
-	free(mini->nodes[0]->tokens[0]);
-	free(mini->nodes[0]->tokens);
-	mini->nodes[0]->tokens = NULL;
+	if (mini)
+	printf("cualquier cosa \n");
 }
 
 void	exec_heredoc_cmd(char **tokens, t_mini mini)
@@ -84,10 +79,9 @@ void	exec_heredoc_cmd(char **tokens, t_mini mini)
 	if (!tokens || !tokens[0])
 	{
 		empty_heredoc(&mini);
-		printf("ses\n");
 	}
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	// signal(SIGINT, SIG_DFL);
+	// signal(SIGQUIT, SIG_DFL);
 	path_dirs = get_path_dirs(mini.envp);
 	if (!path_dirs)
 	{
