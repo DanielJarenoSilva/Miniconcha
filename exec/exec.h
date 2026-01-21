@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 15:38:45 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/19 14:42:58 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
 // char					*expand_token(char *str, t_mini mini);
+void					exec_heredoc_cmd(char **tokens, t_mini mini);
 void					exec_cmd(char **tokens, t_mini mini);
 int						set_env(char **envp, const char *key,
 							const char *value);
@@ -54,5 +55,7 @@ void					apply_redir_append(t_node *node, int i);
 void					apply_heredoc(t_node *node, int i, t_mini *mini);
 void					update_shlvl(t_mini *mini);
 void					sigint_heredoc(int sig);
+void					empty_heredoc(t_mini *mini);
+void					exec_heredoc_cmd(char **tokens, t_mini mini);
 
 #endif
