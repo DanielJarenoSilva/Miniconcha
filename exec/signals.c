@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals_n_init.c                                   :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 16:51:10 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/20 12:09:55 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,23 @@ void	sigint_handler(int sign)
 	}
 }
 
-void	init_mini(t_mini *mini, char **envp)
+void	process_utils(t_mini *mini, t_node *node, int num_nodes)
 {
-	mini->exit_code = 0;
-	mini->envp = dup_env(envp);
-	update_shlvl(mini);
-	mini->output = NULL;
-	mini->nodes = NULL;
-	mini->is_pipe = 0;
-	mini->builtin_quote = 0;
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	if (num_nodes > 1)
+		run_pipes(mini);
+	else
+	{
+		node = mini->nodes[0];
+		if (!node)
+			return ;
+		if (node->redir_count > 0)
+			apply_redirs(node, mini);
+		if (node->tokens && node->tokens[0])
+		{
+			if (is_builtin(node->tokens[0]))
+				exec_builtin(node, mini);
+			else
+				save_exec_cmd(node, mini);
+		}
+	}
 }

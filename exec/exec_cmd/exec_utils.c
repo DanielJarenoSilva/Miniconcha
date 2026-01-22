@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:30:56 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/10 20:56:34 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/19 14:45:55 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ char	*read_fd(int fd)
 {
 	char	*line;
 	char	*buffer;
+	char	*tmp;
 
 	buffer = ft_strdup("");
 	if (!buffer)
@@ -81,9 +82,9 @@ char	*read_fd(int fd)
 	line = get_next_line(fd);
 	while (line)
 	{
-		buffer = ft_strjoin_free(buffer, line);
-		free(line);
+		tmp = ft_strjoin_free(buffer, line);
 		line = get_next_line(fd);
+		buffer = tmp;
 	}
 	if (!*buffer)
 	{

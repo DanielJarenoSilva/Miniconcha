@@ -3,15 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/21 16:44:45 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/22 17:11:22 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
+
+static void	init_mini(t_mini *mini, char **envp)
+{
+	mini->exit_code = 0;
+	mini->envp = dup_env(envp);
+	update_shlvl(mini);
+	mini->output = NULL;
+	mini->nodes = NULL;
+	mini->is_pipe = 0;
+	mini->builtin_quote = 0;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+}
 
 static int	handle_readline(t_mini *mini, char **rl)
 {
@@ -27,7 +40,7 @@ static int	handle_readline(t_mini *mini, char **rl)
 	return (1);
 }
 
-void	process_cmd(t_mini *mini, int i)
+static void	process_cmd(t_mini *mini, int i)
 {
 	char	*cmd;
 
@@ -49,10 +62,18 @@ void	process_nodes(t_mini *mini)
 		if ((mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
 			|| (mini->nodes[i]->redirs))
 		{
-			if (mini->nodes[i]->redirs
-				&& mini->nodes[i]->redirs->type == HEREDOC)
-				apply_redirs(mini->nodes[i], mini);
-			else
+			if ((mini->is_pipe) || (mini->nodes[i]->redirs
+					&& mini->nodes[i]->redirs->type == HEREDOC))
+			{
+				if (mini->nodes[i]->redirs
+					&& mini->nodes[i]->redirs->type == HEREDOC)
+					apply_redirs(mini->nodes[i], mini);
+				if (mini->is_pipe)
+					run_pipes(mini);
+				dup2(stdin_backup, STDIN_FILENO);
+				close(stdin_backup);
+				break ;
+			}
 				process_cmd(mini, i);
 		}
 		dup2(stdin_backup, STDIN_FILENO);
@@ -60,6 +81,35 @@ void	process_nodes(t_mini *mini)
 		i++;
 	}
 }
+
+// void	process_nodes(t_mini *mini)
+// {
+// 	int		num_nodes;
+// 	int		i;
+// 	t_node	*node;
+
+// 	if (!mini->nodes || !mini->nodes[0])
+// 		return ;
+// 	num_nodes = 0;
+// 	while (mini->nodes[num_nodes])
+// 		num_nodes++;
+// 	node = mini->nodes[0];
+// 	if (num_nodes > 1 && node->tokens && node->tokens[0] && pb(node->tokens[0]))
+// 	{
+// 		if (node->redir_count > 0)
+// 			apply_redirs(node, mini);
+// 		exec_builtin(node, mini);
+// 		i = 1;
+// 		while (mini->nodes[i])
+// 		{
+// 			mini->nodes[i - 1] = mini->nodes[i];
+// 			i++;
+// 		}
+// 		mini->nodes[i - 1] = NULL;
+// 		num_nodes--;
+// 	}
+// 	process_utils(mini, node, num_nodes);
+// }
 
 static void	mini_loop(t_mini *mini)
 {
@@ -72,6 +122,8 @@ static void	mini_loop(t_mini *mini)
 		if (*rl)
 		{
 			add_history(rl);
+			free_nodes(mini->nodes);
+			mini->nodes = NULL;
 			parser(rl, mini);
 			process_nodes(mini);
 		}

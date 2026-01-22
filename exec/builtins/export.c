@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:46 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/12 15:20:41 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/21 11:38:24 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,19 @@ void	export(t_mini *mini, char	**tokens)
 	char	*eq;
 
 	if (!tokens[1])
-		empty_export(mini);
+		return (empty_export(mini));
 	i = 1;
 	while (tokens[i])
 	{
 		eq = ft_strchr(tokens[i], '=');
+		if (!*(eq + 1))
+			break ;
 		if (!eq)
 		{
 			i++;
 			continue ;
 		}
-		key = ft_substr(tokens[i], 0,
-				eq - tokens[i]);
+		key = ft_substr(tokens[i], 0, eq - tokens[i]);
 		value = eq + 1;
 		if (set_env(mini->envp, key, value) == 1)
 			mini->envp = new_env(mini, key, value);

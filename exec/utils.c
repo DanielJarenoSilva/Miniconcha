@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 16:49:04 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/19 12:19:28 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,7 @@ void	update_shlvl(t_mini *mini)
 	n = ft_atoi(lvl);
 	free(lvl);
 	n++;
-	set_env(mini->envp, "SHLVL", ft_itoa(n));
+	lvl = ft_itoa(n);
+	set_env(mini->envp, "SHLVL", lvl);
+	free(lvl);
 }

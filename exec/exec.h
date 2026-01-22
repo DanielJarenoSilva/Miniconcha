@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 16:57:57 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/22 16:23:01 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ typedef struct s_mini	t_mini;
 
 // char					*expand_token(char *str, t_mini mini);
 void					exec_heredoc_cmd(char **tokens, t_mini mini);
-void					exec_cmd(char **tokens, t_mini mini);
+void					heredoc_father(int fd[], pid_t pid, t_mini *mini);
+void					exec_cmd(char **tokens, t_mini *mini);
 int						set_env(char **envp, const char *key,
 							const char *value);
 char					*ft_strjoin_free(char *s1, char *s2);
@@ -55,11 +56,11 @@ void					apply_redir_append(t_node *node, int i);
 void					apply_heredoc(t_node *node, int i, t_mini *mini);
 void					update_shlvl(t_mini *mini);
 void					sigint_heredoc(int sig);
-void					empty_heredoc(t_mini *mini);
-void					exec_heredoc_cmd(char **tokens, t_mini mini);
-void					heredoc_loop(const char *delimiter, int expand,
-							t_mini *mini);
-void					init_mini(t_mini *mini, char **envp);
-void					heredoc_father(int fd[], pid_t pid, t_mini *mini);
+void					free_nodes(t_node **nodes);
+void					execute_node(t_mini *mini, int i);
+int						pb(char *cmd);
+void					process_utils(t_mini *mini, t_node *node,
+							int num_nodes);
+void					print_nodes(t_mini mini);
 
 #endif
