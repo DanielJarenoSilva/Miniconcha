@@ -1,0 +1,94 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redir_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/10 23:08:41 by kfuto             #+#    #+#             */
+/*   Updated: 2026/01/22 16:18:55 by pabalvar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "exec.h"
+
+void	apply_redir_in(t_node *node, int i)
+{
+	int	fd;
+
+	fd = open(node->redirs[i].file, O_RDONLY);
+	if (fd < 0)
+	{
+		perror(node->redirs[i].file);
+		exit(1);
+	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+}
+
+void	apply_redir_out(t_node *node, int i)
+{
+	int	fd;
+
+	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror(node->redirs[i].file);
+		exit(1);
+	}
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+}
+
+void	apply_redir_append(t_node *node, int i)
+{
+	int	fd;
+
+	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (fd < 0)
+	{
+		perror(node->redirs[i].file);
+		exit(1);
+	}
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+}
+
+int	has_redir_out(t_node *node)
+{
+	int	i;
+
+	i = 0;
+	while (i < node->redir_count)
+	{
+		if (node->redirs[i].type == REDIR_OUT
+			|| node->redirs[i].type == REDIR_APPEND)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	apply_redirs(t_node *node, t_mini *mini)
+{
+	int	i;
+
+	i = 0;
+	while (i < node->redir_count)
+	{
+		if (node->redirs[i].type == REDIR_IN)
+			apply_redir_in(node, i);
+		else if (node->redirs[i].type == REDIR_OUT)
+			apply_redir_out(node, i);
+		else if (node->redirs[i].type == REDIR_APPEND)
+			apply_redir_append(node, i);
+		else if (node->redirs[i].type == HEREDOC)
+		{
+			apply_heredoc(node, i, mini);
+			if (mini->heredoc_interrupted)
+				return (-1);
+		}
+		i++;
+	}
+	return (0);
+}
