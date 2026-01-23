@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:46 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 11:38:24 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/23 17:44:22 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,26 @@ char	**new_env(t_mini *mini, char *key, char *value)
 
 void	empty_export(t_mini *mini)
 {
-	int	i;
+	char	**sorted;
+	int		i;
 
+	if (!mini->envp)
+		return ;
+	sorted = copy_envp(mini->envp);
+	if (!sorted)
+		return ;
+	sort_envp(sorted);
 	i = 0;
-	while (mini->envp && mini->envp[i])
+	while (sorted[i])
 	{
-		printf("declare -x \"%s\"\n", mini->envp[i]);
+		printf("declare -x \"%s\"\n", sorted[i]);
+		free(sorted[i]);
 		i++;
 	}
-	return ;
+	free(sorted);
 }
 
-void	export(t_mini *mini, char	**tokens)
+void	export(t_mini *mini, char **tokens)
 {
 	int		i;
 	char	*key;

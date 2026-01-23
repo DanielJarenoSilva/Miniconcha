@@ -24,6 +24,7 @@ SRCS =  ./exec/main.c \
         ./exec/builtins/pwd.c \
         ./exec/builtins/cd.c \
         ./exec/builtins/export.c \
+        ./exec/builtins/sort_export.c \
         ./exec/builtins/unset.c \
         ./exec/builtins/env.c \
         ./exec/builtins/exit.c \
