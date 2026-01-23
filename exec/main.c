@@ -3,28 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/22 17:11:22 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/23 16:36:18 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
-
-static void	init_mini(t_mini *mini, char **envp)
-{
-	mini->exit_code = 0;
-	mini->envp = dup_env(envp);
-	update_shlvl(mini);
-	mini->output = NULL;
-	mini->nodes = NULL;
-	mini->is_pipe = 0;
-	mini->builtin_quote = 0;
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
 
 static int	handle_readline(t_mini *mini, char **rl)
 {
@@ -74,42 +61,13 @@ void	process_nodes(t_mini *mini)
 				close(stdin_backup);
 				break ;
 			}
-				process_cmd(mini, i);
+			process_cmd(mini, i);
 		}
 		dup2(stdin_backup, STDIN_FILENO);
 		close(stdin_backup);
 		i++;
 	}
 }
-
-// void	process_nodes(t_mini *mini)
-// {
-// 	int		num_nodes;
-// 	int		i;
-// 	t_node	*node;
-
-// 	if (!mini->nodes || !mini->nodes[0])
-// 		return ;
-// 	num_nodes = 0;
-// 	while (mini->nodes[num_nodes])
-// 		num_nodes++;
-// 	node = mini->nodes[0];
-// 	if (num_nodes > 1 && node->tokens && node->tokens[0] && pb(node->tokens[0]))
-// 	{
-// 		if (node->redir_count > 0)
-// 			apply_redirs(node, mini);
-// 		exec_builtin(node, mini);
-// 		i = 1;
-// 		while (mini->nodes[i])
-// 		{
-// 			mini->nodes[i - 1] = mini->nodes[i];
-// 			i++;
-// 		}
-// 		mini->nodes[i - 1] = NULL;
-// 		num_nodes--;
-// 	}
-// 	process_utils(mini, node, num_nodes);
-// }
 
 static void	mini_loop(t_mini *mini)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/22 16:23:01 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/23 16:33:04 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,6 @@ int						pb(char *cmd);
 void					process_utils(t_mini *mini, t_node *node,
 							int num_nodes);
 void					print_nodes(t_mini mini);
+void					init_mini(t_mini *mini, char **envp);
 
 #endif
