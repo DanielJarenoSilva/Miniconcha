@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/23 16:36:18 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/23 20:48:31 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,9 @@ void	process_nodes(t_mini *mini)
 		if ((mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
 			|| (mini->nodes[i]->redirs))
 		{
-			if ((mini->is_pipe) || (mini->nodes[i]->redirs
-					&& mini->nodes[i]->redirs->type == HEREDOC))
+			if ((mini->is_pipe) || (mini->nodes[i]->redirs))
 			{
-				if (mini->nodes[i]->redirs
-					&& mini->nodes[i]->redirs->type == HEREDOC)
+				if (mini->nodes[i]->redirs)
 					apply_redirs(mini->nodes[i], mini);
 				if (mini->is_pipe)
 					run_pipes(mini);
