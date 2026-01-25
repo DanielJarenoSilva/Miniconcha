@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/23 20:48:31 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/25 17:14:21 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,28 +41,41 @@ void	process_nodes(t_mini *mini)
 {
 	int	i;
 	int	stdin_backup;
+	int	stdout_backup;
 
 	i = 0;
 	while (mini->nodes && mini->nodes[i])
 	{
 		stdin_backup = dup(STDIN_FILENO);
-		if ((mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
-			|| (mini->nodes[i]->redirs))
+		stdout_backup = dup(STDOUT_FILENO);
+		if (mini->nodes[i]->redirs)
 		{
-			if ((mini->is_pipe) || (mini->nodes[i]->redirs))
+			apply_redirs(mini->nodes[i], mini);
+			if (mini->nodes[i]->redirs->type == HEREDOC)
 			{
-				if (mini->nodes[i]->redirs)
-					apply_redirs(mini->nodes[i], mini);
-				if (mini->is_pipe)
-					run_pipes(mini);
 				dup2(stdin_backup, STDIN_FILENO);
+				dup2(stdout_backup, STDOUT_FILENO);
 				close(stdin_backup);
-				break ;
+				close(stdout_backup);
+				i++;
+				continue ;
 			}
-			process_cmd(mini, i);
 		}
+		if (mini->is_pipe)
+		{
+			run_pipes(mini);
+			dup2(stdin_backup, STDIN_FILENO);
+			dup2(stdout_backup, STDOUT_FILENO);
+			close(stdin_backup);
+			close(stdout_backup);
+			break ;
+		}
+		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+			process_cmd(mini, i);
 		dup2(stdin_backup, STDIN_FILENO);
+		dup2(stdout_backup, STDOUT_FILENO);
 		close(stdin_backup);
+		close(stdout_backup);
 		i++;
 	}
 }

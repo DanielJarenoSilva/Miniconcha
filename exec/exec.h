@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/23 17:48:00 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/25 17:22:37 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ typedef struct s_mini	t_mini;
 // char					*expand_token(char *str, t_mini mini);
 char					**copy_envp(char **envp);
 void					sort_envp(char **env);
-void					exec_heredoc_cmd(char **tokens, t_mini mini);
+void					exec_heredoc_cmd(char **tokens, t_mini *mini);
 void					heredoc_father(int fd[], pid_t pid, t_mini *mini);
 void					exec_cmd(char **tokens, t_mini *mini);
 int						set_env(char **envp, const char *key,

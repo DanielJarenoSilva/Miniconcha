@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/22 16:22:57 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/01/25 17:25:29 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 		signal(SIGQUIT, SIG_IGN);
 		close(fd[0]);
 		heredoc_loop(node->redirs[i].file, node->redirs[i].expand, mini);
-		exec_heredoc_cmd(mini->nodes[0]->tokens, *mini);
+		exec_heredoc_cmd(mini->nodes[0]->tokens, mini);
 		close(fd[1]);
 		exit(0);
 	}
@@ -69,7 +69,7 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 
 void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
 {
-	int		status;
+	int	status;
 
 	close(fd[1]);
 	waitpid(pid, &status, 0);
@@ -84,12 +84,17 @@ void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
 	close(fd[0]);
 }
 
-void	exec_heredoc_cmd(char **tokens, t_mini mini)
+void	exec_heredoc_cmd(char **tokens, t_mini *mini)
 {
 	char	**path_dirs;
 	char	*path_cmd;
 
-	path_dirs = get_path_dirs(mini.envp);
+	if (is_builtin(tokens[0]))
+	{
+		exec_builtin(mini->nodes[0], mini);
+		return ;
+	}
+	path_dirs = get_path_dirs(mini->envp);
 	if (!path_dirs)
 	{
 		print_error_cmd(tokens[0]);
@@ -103,7 +108,7 @@ void	exec_heredoc_cmd(char **tokens, t_mini mini)
 		print_error_cmd(tokens[0]);
 		exit(127);
 	}
-	execve(path_cmd, tokens, mini.envp);
+	execve(path_cmd, tokens, mini->envp);
 	perror("execve");
 	free(path_cmd);
 }
