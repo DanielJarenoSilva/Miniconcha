@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:30:18 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/25 22:26:09 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
+void					add_delimiter(t_redir *redir, char *delim);
 char					**get_nodes(const char *s, struct s_mini *mini);
 int						ft_isnode(char c);
 int						ft_count_nodes(const char *s);
@@ -38,8 +39,7 @@ char					*expand_var(char *str, int *i, t_mini *mini);
 int						ft_ischev(char c);
 int						handle_redir(const char *s, int *i, t_node *node);
 char					*get_next_word(const char *s, int *i);
-void					add_redir(t_node *node, t_redir_type type, char *file,
-							int expand);
+void					add_redir(t_node *node, t_redir_type type, int expand);
 void					print_nodes(t_mini mini);
 char					*handle_single_quote(char *str, int *i, char *result);
 char					*handle_double_quote(char *str, int *i, char *result,

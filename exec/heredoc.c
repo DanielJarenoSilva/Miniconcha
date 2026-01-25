@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/25 19:04:07 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/25 23:46:26 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,26 +43,13 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 	int		fd[2];
 	pid_t	pid;
 
-	if (!mini->nodes[0]->tokens || !mini->nodes[0]->tokens[0])
-	{
-		heredoc_loop(node->redirs[i].file, node->redirs[i].expand, mini);
-		return ;
-	}
 	if (pipe(fd) == -1)
 		return ;
 	pid = fork();
 	if (pid == -1)
 		return ;
 	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_IGN);
-		close(fd[0]);
-		heredoc_loop(node->redirs[i].file, node->redirs[i].expand, mini);
-		exec_heredoc_cmd(mini->nodes[0]->tokens, mini);
-		close(fd[1]);
-		exit(0);
-	}
+		exec_heredoc(i, fd, node, mini);
 	else
 		heredoc_father(fd, pid, mini);
 }
