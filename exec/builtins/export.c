@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:46 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 11:38:24 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/27 13:08:08 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,40 @@ static int	env_len(char **envp)
 	return (i);
 }
 
+char	*join_key_value(char *key, char *value)
+{
+	char	*tmp;
+	char	*result;
+
+	tmp = ft_strjoin(key, "=");
+	result = ft_strjoin_free(tmp, value);
+	return (result);
+}
+
 char	**new_env(t_mini *mini, char *key, char *value)
 {
 	int		len;
 	int		k;
 	char	**new_env;
 
-	k = 0;
 	len = env_len(mini->envp);
 	new_env = malloc(sizeof(char *) * (len + 2));
+	if (!new_env)
+		return (NULL);
+	k = 0;
 	while (k < len)
 	{
-		new_env[k] = mini->envp[k];
+		new_env[k] = ft_strdup(mini->envp[k]);
 		k++;
 	}
-	new_env[len] = ft_strjoin(key, "=");
-	new_env[len] = ft_strjoin_free(new_env[len], ft_strdup(value));
+	new_env[len] = join_key_value(key, value);
 	new_env[len + 1] = NULL;
+	k = 0;
+	while (k < len)
+	{
+		free(mini->envp[k]);
+		k++;
+	}
 	free(mini->envp);
 	return (new_env);
 }
@@ -69,9 +86,7 @@ void	export(t_mini *mini, char	**tokens)
 	while (tokens[i])
 	{
 		eq = ft_strchr(tokens[i], '=');
-		if (!*(eq + 1))
-			break ;
-		if (!eq)
+		if (!eq || !*(eq + 1))
 		{
 			i++;
 			continue ;

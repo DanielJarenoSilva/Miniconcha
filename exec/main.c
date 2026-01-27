@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/21 10:54:16 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/27 12:53:18 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,31 +42,44 @@ static int	handle_readline(t_mini *mini, char **rl)
 
 void	process_nodes(t_mini *mini)
 {
-	int		num_nodes;
 	int		i;
-	t_node	*node;
+	int		stdin_backup;
+	int		stdout_backup;
 
 	if (!mini->nodes || !mini->nodes[0])
 		return ;
-	num_nodes = 0;
-	while (mini->nodes[num_nodes])
-		num_nodes++;
-	node = mini->nodes[0];
-	if (num_nodes > 1 && node->tokens && node->tokens[0] && pb(node->tokens[0]))
+	if (mini->is_pipe)
+		return (run_pipes(mini));
+	i = 0;
+	while (mini->nodes[i])
 	{
-		if (node->redir_count > 0)
-			apply_redirs(node, mini);
-		exec_builtin(node, mini);
-		i = 1;
-		while (mini->nodes[i])
+		stdin_backup = dup(STDIN_FILENO);
+		stdout_backup = dup(STDOUT_FILENO);
+
+		if (mini->nodes[i]->redir_count > 0)
 		{
-			mini->nodes[i - 1] = mini->nodes[i];
-			i++;
+			if (apply_redirs(mini->nodes[i], mini) == -1)
+			{
+				dup2(stdin_backup, STDIN_FILENO);
+				dup2(stdout_backup, STDOUT_FILENO);
+				close(stdin_backup);
+				close(stdout_backup);
+				return ;
+			}
 		}
-		mini->nodes[i - 1] = NULL;
-		num_nodes--;
+		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0]
+			&& pb(mini->nodes[i]->tokens[0]))
+			exec_builtin(mini->nodes[i], mini);
+		else if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+			save_exec_cmd(mini->nodes[i], mini);
+
+		dup2(stdin_backup, STDIN_FILENO);
+		dup2(stdout_backup, STDOUT_FILENO);
+		close(stdin_backup);
+		close(stdout_backup);
+
+		i++;
 	}
-	process_utils(mini, node, num_nodes);
 }
 
 static void	mini_loop(t_mini *mini)

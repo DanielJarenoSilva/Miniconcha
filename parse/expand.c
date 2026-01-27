@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 11:00:58 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:59:54 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 11:55:53 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ char	*expand_token(char *str, t_mini *mini)
 {
 	int		i;
 	char	*result;
+	char	*tmp;
 
 	i = 0;
 	result = ft_strdup("");
@@ -80,9 +81,14 @@ char	*expand_token(char *str, t_mini *mini)
 			result = handle_single_quote(str, &i, result);
 		else if (str[i] == '"')
 			result = handle_double_quote(str, &i, result, mini);
-		else if (str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1])
-				|| str[i + 1] == '_' || str[i + 1] == '?'))
-			result = ft_strjoin_free(result, expand_var(str, &i, mini));
+		else if (str[i] == '$' && str[i + 1]
+			&& (ft_isalnum(str[i + 1]) || str[i + 1] == '_'
+				|| str[i + 1] == '?'))
+		{
+			tmp = expand_var(str, &i, mini);
+			result = ft_strjoin_free(result, tmp);
+			free(tmp);
+		}
 		else
 			result = ft_strjoin_char_free(result, str[i++]);
 	}

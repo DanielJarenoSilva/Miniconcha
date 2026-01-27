@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/16 03:48:59 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 11:34:11 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ typedef struct s_redir
 {
 	t_redir_type	type;
 	char			*file;
+	char			**delimiter;
 	int				expand;
+	int				heredoc_fd;
 }					t_redir;
 
 typedef struct s_node
@@ -56,6 +58,8 @@ typedef struct s_mini
 	int				builtin_quote;
 	char			*output;
 	char			**envp;
+	int				heredoc_interrupted;
+
 }					t_mini;
 
 #endif

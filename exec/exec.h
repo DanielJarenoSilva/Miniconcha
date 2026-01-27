@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 12:15:02 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/27 11:38:27 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void					env(t_mini *mini);
 int						my_exit(t_mini *mini, char **args);
 char					*save_exec_cmd(t_node *node, t_mini *mini);
 void					sigint_handler(int signo);
-void					apply_redirs(t_node *node, t_mini *mini);
 int						has_redir_out(t_node *node);
 int						handle_heredoc(const char *delimiter, int expand,
 							t_mini *mini);
@@ -51,7 +50,7 @@ void					unset(t_mini *mini, char **tokens);
 void					apply_redir_in(t_node *node, int i);
 void					apply_redir_out(t_node *node, int i);
 void					apply_redir_append(t_node *node, int i);
-void					apply_heredoc(t_node *node, int i, t_mini *mini);
+int						apply_heredoc(t_node *node, int i, t_mini *mini);
 void					update_shlvl(t_mini *mini);
 void					sigint_heredoc(int sig);
 void					free_nodes(t_node **nodes);
@@ -60,5 +59,6 @@ int						pb(char *cmd);
 void					process_utils(t_mini *mini, t_node *node,
 							int num_nodes);
 void					print_nodes(t_mini mini);
+int						apply_redirs(t_node *node, t_mini *mini);
 
 #endif

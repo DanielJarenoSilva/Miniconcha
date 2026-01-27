@@ -18,7 +18,6 @@ SRCS =  ./exec/main.c \
         ./gnl/get_next_line.c \
         ./gnl/get_next_line_utils.c \
         ./exec/redir.c \
-        ./exec/redir_utils.c \
         ./parse/redir_parser.c \
         ./exec/builtins/echo.c \
         ./exec/builtins/pwd.c \
@@ -30,8 +29,7 @@ SRCS =  ./exec/main.c \
         ./exec/builtins/exec_builtin.c \
         ./exec/free_mini.c \
         ./parse/expand_helper.c \
-        ./parse/print_nodes.c \
-        ./parse/redirparseutils.c
+        ./exec/heredoc.c \
 
 
 OBJS = $(SRCS:.c=.o)

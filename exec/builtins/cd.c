@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 10:59:38 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/27 12:56:55 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,22 +40,27 @@ int	set_env(char **envp, const char *key, const char *value)
 	return (1);
 }
 
-static char	*get_cd_path(char **cmd, char **envp)
+char	*get_cd_path(char **cmd, char **envp)
 {
-	char	*path;
+	char	*home;
+	char	*oldpwd;
 
-	if (!cmd[1])
+	if (!cmd[1] || ft_strncmp(cmd[1], "~", 2) == 0)
 	{
-		path = ft_getenv(envp, "HOME");
-		if (!path)
-		{
-			write(2, "cd: HOME not set\n", 17);
+		home = ft_getenv(envp, "HOME");
+		if (!home)
 			return (NULL);
-		}
+		return (home);
+	}
+	else if (ft_strncmp(cmd[1], "-", 2) == 0)
+	{
+		oldpwd = ft_getenv(envp, "OLDPWD");
+		if (!oldpwd)
+			return (NULL);
+		return (oldpwd);
 	}
 	else
-		path = cmd[1];
-	return (path);
+		return (ft_strdup(cmd[1]));
 }
 
 static int	change_dir(char *path, t_mini *mini)
@@ -63,6 +68,8 @@ static int	change_dir(char *path, t_mini *mini)
 	char	*oldpwd;
 
 	oldpwd = ft_getenv(mini->envp, "PWD");
+	if (!oldpwd)
+		oldpwd = ft_strdup("");
 	if (chdir(path) == -1)
 	{
 		perror("cd");
@@ -70,7 +77,7 @@ static int	change_dir(char *path, t_mini *mini)
 		return (1);
 	}
 	set_env(mini->envp, "OLDPWD", oldpwd);
-	free(oldpwd);
+	//free(oldpwd);
 	return (0);
 }
 
@@ -92,6 +99,7 @@ static int	update_pwd(t_mini *mini)
 void	cd(t_mini *mini, char **cmd)
 {
 	char	*path;
+	char	*tmp;
 
 	path = get_cd_path(cmd, mini->envp);
 	if (!path)
@@ -99,21 +107,18 @@ void	cd(t_mini *mini, char **cmd)
 		mini->exit_code = 1;
 		return ;
 	}
-	if (change_dir(path, mini))
+	tmp = ft_strdup(path);
+	if (!tmp)
 	{
-		if (!cmd[1])
-			free(path);
 		mini->exit_code = 1;
 		return ;
 	}
-	if (update_pwd(mini))
+	if (change_dir(tmp, mini) || update_pwd(mini))
 	{
-		if (!cmd[1])
-			free(path);
+		free(tmp);
 		mini->exit_code = 1;
 		return ;
 	}
-	if (!cmd[1])
-		free(path);
+	free(tmp);
 	mini->exit_code = 0;
 }

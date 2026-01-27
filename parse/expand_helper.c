@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_helper.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:17:25 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/16 04:35:41 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 11:55:26 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,22 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		i++;
 	}
 	str[ft_strlen(s1) + ft_strlen(s2)] = '\0';
-	return (free(s1), free(s2), str);
+	return (free(s1), str);
 }
 
 char	*ft_strjoin_char_free(char *s, char c)
 {
 	char	*s2;
+	char	*res;
 
 	s2 = malloc(2);
+	if (!s2)
+		return (NULL);
 	s2[0] = c;
 	s2[1] = '\0';
-	return (ft_strjoin_free(s, s2));
+	res = ft_strjoin_free(s, s2);
+	free(s2);
+	return (res);
 }
 
 void	expand_tokens(t_node *node, t_mini *mini)
@@ -55,9 +60,9 @@ void	expand_tokens(t_node *node, t_mini *mini)
 	int		i;
 	char	*tmp;
 
-	if (node->expand == 0)
+	if (!node->expand)
 		return ;
-	i = 0;
+	i = 1;
 	while (node->tokens[i])
 	{
 		tmp = expand_token(node->tokens[i], mini);

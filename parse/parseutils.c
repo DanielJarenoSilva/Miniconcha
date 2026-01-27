@@ -61,7 +61,7 @@ int	has_single_quotes(char *s)
 	while (*s)
 	{
 		if (*s == '\'')
-			return (0);
+			return (1);
 		s++;
 	}
 	return (1);

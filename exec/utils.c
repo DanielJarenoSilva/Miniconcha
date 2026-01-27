@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 12:19:28 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/27 12:05:59 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,17 @@ char	**dup_env(char **envp)
 char	*ft_getenv(char **envp, char *env)
 {
 	int		i;
-	char	*tmp;
-	size_t	y;
-	int		x;
+	size_t	len;
 
-	i = 0;
-	x = 0;
-	if (!envp)
+	if (!envp || !env)
 		return (NULL);
+
+	len = ft_strlen(env);
+	i = 0;
 	while (envp[i])
 	{
-		if (ft_strncmp(envp[i], env, ft_strlen(env)) == 0)
-		{
-			y = ft_strlen(env) + 1;
-			tmp = malloc(ft_strlen(envp[i]) - ft_strlen(env) + 1);
-			while (y < ft_strlen(envp[i]))
-				tmp[x++] = envp[i][y++];
-			tmp[x] = '\0';
-			return (tmp);
-		}
+		if (ft_strncmp(envp[i], env, len) == 0 && envp[i][len] == '=')
+			return (envp[i] + len + 1);
 		i++;
 	}
 	return (NULL);
@@ -82,6 +74,7 @@ void	print_error_cmd(char *cmd)
 void	update_shlvl(t_mini *mini)
 {
 	char	*lvl;
+	char	*tmp;
 	int		n;
 
 	lvl = ft_getenv(mini->envp, "SHLVL");
@@ -90,10 +83,11 @@ void	update_shlvl(t_mini *mini)
 		set_env(mini->envp, "SHLVL", "1");
 		return ;
 	}
-	n = ft_atoi(lvl);
-	free(lvl);
+	tmp = ft_strdup(lvl);
+	n = ft_atoi(tmp);
+	free(tmp);
 	n++;
-	lvl = ft_itoa(n);
-	set_env(mini->envp, "SHLVL", lvl);
-	free(lvl);
+	tmp = ft_itoa(n);
+	set_env(mini->envp, "SHLVL", tmp);
+	free(tmp);
 }

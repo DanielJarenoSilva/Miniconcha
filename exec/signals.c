@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/20 12:09:55 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/27 11:38:18 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,3 +52,4 @@ void	process_utils(t_mini *mini, t_node *node, int num_nodes)
 		}
 	}
 }
+

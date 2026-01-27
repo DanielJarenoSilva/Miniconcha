@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 12:36:04 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/12 02:35:26 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-char	**tokenizer(const char *s, t_node *node, t_mini mini)
+char	**tokenizer(const char *s, t_node *node)
 {
 	char	**tokens;
 	int		i;
@@ -31,9 +31,10 @@ char	**tokenizer(const char *s, t_node *node, t_mini mini)
 		if (handle_redir(s, &i, node))
 			continue ;
 		start = i;
-		skip_token_quotes(s, &i, &mini);
+		while (s[i] && !ft_isspace(s[i]) && !ft_ischev(s[i]))
+			i++;
 		if (i > start)
-			tokens[j++] = word_dup_no_quotes(s + start, i - start);
+			tokens[j++] = word_dup(s + start, i - start);
 	}
 	tokens[j] = NULL;
 	return (tokens);
@@ -98,7 +99,7 @@ static int	init_nodes(char **cmds, struct s_mini *mini, int num_cmds)
 			return (0);
 		mini->nodes[i]->redirs = NULL;
 		mini->nodes[i]->redir_count = 0;
-		mini->nodes[i]->tokens = tokenizer(cmds[i], mini->nodes[i], *mini);
+		mini->nodes[i]->tokens = tokenizer(cmds[i], mini->nodes[i]);
 		mini->nodes[i]->expand = has_single_quotes(cmds[i]);
 		expand_tokens(mini->nodes[i], mini);
 		i++;
@@ -121,7 +122,6 @@ void	parser(const char *s, struct s_mini *mini)
 	mini->nodes = malloc(sizeof(struct s_node *) * (num_cmds + 1));
 	if (!mini->nodes)
 		return (ft_free_matrix(cmds));
-	mini->nodes[num_cmds] = NULL;
 	if (!init_nodes(cmds, mini, num_cmds))
 		return (ft_free_matrix(cmds));
 	ft_free_matrix(cmds);
