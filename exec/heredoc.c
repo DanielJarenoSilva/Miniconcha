@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/25 23:46:26 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 17:12:31 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
 		return ;
 	}
 	dup2(fd[0], STDIN_FILENO);
-	close(fd[0]);
 }
 
 void	exec_heredoc_cmd(char **tokens, t_mini *mini)

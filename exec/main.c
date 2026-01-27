@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/25 23:49:23 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 16:26:40 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,7 @@ void	process_nodes(t_mini *mini)
 		stdin_backup = dup(STDIN_FILENO);
 		stdout_backup = dup(STDOUT_FILENO);
 		if (mini->nodes[i]->redirs)
-		{
 			apply_redirs(mini->nodes[i], mini);
-			if (mini->nodes[i]->redirs->type == HEREDOC)
-			{
-				dup2(stdin_backup, STDIN_FILENO);
-				dup2(stdout_backup, STDOUT_FILENO);
-				close(stdin_backup);
-				close(stdout_backup);
-				i++;
-				continue ;
-			}
-		}
 		if (mini->is_pipe)
 		{
 			run_pipes(mini);

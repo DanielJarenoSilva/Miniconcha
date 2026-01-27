@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 14:37:17 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/27 17:13:12 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	if (mini->nodes[i]->redir_count > 0)
+		apply_redirs(mini->nodes[i], mini);
 	if (in_fd != STDIN_FILENO)
 	{
 		dup2(in_fd, STDIN_FILENO);
@@ -38,8 +40,6 @@ static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 	}
-	if (mini->nodes[i]->redir_count > 0)
-		apply_redirs(mini->nodes[i], mini);
 	execute_node(mini, i);
 }
 
