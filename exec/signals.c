@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 17:35:44 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 20:01:49 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,11 @@ void	sigint_handler(int sign)
 
 void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
-	int	j;
-
-	j = 0;
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
-	while (node->redirs[i].delimiter[j])
-	{
-		heredoc_loop(node->redirs[i].delimiter[j], node->redirs[i].expand,
-			mini);
-		j++;
-	}
+	heredoc_loop(i, node, node->redirs[i].expand,
+		mini);
 	close(fd[1]);
 	exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 17:35:56 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 18:44:36 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ typedef struct s_mini	t_mini;
 
 // char					*expand_token(char *str, t_mini mini);
 void					dup_stdin(int stdin_backup, int stdout_backup);
-void					heredoc_loop(const char *delimiter, int expand,
+void					heredoc_loop(int i, t_node *node, int expand,
 							t_mini *mini);
 void					exec_heredoc(int i, int fd[], t_node *node,
 							t_mini *mini);

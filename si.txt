@@ -1,8 +1,0 @@
-Makefile
-exec
-gnl
-libft
-minishell
-minishell.h
-parse
-si.txt

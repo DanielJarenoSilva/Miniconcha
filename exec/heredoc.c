@@ -6,26 +6,28 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/27 17:12:31 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 20:09:26 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
 
-void	heredoc_loop(const char *delimiter, int expand, t_mini *mini)
+void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
 {
 	char	*line;
 	char	*expanded;
+	int		k;
 
+	k = 0;
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
-	while (1)
+	while (node->redirs[i].delimiter[k])
 	{
 		line = readline("> ");
-		if (!line || ft_strncmp(line, (char *)delimiter, ft_strlen(delimiter)
-				+ 1) == 0)
-			break ;
+		if (!line || ft_strncmp(line, node->redirs[i].delimiter[k],
+				ft_strlen(node->redirs[i].delimiter[k]) + 1) == 0)
+			k++;
 		if (expand)
 		{
 			expanded = expand_token(line, mini);
