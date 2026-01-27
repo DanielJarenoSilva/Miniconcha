@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 16:12:32 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 17:35:44 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,16 @@ void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 			mini);
 		j++;
 	}
-	// exec_heredoc_cmd(mini->nodes[0]->tokens, mini);
 	close(fd[1]);
 	exit(0);
+}
+
+void	dup_stdin(int stdin_backup, int stdout_backup)
+{
+	dup2(stdin_backup, STDIN_FILENO);
+	dup2(stdout_backup, STDOUT_FILENO);
+	close(stdin_backup);
+	close(stdout_backup);
 }
 
 void	init_mini(t_mini *mini, char **envp)

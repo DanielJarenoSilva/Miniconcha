@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/27 16:26:40 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/27 17:35:02 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,12 @@ void	process_nodes(t_mini *mini)
 		if (mini->is_pipe)
 		{
 			run_pipes(mini);
-			dup2(stdin_backup, STDIN_FILENO);
-			dup2(stdout_backup, STDOUT_FILENO);
-			close(stdin_backup);
-			close(stdout_backup);
+			dup_stdin(stdin_backup, stdout_backup);
 			break ;
 		}
 		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
 			process_cmd(mini, i);
-		dup2(stdin_backup, STDIN_FILENO);
-		dup2(stdout_backup, STDOUT_FILENO);
-		close(stdin_backup);
-		close(stdout_backup);
+		dup_stdin(stdin_backup, stdout_backup);
 		i++;
 	}
 }
