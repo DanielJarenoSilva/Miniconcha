@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 11:34:11 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 10:49:00 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ typedef struct s_redir
 	char			*file;
 	char			**delimiter;
 	int				expand;
-	int				heredoc_fd;
 }					t_redir;
 
 typedef struct s_node

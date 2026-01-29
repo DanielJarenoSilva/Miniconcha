@@ -6,25 +6,12 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/27 12:53:18 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 10:06:33 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
-
-static void	init_mini(t_mini *mini, char **envp)
-{
-	mini->exit_code = 0;
-	mini->envp = dup_env(envp);
-	update_shlvl(mini);
-	mini->output = NULL;
-	mini->nodes = NULL;
-	mini->is_pipe = 0;
-	mini->builtin_quote = 0;
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-}
 
 static int	handle_readline(t_mini *mini, char **rl)
 {
@@ -40,44 +27,38 @@ static int	handle_readline(t_mini *mini, char **rl)
 	return (1);
 }
 
+static void	process_cmd(t_mini *mini, int i)
+{
+	char	*cmd;
+
+	cmd = save_exec_cmd(mini->nodes[i], mini);
+	if (cmd && *cmd)
+		ft_putstr_fd(cmd, 1);
+	free(cmd);
+}
+
 void	process_nodes(t_mini *mini)
 {
-	int		i;
-	int		stdin_backup;
-	int		stdout_backup;
+	int	i;
+	int	stdin_backup;
+	int	stdout_backup;
 
-	if (!mini->nodes || !mini->nodes[0])
-		return ;
-	if (mini->is_pipe)
-		return (run_pipes(mini));
 	i = 0;
-	while (mini->nodes[i])
+	while (mini->nodes && mini->nodes[i])
 	{
 		stdin_backup = dup(STDIN_FILENO);
 		stdout_backup = dup(STDOUT_FILENO);
-
-		if (mini->nodes[i]->redir_count > 0)
+		if (mini->nodes[i]->redirs)
+			apply_redirs(mini->nodes[i], mini);
+		if (mini->is_pipe)
 		{
-			if (apply_redirs(mini->nodes[i], mini) == -1)
-			{
-				dup2(stdin_backup, STDIN_FILENO);
-				dup2(stdout_backup, STDOUT_FILENO);
-				close(stdin_backup);
-				close(stdout_backup);
-				return ;
-			}
+			run_pipes(mini);
+			dup_stdin(stdin_backup, stdout_backup);
+			break ;
 		}
-		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0]
-			&& pb(mini->nodes[i]->tokens[0]))
-			exec_builtin(mini->nodes[i], mini);
-		else if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
-			save_exec_cmd(mini->nodes[i], mini);
-
-		dup2(stdin_backup, STDIN_FILENO);
-		dup2(stdout_backup, STDOUT_FILENO);
-		close(stdin_backup);
-		close(stdout_backup);
-
+		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+			process_cmd(mini, i);
+		dup_stdin(stdin_backup, stdout_backup);
 		i++;
 	}
 }

@@ -1,48 +1,58 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   sort_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/07 13:14:53 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:17:34 by djareno          ###   ########.fr       */
+/*   Created: 2026/01/29 10:16:18 by djareno           #+#    #+#             */
+/*   Updated: 2026/01/29 10:23:58 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../exec.h"
 
-void	aux(t_mini *mini, int i)
+char	**copy_envp(char **envp)
 {
-	while (mini->envp[i])
+	int		i;
+	char	**copy;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	copy = malloc(sizeof(char *) * (i + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (envp[i])
 	{
-		mini->envp[i] = mini->envp[i + 1];
+		copy[i] = ft_strdup(envp[i]);
 		i++;
 	}
+	copy[i] = NULL;
+	return (copy);
 }
 
-void	unset(t_mini *mini, char **tokens)
+void	sort_envp(char **env)
 {
-	int	arg;
-	int	i;
-	int	len;
+	int		i;
+	int		j;
+	char	*tmp;
 
-	arg = 1;
-	while (tokens[arg])
+	i = 0;
+	while (env[i])
 	{
-		len = ft_strlen(tokens[arg]);
-		i = 0;
-		while (mini->envp[i])
+		j = i + 1;
+		while (env[j])
 		{
-			if (ft_strncmp(mini->envp[i], tokens[arg], len) == 0
-				&& mini->envp[i][len] == '=')
+			if (ft_strncmp(env[i], env[j], 1000) > 0)
 			{
-				free(mini->envp[i]);
-				aux(mini, i);
-				break ;
+				tmp = env[i];
+				env[i] = env[j];
+				env[j] = tmp;
 			}
-			i++;
+			j++;
 		}
-		arg++;
+		i++;
 	}
 }

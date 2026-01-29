@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 11:38:18 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 10:14:40 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,34 @@ void	sigint_handler(int sign)
 	}
 }
 
-void	process_utils(t_mini *mini, t_node *node, int num_nodes)
+void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
-	if (num_nodes > 1)
-		run_pipes(mini);
-	else
-	{
-		node = mini->nodes[0];
-		if (!node)
-			return ;
-		if (node->redir_count > 0)
-			apply_redirs(node, mini);
-		if (node->tokens && node->tokens[0])
-		{
-			if (is_builtin(node->tokens[0]))
-				exec_builtin(node, mini);
-			else
-				save_exec_cmd(node, mini);
-		}
-	}
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+	close(fd[0]);
+	heredoc_loop(i, node, node->redirs[i].expand,
+		mini);
+	close(fd[1]);
+	exit(0);
 }
 
+void	dup_stdin(int stdin_backup, int stdout_backup)
+{
+	dup2(stdin_backup, STDIN_FILENO);
+	dup2(stdout_backup, STDOUT_FILENO);
+	close(stdin_backup);
+	close(stdout_backup);
+}
+
+void	init_mini(t_mini *mini, char **envp)
+{
+	mini->exit_code = 0;
+	mini->envp = dup_env(envp);
+	update_shlvl(mini);
+	mini->output = NULL;
+	mini->nodes = NULL;
+	mini->is_pipe = 0;
+	mini->builtin_quote = 0;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+}

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:07:10 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 12:04:03 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 11:16:28 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,15 @@
 
 static void	print_tokens(t_mini *mini, char **tokens, int start, int print_nl)
 {
-	int		i;
-	char	*value;
+	int	i;
 
+	(void)mini;
 	i = start;
 	while (tokens[i])
 	{
 		if (i > start)
 			ft_putstr_fd(" ", 1);
-		if (tokens[i][0] == '$')
-		{
-			value = ft_getenv(mini->envp, tokens[i] + 1);
-			if (value)
-				ft_putstr_fd(value, 1);
-		}
-		else
-			ft_putstr_fd(tokens[i], 1);
+		ft_putstr_fd(tokens[i], 1);
 		i++;
 	}
 	if (print_nl)

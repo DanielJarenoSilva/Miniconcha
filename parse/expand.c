@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 11:00:58 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 11:55:53 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 10:34:26 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,30 +67,44 @@ char	*expand_var(char *str, int *i, t_mini *mini)
 	return (free(key), value);
 }
 
+char	*join_expanded_var(char *str, int *i, char *res, t_mini *mini)
+{
+	char	*tmp;
+	char	*val;
+
+	val = expand_var(str, i, mini);
+	if (!val)
+		return (NULL);
+	tmp = ft_strjoin_free(res, val);
+	free(val);
+	return (tmp);
+}
+
 char	*expand_token(char *str, t_mini *mini)
 {
 	int		i;
-	char	*result;
+	char	*res;
 	char	*tmp;
 
 	i = 0;
-	result = ft_strdup("");
+	res = ft_strdup("");
+	if (!res)
+		return (NULL);
 	while (str[i])
 	{
 		if (str[i] == '\'')
-			result = handle_single_quote(str, &i, result);
+			tmp = handle_single_quote(str, &i, res);
 		else if (str[i] == '"')
-			result = handle_double_quote(str, &i, result, mini);
+			tmp = handle_double_quote(str, &i, res, mini);
 		else if (str[i] == '$' && str[i + 1]
-			&& (ft_isalnum(str[i + 1]) || str[i + 1] == '_'
-				|| str[i + 1] == '?'))
-		{
-			tmp = expand_var(str, &i, mini);
-			result = ft_strjoin_free(result, tmp);
-			free(tmp);
-		}
+			&& (ft_isalnum(str[i + 1])
+				|| str[i + 1] == '_' || str[i + 1] == '?'))
+			tmp = join_expanded_var(str, &i, res, mini);
 		else
-			result = ft_strjoin_char_free(result, str[i++]);
+			tmp = ft_strjoin_char_free(res, str[i++]);
+		if (!tmp)
+			return (free(res), NULL);
+		res = tmp;
 	}
-	return (result);
+	return (res);
 }

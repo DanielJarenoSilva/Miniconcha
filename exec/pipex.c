@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/19 14:37:17 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 10:47:22 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+	if (mini->nodes[i]->redir_count > 0)
+		apply_redirs(mini->nodes[i], mini);
 	if (in_fd != STDIN_FILENO)
 	{
 		dup2(in_fd, STDIN_FILENO);
@@ -38,14 +40,12 @@ static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 	}
-	if (mini->nodes[i]->redir_count > 0)
-		apply_redirs(mini->nodes[i], mini);
 	execute_node(mini, i);
 }
 
 static void	setup_parent(int *in_fd, int fd[2], int has_next)
 {
-	if (*in_fd != 0)
+	if (*in_fd != STDIN_FILENO)
 		close(*in_fd);
 	if (has_next)
 	{
@@ -90,14 +90,12 @@ void	run_pipes(t_mini *mini)
 	pid_t	last_pid;
 
 	i = 0;
-	in_fd = 0;
+	in_fd = STDIN_FILENO;
+	init_fd(fd);
 	while (mini->nodes[i])
 	{
-		if (mini->nodes[i + 1] && pipe(fd) == -1)
-		{
-			perror("pipe");
-			exit(1);
-		}
+		if (mini->nodes[i + 1] && create_pipe(fd))
+			return ;
 		pid = fork();
 		if (pid == 0)
 			setup_child(mini, i, in_fd, fd);

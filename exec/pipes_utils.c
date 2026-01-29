@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/07 13:14:50 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 12:20:36 by djareno          ###   ########.fr       */
+/*   Created: 2026/01/29 10:45:49 by djareno           #+#    #+#             */
+/*   Updated: 2026/01/29 10:49:08 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../exec.h"
+#include "exec.h"
+#include <unistd.h>
 
-void	pwd(t_mini *mini)
+void	init_fd(int fd[2])
 {
-	char	*tmp;
+	fd[0] = -1;
+	fd[1] = -1;
+}
 
-	tmp = ft_getenv(mini->envp, "PWD");
-	if (tmp)
-		printf("%s\n", tmp);
+int	create_pipe(int fd[2])
+{
+	if (pipe(fd) == -1)
+	{
+		perror("pipe");
+		return (1);
+	}
+	return (0);
 }

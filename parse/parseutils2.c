@@ -6,45 +6,38 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 19:49:35 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/27 12:00:36 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 11:12:41 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-char	*handle_single_quote(char *str, int *i, char *result)
-{
-	int		start;
-	char	*tmp;
-
-	start = ++(*i);
-	while (str[*i] && str[*i] != '\'')
-		(*i)++;
-
-	tmp = ft_substr(str, start, *i - start);
-	result = ft_strjoin_free(result, tmp);
-	free(tmp);
-
-	if (str[*i] == '\'')
-		(*i)++;
-	return (result);
-}
-
-char	*handle_double_quote(char *str, int *i, char *result, t_mini *mini)
+char	*handle_single_quote(char *str, int *i, char *res)
 {
 	char	*tmp;
 
 	(*i)++;
+	while (str[*i] && str[*i] != '\'')
+	{
+		tmp = ft_strjoin_char_free(res, str[*i]);
+		if (!tmp)
+			return (NULL);
+		res = tmp;
+		(*i)++;
+	}
+	if (str[*i] == '\'')
+		(*i)++;
+	return (res);
+}
+
+char	*handle_double_quote(char *str, int *i, char *result, t_mini *mini)
+{
+	(*i)++;
 	while (str[*i] && str[*i] != '"')
 	{
-		if (str[*i] == '$' && str[*i + 1] &&
-			(ft_isalnum(str[*i + 1]) || str[*i + 1] == '_'
-				|| str[*i + 1] == '?'))
-		{
-			tmp = expand_var(str, i, mini);
-			result = ft_strjoin_free(result, tmp);
-			free(tmp);
-		}
+		if (str[*i] == '$' && str[*i + 1] && (ft_isalnum(str[*i + 1])
+				|| str[*i + 1] == '_' || str[*i + 1] == '?'))
+			result = ft_strjoin_free(result, expand_var(str, i, mini));
 		else
 			result = ft_strjoin_char_free(result, str[(*i)++]);
 	}
@@ -71,4 +64,48 @@ int	get_quotes(const char *s)
 	if (quote)
 		return (0);
 	return (1);
+}
+
+char	*word_dup_no_quotes(const char *s, int len)
+{
+	char	*out;
+	int		i;
+	int		j;
+	char	quote;
+
+	quote = 0;
+	out = malloc(len + 1);
+	i = 0;
+	j = 0;
+	while (i < len)
+	{
+		if (!quote && (s[i] == '"' || s[i] == '\''))
+			quote = s[i++];
+		else if (quote && s[i] == quote)
+		{
+			quote = 0;
+			i++;
+		}
+		else
+			out[j++] = s[i++];
+	}
+	out[j] = '\0';
+	return (out);
+}
+
+void	skip_token_quotes(const char *s, int *i, struct s_mini *mini)
+{
+	char	quote;
+
+	quote = 0;
+	while (s[*i] && (quote || (!ft_isspace(s[*i]) && !ft_ischev(s[*i]))))
+	{
+		if (!quote && (s[*i] == '"' || s[*i] == '\''))
+			quote = s[*i];
+		else if (quote && s[*i] == quote)
+			quote = 0;
+		(*i)++;
+	}
+	if (quote != 0)
+		mini->builtin_quote = 1;
 }

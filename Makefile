@@ -18,18 +18,22 @@ SRCS =  ./exec/main.c \
         ./gnl/get_next_line.c \
         ./gnl/get_next_line_utils.c \
         ./exec/redir.c \
+        ./exec/heredoc.c \
         ./parse/redir_parser.c \
         ./exec/builtins/echo.c \
         ./exec/builtins/pwd.c \
         ./exec/builtins/cd.c \
         ./exec/builtins/export.c \
+        ./exec/builtins/sort_export.c \
         ./exec/builtins/unset.c \
         ./exec/builtins/env.c \
         ./exec/builtins/exit.c \
         ./exec/builtins/exec_builtin.c \
         ./exec/free_mini.c \
         ./parse/expand_helper.c \
-        ./exec/heredoc.c \
+        ./parse/print_nodes.c \
+        ./parse/redirparseutils.c \
+        ./exec/pipes_utils.c
 
 
 OBJS = $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:17:25 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/27 11:55:26 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 11:22:54 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,30 @@
 char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*str;
-	size_t	i;
+	size_t	len1;
+	size_t	len2;
 
-	if (!s1)
-		s1 = ft_strdup("");
-	if (!s2)
-		s2 = ft_strdup("");
-	str = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	i = 0;
-	if (!str)
+	if (!s1 || !s2)
 		return (NULL);
-	while (i < ft_strlen(s1))
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	i = 0;
-	while (i < ft_strlen(s2))
-	{
-		str[ft_strlen(s1) + i] = s2[i];
-		i++;
-	}
-	str[ft_strlen(s1) + ft_strlen(s2)] = '\0';
-	return (free(s1), str);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	str = malloc(len1 + len2 + 1);
+	if (!str)
+		return (free(s1), NULL);
+	ft_memcpy(str, s1, len1);
+	ft_memcpy(str + len1, s2, len2);
+	str[len1 + len2] = '\0';
+	free(s1);
+	return (str);
 }
 
 char	*ft_strjoin_char_free(char *s, char c)
 {
-	char	*s2;
-	char	*res;
+	char	buf[2];
 
-	s2 = malloc(2);
-	if (!s2)
-		return (NULL);
-	s2[0] = c;
-	s2[1] = '\0';
-	res = ft_strjoin_free(s, s2);
-	free(s2);
-	return (res);
+	buf[0] = c;
+	buf[1] = '\0';
+	return (ft_strjoin_free(s, buf));
 }
 
 void	expand_tokens(t_node *node, t_mini *mini)
@@ -60,14 +46,17 @@ void	expand_tokens(t_node *node, t_mini *mini)
 	int		i;
 	char	*tmp;
 
-	if (!node->expand)
+	if (!node || !node->expand || !node->tokens)
 		return ;
 	i = 1;
 	while (node->tokens[i])
 	{
-		tmp = expand_token(node->tokens[i], mini);
-		free(node->tokens[i]);
-		node->tokens[i] = tmp;
+		if (node->tokens[i])
+		{
+			tmp = expand_token(node->tokens[i], mini);
+			free(node->tokens[i]);
+			node->tokens[i] = tmp;
+		}
 		i++;
 	}
 }

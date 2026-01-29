@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:38 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/21 10:48:29 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/10 20:40:51 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,6 @@ void	env(t_mini *mini)
 	int	i;
 
 	i = 0;
-	if (!mini->envp)
-	{
-		mini->exit_code = 1;
-		perror("env");
-	}
 	while (mini->envp[i])
 	{
 		ft_putstr_fd(mini->envp[i], 1);

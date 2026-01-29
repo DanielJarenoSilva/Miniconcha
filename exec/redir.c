@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/27 11:42:24 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 10:22:08 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,7 @@ int	apply_redirs(t_node *node, t_mini *mini)
 	while (i < node->redir_count)
 	{
 		if (node->redirs[i].type == HEREDOC)
-		{
-			if (apply_heredoc(node, i, mini) == -1)
-				return (-1);
-		}
+			apply_heredoc(node, i, mini);
 		else if (node->redirs[i].type == REDIR_IN)
 			apply_redir_in(node, i);
 		else if (node->redirs[i].type == REDIR_OUT)

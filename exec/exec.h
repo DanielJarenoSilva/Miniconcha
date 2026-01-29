@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 11:38:27 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 10:47:00 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,15 @@
 typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
-// char					*expand_token(char *str, t_mini mini);
+void					dup_stdin(int stdin_backup, int stdout_backup);
+void					heredoc_loop(int i, t_node *node, int expand,
+							t_mini *mini);
+void					exec_heredoc(int i, int fd[], t_node *node,
+							t_mini *mini);
+char					**copy_envp(char **envp);
+void					sort_envp(char **env);
+void					exec_heredoc_cmd(char **tokens, t_mini *mini);
+void					heredoc_father(int fd[], pid_t pid, t_mini *mini);
 void					exec_cmd(char **tokens, t_mini *mini);
 int						set_env(char **envp, const char *key,
 							const char *value);
@@ -33,6 +41,7 @@ void					env(t_mini *mini);
 int						my_exit(t_mini *mini, char **args);
 char					*save_exec_cmd(t_node *node, t_mini *mini);
 void					sigint_handler(int signo);
+int						apply_redirs(t_node *node, t_mini *mini);
 int						has_redir_out(t_node *node);
 int						handle_heredoc(const char *delimiter, int expand,
 							t_mini *mini);
@@ -50,7 +59,7 @@ void					unset(t_mini *mini, char **tokens);
 void					apply_redir_in(t_node *node, int i);
 void					apply_redir_out(t_node *node, int i);
 void					apply_redir_append(t_node *node, int i);
-int						apply_heredoc(t_node *node, int i, t_mini *mini);
+void					apply_heredoc(t_node *node, int i, t_mini *mini);
 void					update_shlvl(t_mini *mini);
 void					sigint_heredoc(int sig);
 void					free_nodes(t_node **nodes);
@@ -59,6 +68,8 @@ int						pb(char *cmd);
 void					process_utils(t_mini *mini, t_node *node,
 							int num_nodes);
 void					print_nodes(t_mini mini);
-int						apply_redirs(t_node *node, t_mini *mini);
+void					init_mini(t_mini *mini, char **envp);
+int						create_pipe(int fd[2]);
+void					init_fd(int fd[2]);
 
 #endif

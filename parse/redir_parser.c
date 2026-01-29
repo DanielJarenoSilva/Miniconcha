@@ -3,41 +3,96 @@
 /*                                                        :::      ::::::::   */
 /*   redir_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/09 00:56:19 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/01/29 12:08:35 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-static void	handle_in_redir(const char *s, int *i, t_node *node)
+char	*get_next_word(const char *s, int *i)
 {
+	int		start;
+	char	quote;
+
+	while (s[*i] && ft_isspace(s[*i]))
+		(*i)++;
+	if (!s[*i])
+		return (NULL);
+	if (s[*i] == '\'' || s[*i] == '"')
+	{
+		quote = s[(*i)++];
+		start = *i;
+		while (s[*i] && s[*i] != quote)
+			(*i)++;
+		return (ft_substr(s, start, (*i)++ - start));
+	}
+	start = *i;
+	while (s[*i] && !ft_isspace(s[*i]) && !ft_ischev(s[*i]) && s[*i] != '|')
+		(*i)++;
+	if (start == *i)
+		return (NULL);
+	return (ft_substr(s, start, *i - start));
+}
+
+static int	handle_in_redir(const char *s, int *i, t_node *node)
+{
+	char	*file;
+
 	if (s[*i + 1] == '<')
 	{
 		*i += 2;
-		add_redir(node, HEREDOC, get_next_word(s, i));
+		file = get_next_word(s, i);
+		if (!file)
+		{
+			printf("minishell: syntax error near unexpected token <<\n");
+			return (0);
+		}
+		add_redir(node, HEREDOC, 1);
+		add_delimiter(&node->redirs[node->redir_count - 1], file);
+		return (1);
 	}
-	else
+	(*i)++;
+	file = get_next_word(s, i);
+	if (!file)
 	{
-		(*i)++;
-		add_redir(node, REDIR_IN, get_next_word(s, i));
+		printf("minishell: syntax error near unexpected token <\n");
+		return (0);
 	}
+	add_redir(node, REDIR_IN, 0);
+	node->redirs[node->redir_count - 1].file = file;
+	return (1);
 }
 
-static void	handle_out_redir(const char *s, int *i, t_node *node)
+static int	handle_out_redir(const char *s, int *i, t_node *node)
 {
+	char	*file;
+
 	if (s[*i + 1] == '>')
 	{
 		*i += 2;
-		add_redir(node, REDIR_APPEND, get_next_word(s, i));
+		file = get_next_word(s, i);
+		if (!file)
+		{
+			printf("minishell: syntax error near unexpected token `>>`\n");
+			return (0);
+		}
+		add_redir(node, REDIR_APPEND, 0);
 	}
 	else
 	{
 		(*i)++;
-		add_redir(node, REDIR_OUT, get_next_word(s, i));
+		file = get_next_word(s, i);
+		if (!file)
+		{
+			printf("minishell: syntax error near unexpected token `>`\n");
+			return (0);
+		}
+		add_redir(node, REDIR_OUT, 0);
 	}
+	return (node->redirs[node->redir_count - 1].file = file, 1);
 }
 
 int	handle_redir(const char *s, int *i, t_node *node)
@@ -45,37 +100,18 @@ int	handle_redir(const char *s, int *i, t_node *node)
 	if (!ft_ischev(s[*i]))
 		return (0);
 	if (s[*i] == '<')
-		handle_in_redir(s, i, node);
-	else if (s[*i] == '>')
-		handle_out_redir(s, i, node);
-	else
-		return (0);
-	return (1);
+		return (handle_in_redir(s, i, node));
+	if (s[*i] == '>')
+		return (handle_out_redir(s, i, node));
+	return (0);
 }
 
-char	*get_next_word(const char *s, int *i)
-{
-	int	start;
-	int	len;
-
-	start = *i;
-	len = 0;
-	while (s[*i] && ft_isspace(s[*i]))
-		(*i)++;
-	start = *i;
-	while (s[*i] && !ft_isspace(s[*i]) && !ft_ischev(s[*i]))
-	{
-		(*i)++;
-		len++;
-	}
-	return (word_dup(s + start, len));
-}
-
-void	add_redir(t_node *node, t_redir_type type, char *file)
+void	add_redir(t_node *node, t_redir_type type, int expand)
 {
 	node->redirs = realloc(node->redirs, sizeof(t_redir) * (node->redir_count
 				+ 1));
 	node->redirs[node->redir_count].type = type;
-	node->redirs[node->redir_count].file = file;
+	node->redirs[node->redir_count].delimiter = NULL;
+	node->redirs[node->redir_count].expand = expand;
 	node->redir_count++;
 }

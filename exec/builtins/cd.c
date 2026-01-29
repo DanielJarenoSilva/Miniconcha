@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 12:56:55 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 12:18:28 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,21 @@ char	*get_cd_path(char **cmd, char **envp)
 static int	change_dir(char *path, t_mini *mini)
 {
 	char	*oldpwd;
+	char	*oldpwd_dup;
 
 	oldpwd = ft_getenv(mini->envp, "PWD");
 	if (!oldpwd)
-		oldpwd = ft_strdup("");
+		oldpwd_dup = ft_strdup("");
+	else
+		oldpwd_dup = ft_strdup(oldpwd);
 	if (chdir(path) == -1)
 	{
 		perror("cd");
-		free(oldpwd);
+		free(oldpwd_dup);
 		return (1);
 	}
-	set_env(mini->envp, "OLDPWD", oldpwd);
-	//free(oldpwd);
+	set_env(mini->envp, "OLDPWD", oldpwd_dup);
+	free(oldpwd_dup);
 	return (0);
 }
 
@@ -99,7 +102,6 @@ static int	update_pwd(t_mini *mini)
 void	cd(t_mini *mini, char **cmd)
 {
 	char	*path;
-	char	*tmp;
 
 	path = get_cd_path(cmd, mini->envp);
 	if (!path)
@@ -107,18 +109,16 @@ void	cd(t_mini *mini, char **cmd)
 		mini->exit_code = 1;
 		return ;
 	}
-	tmp = ft_strdup(path);
-	if (!tmp)
+	if (change_dir(path, mini) || update_pwd(mini))
 	{
+		if (path && path != ft_getenv(mini->envp, "HOME")
+			&& path != ft_getenv(mini->envp, "OLDPWD"))
+			free(path);
 		mini->exit_code = 1;
 		return ;
 	}
-	if (change_dir(tmp, mini) || update_pwd(mini))
-	{
-		free(tmp);
-		mini->exit_code = 1;
-		return ;
-	}
-	free(tmp);
+	if (path && path != ft_getenv(mini->envp, "HOME")
+		&& path != ft_getenv(mini->envp, "OLDPWD"))
+		free(path);
 	mini->exit_code = 0;
 }

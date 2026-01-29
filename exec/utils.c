@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/27 12:05:59 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 12:28:13 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*ft_getenv(char **envp, char *env)
 
 	if (!envp || !env)
 		return (NULL);
-
 	len = ft_strlen(env);
 	i = 0;
 	while (envp[i])
@@ -74,7 +73,6 @@ void	print_error_cmd(char *cmd)
 void	update_shlvl(t_mini *mini)
 {
 	char	*lvl;
-	char	*tmp;
 	int		n;
 
 	lvl = ft_getenv(mini->envp, "SHLVL");
@@ -83,11 +81,9 @@ void	update_shlvl(t_mini *mini)
 		set_env(mini->envp, "SHLVL", "1");
 		return ;
 	}
-	tmp = ft_strdup(lvl);
-	n = ft_atoi(tmp);
-	free(tmp);
+	n = ft_atoi(lvl);
 	n++;
-	tmp = ft_itoa(n);
-	set_env(mini->envp, "SHLVL", tmp);
-	free(tmp);
+	lvl = ft_itoa(n);
+	set_env(mini->envp, "SHLVL", lvl);
+	free(lvl);
 }
