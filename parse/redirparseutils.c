@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirparseutils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:08:14 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:08:22 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 18:32:51 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,29 @@ void	add_delimiter(t_redir *redir, char *delim)
 			sizeof(char *) * (i + 2));
 	redir->delimiter[i] = delim;
 	redir->delimiter[i + 1] = NULL;
+}
+
+char	*get_next_word(const char *s, int *i)
+{
+	int		start;
+	char	quote;
+
+	while (s[*i] && ft_isspace(s[*i]))
+		(*i)++;
+	if (!s[*i])
+		return (NULL);
+	if (s[*i] == '\'' || s[*i] == '"')
+	{
+		quote = s[(*i)++];
+		start = *i;
+		while (s[*i] && s[*i] != quote)
+			(*i)++;
+		return (ft_substr(s, start, (*i)++ - start));
+	}
+	start = *i;
+	while (s[*i] && !ft_isspace(s[*i]) && !ft_ischev(s[*i]) && s[*i] != '|')
+		(*i)++;
+	if (start == *i)
+		return (NULL);
+	return (ft_substr(s, start, *i - start));
 }

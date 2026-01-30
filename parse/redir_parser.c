@@ -3,68 +3,94 @@
 /*                                                        :::      ::::::::   */
 /*   redir_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/29 12:08:35 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/29 18:38:24 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-char	*get_next_word(const char *s, int *i)
+static int	handle_add_heredoc(int expand, char *delim, t_node *node)
 {
-	int		start;
-	char	quote;
-
-	while (s[*i] && ft_isspace(s[*i]))
-		(*i)++;
-	if (!s[*i])
-		return (NULL);
-	if (s[*i] == '\'' || s[*i] == '"')
+	if (!delim)
+		return (0);
+	if (node->redir_count > 0 && node->redirs[node->redir_count
+			- 1].type == HEREDOC)
 	{
-		quote = s[(*i)++];
-		start = *i;
-		while (s[*i] && s[*i] != quote)
-			(*i)++;
-		return (ft_substr(s, start, (*i)++ - start));
+		add_delimiter(&node->redirs[node->redir_count - 1], delim);
 	}
-	start = *i;
-	while (s[*i] && !ft_isspace(s[*i]) && !ft_ischev(s[*i]) && s[*i] != '|')
-		(*i)++;
-	if (start == *i)
-		return (NULL);
-	return (ft_substr(s, start, *i - start));
+	else
+	{
+		add_redir(node, HEREDOC, expand);
+		add_delimiter(&node->redirs[node->redir_count - 1], delim);
+	}
+	return (1);
 }
 
 static int	handle_in_redir(const char *s, int *i, t_node *node)
 {
-	char	*file;
+	char	*delim;
+	int		expand;
 
 	if (s[*i + 1] == '<')
 	{
 		*i += 2;
-		file = get_next_word(s, i);
-		if (!file)
-		{
-			printf("minishell: syntax error near unexpected token <<\n");
+		expand = !is_quoted_delimiter(s, *i);
+		delim = get_next_word(s, i);
+		return (handle_add_heredoc(expand, delim, node));
+	}
+	else
+	{
+		(*i)++;
+		delim = get_next_word(s, i);
+		if (!delim)
 			return (0);
-		}
-		add_redir(node, HEREDOC, 1);
-		add_delimiter(&node->redirs[node->redir_count - 1], file);
+		add_redir(node, REDIR_IN, 0);
+		node->redirs[node->redir_count - 1].file = delim;
 		return (1);
 	}
-	(*i)++;
-	file = get_next_word(s, i);
-	if (!file)
-	{
-		printf("minishell: syntax error near unexpected token <\n");
-		return (0);
-	}
-	add_redir(node, REDIR_IN, 0);
-	node->redirs[node->redir_count - 1].file = file;
-	return (1);
 }
+
+// static int	handle_in_redir(const char *s, int *i, t_node *node)
+// {
+// 	char	*delim;
+// 	int		expand;
+
+// 	if (s[*i + 1] == '<')
+// 	{
+// 		*i += 2;
+// 		expand = !is_quoted_delimiter(s, *i);
+// 		delim = get_next_word(s, i);
+// 		if (!delim)
+// 		{
+// 			printf("minishell: syntax error near unexpected token <<\n");
+// 			return (0);
+// 		}
+// 		if (node->redir_count > 0 && node->redirs[node->redir_count
+// 				- 1].type == HEREDOC)
+// 		{
+// 			add_delimiter(&node->redirs[node->redir_count - 1], delim);
+// 		}
+// 		else
+// 		{
+// 			add_redir(node, HEREDOC, expand);
+// 			add_delimiter(&node->redirs[node->redir_count - 1], delim);
+// 		}
+// 		return (1);
+// 	}
+// 	(*i)++;
+// 	delim = get_next_word(s, i);
+// 	if (!delim)
+// 	{
+// 		printf("minishell: syntax error near unexpected token <\n");
+// 		return (0);
+// 	}
+// 	add_redir(node, REDIR_IN, 0);
+// 	node->redirs[node->redir_count - 1].file = delim;
+// 	return (1);
+// }
 
 static int	handle_out_redir(const char *s, int *i, t_node *node)
 {
