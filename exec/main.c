@@ -3,29 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/29 10:06:33 by djareno          ###   ########.fr       */
+/*   Updated: 2026/01/30 19:06:13 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
-
-static int	handle_readline(t_mini *mini, char **rl)
-{
-	g_signal_state = 1;
-	*rl = readline("minishell > ");
-	g_signal_state = 0;
-	if (!*rl)
-	{
-		ft_putstr_fd("exit\n", 1);
-		free_mini(mini);
-		return (0);
-	}
-	return (1);
-}
 
 static void	process_cmd(t_mini *mini, int i)
 {
@@ -37,28 +23,44 @@ static void	process_cmd(t_mini *mini, int i)
 	free(cmd);
 }
 
+static int	process_single_node(t_mini *mini, int i)
+{
+	int	stdin_backup;
+	int	stdout_backup;
+
+	stdin_backup = dup(STDIN_FILENO);
+	stdout_backup = dup(STDOUT_FILENO);
+	if (mini->nodes[i]->redirs)
+	{
+		apply_redirs(mini->nodes[i], mini);
+		if (mini->heredoc_interrupted)
+		{
+			mini->heredoc_interrupted = 0;
+			dup_stdin(stdin_backup, stdout_backup);
+			return (1);
+		}
+	}
+	if (mini->is_pipe)
+	{
+		run_pipes(mini);
+		dup_stdin(stdin_backup, stdout_backup);
+		return (1);
+	}
+	if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
+		process_cmd(mini, i);
+	dup_stdin(stdin_backup, stdout_backup);
+	return (0);
+}
+
 void	process_nodes(t_mini *mini)
 {
 	int	i;
-	int	stdin_backup;
-	int	stdout_backup;
 
 	i = 0;
 	while (mini->nodes && mini->nodes[i])
 	{
-		stdin_backup = dup(STDIN_FILENO);
-		stdout_backup = dup(STDOUT_FILENO);
-		if (mini->nodes[i]->redirs)
-			apply_redirs(mini->nodes[i], mini);
-		if (mini->is_pipe)
-		{
-			run_pipes(mini);
-			dup_stdin(stdin_backup, stdout_backup);
+		if (process_single_node(mini, i))
 			break ;
-		}
-		if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
-			process_cmd(mini, i);
-		dup_stdin(stdin_backup, stdout_backup);
 		i++;
 	}
 }

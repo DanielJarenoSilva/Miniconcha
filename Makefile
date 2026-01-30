@@ -15,6 +15,7 @@ SRCS =  ./exec/main.c \
         ./exec/pipex.c \
         ./exec/signals.c \
         ./exec/utils.c \
+        ./exec/utils2.c \
         ./gnl/get_next_line.c \
         ./gnl/get_next_line_utils.c \
         ./exec/redir.c \
