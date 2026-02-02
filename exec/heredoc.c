@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/02 13:54:39 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/02 16:14:34 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,19 @@ void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
 	while (node->redirs[i].delimiter[k])
 	{
 		line = readline("> ");
+		if (!line)
+			break ;
+		if (ft_strncmp(line, node->redirs[i].delimiter[k],
+				ft_strlen(node->redirs[i].delimiter[k] + 1)) == 0)
+		{
+			free(line);
+			k++;
+			continue ;
+		}
 		if (expand)
 			expanded = expand_token(line, mini);
-		if (!line || ft_strncmp(line, node->redirs[i].delimiter[k],
-				ft_strlen(node->redirs[i].delimiter[k]) + 1) == 0)
-			k++;
 		if (expand)
 			free(expanded);
-		if (line)
-			free(line);
 	}
 }
 
@@ -43,8 +47,7 @@ void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
-	heredoc_loop(i, node, node->redirs[i].expand,
-		mini);
+	heredoc_loop(i, node, node->redirs[i].expand, mini);
 	close(fd[1]);
 	exit(0);
 }
