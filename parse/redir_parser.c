@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/29 18:38:24 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/02 13:19:42 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	handle_in_redir(const char *s, int *i, t_node *node)
 	if (s[*i + 1] == '<')
 	{
 		*i += 2;
-		expand = !is_quoted_delimiter(s, *i);
+		expand = is_quoted_delimiter(s, *i);
 		delim = get_next_word(s, i);
 		return (handle_add_heredoc(expand, delim, node));
 	}
@@ -52,45 +52,6 @@ static int	handle_in_redir(const char *s, int *i, t_node *node)
 		return (1);
 	}
 }
-
-// static int	handle_in_redir(const char *s, int *i, t_node *node)
-// {
-// 	char	*delim;
-// 	int		expand;
-
-// 	if (s[*i + 1] == '<')
-// 	{
-// 		*i += 2;
-// 		expand = !is_quoted_delimiter(s, *i);
-// 		delim = get_next_word(s, i);
-// 		if (!delim)
-// 		{
-// 			printf("minishell: syntax error near unexpected token <<\n");
-// 			return (0);
-// 		}
-// 		if (node->redir_count > 0 && node->redirs[node->redir_count
-// 				- 1].type == HEREDOC)
-// 		{
-// 			add_delimiter(&node->redirs[node->redir_count - 1], delim);
-// 		}
-// 		else
-// 		{
-// 			add_redir(node, HEREDOC, expand);
-// 			add_delimiter(&node->redirs[node->redir_count - 1], delim);
-// 		}
-// 		return (1);
-// 	}
-// 	(*i)++;
-// 	delim = get_next_word(s, i);
-// 	if (!delim)
-// 	{
-// 		printf("minishell: syntax error near unexpected token <\n");
-// 		return (0);
-// 	}
-// 	add_redir(node, REDIR_IN, 0);
-// 	node->redirs[node->redir_count - 1].file = delim;
-// 	return (1);
-// }
 
 static int	handle_out_redir(const char *s, int *i, t_node *node)
 {
@@ -139,5 +100,6 @@ void	add_redir(t_node *node, t_redir_type type, int expand)
 	node->redirs[node->redir_count].type = type;
 	node->redirs[node->redir_count].delimiter = NULL;
 	node->redirs[node->redir_count].expand = expand;
+	node->redirs[node->redir_count].file = NULL;
 	node->redir_count++;
 }

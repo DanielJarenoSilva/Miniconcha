@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:20:43 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/02 13:54:39 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,38 +22,31 @@ void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
 	k = 0;
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
+	line = NULL;
 	while (node->redirs[i].delimiter[k])
 	{
 		line = readline("> ");
+		if (expand)
+			expanded = expand_token(line, mini);
 		if (!line || ft_strncmp(line, node->redirs[i].delimiter[k],
 				ft_strlen(node->redirs[i].delimiter[k]) + 1) == 0)
 			k++;
 		if (expand)
-		{
-			expanded = expand_token(line, mini);
-			free(line);
-		}
-		else
-			expanded = line;
-		if (expand)
 			free(expanded);
+		if (line)
+			free(line);
 	}
 }
 
-void	apply_heredoc(t_node *node, int i, t_mini *mini)
+void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
-	int		fd[2];
-	pid_t	pid;
-
-	if (pipe(fd) == -1)
-		return ;
-	pid = fork();
-	if (pid == -1)
-		return ;
-	if (pid == 0)
-		exec_heredoc(i, fd, node, mini);
-	else
-		heredoc_father(fd, pid, mini);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
+	close(fd[0]);
+	heredoc_loop(i, node, node->redirs[i].expand,
+		mini);
+	close(fd[1]);
+	exit(0);
 }
 
 void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
@@ -72,31 +65,18 @@ void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
 	dup2(fd[0], STDIN_FILENO);
 }
 
-void	exec_heredoc_cmd(char **tokens, t_mini *mini)
+void	apply_heredoc(t_node *node, int i, t_mini *mini)
 {
-	char	**path_dirs;
-	char	*path_cmd;
+	int		fd[2];
+	pid_t	pid;
 
-	if (is_builtin(tokens[0]))
-	{
-		exec_builtin(mini->nodes[0], mini);
+	if (pipe(fd) == -1)
 		return ;
-	}
-	path_dirs = get_path_dirs(mini->envp);
-	if (!path_dirs)
-	{
-		print_error_cmd(tokens[0]);
-		exit(127);
-	}
-	path_cmd = find_cmd(tokens[0], path_dirs);
-	if (path_dirs)
-		ft_free_matrix(path_dirs);
-	if (!path_cmd)
-	{
-		print_error_cmd(tokens[0]);
-		exit(127);
-	}
-	execve(path_cmd, tokens, mini->envp);
-	perror("execve");
-	free(path_cmd);
+	pid = fork();
+	if (pid == -1)
+		return ;
+	if (pid == 0)
+		exec_heredoc(i, fd, node, mini);
+	else
+		heredoc_father(fd, pid, mini);
 }

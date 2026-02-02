@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/04 11:00:58 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:34:26 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/02 13:15:21 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,9 @@ char	*expand_token(char *str, t_mini *mini)
 	char	*tmp;
 
 	i = 0;
-	res = ft_strdup("");
-	if (!res)
+	if (!str)
 		return (NULL);
+	res = ft_strdup("");
 	while (str[i])
 	{
 		if (str[i] == '\'')

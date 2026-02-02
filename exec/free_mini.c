@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_mini.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 15:02:36 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:07:47 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/02 13:24:59 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	free_redirs(t_redir *redirs, int count)
 		return ;
 	while (i < count)
 	{
+		ft_free_matrix(redirs[i].delimiter);
 		if (redirs[i].file)
 			free(redirs[i].file);
 		i++;
