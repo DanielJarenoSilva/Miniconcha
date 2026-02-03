@@ -20,7 +20,7 @@ The project must be compiled and executed on a Unix-based system.
 
 Required tools:
 - GNU Make
-- GCC compiler
+- CC compiler
 - Standard C libraries
 
 ---

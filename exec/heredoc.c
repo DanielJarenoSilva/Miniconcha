@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 16:18:08 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 17:31:48 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,20 @@ void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
 {
 	char	*line;
 	char	*expanded;
+	char	*str;
 	int		k;
 
+	str = ft_strdup("");
 	k = 0;
 	while (node->redirs[i].delimiter[k])
 	{
 		line = readline("> ");
+		ft_strjoin_free(str, line);
+		ft_strjoin_char_free(str, '\n');
 		if (!line)
 			break ;
 		if (ft_strncmp(line, node->redirs[i].delimiter[k],
-				ft_strlen(node->redirs[i].delimiter[k])) == 0)
+				ft_strlen(line)) == 0)
 		{
 			free(line);
 			k++;
@@ -62,6 +66,11 @@ void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
 		if (expand)
 			free(expanded);
 	}
+	printf("str : %s\n",str);
+	k = 0;
+	while (node->tokens[k])
+		k++;
+	node->tokens[k] = str;
 }
 
 void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)

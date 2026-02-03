@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 12:08:19 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/03 16:59:53 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	**tokenizer(const char *s, t_node *node, t_mini mini)
 	int		j;
 	int		start;
 
-	tokens = (char **)calloc(1024, sizeof(char *));
+	tokens = (char **)ft_calloc(1024, sizeof(char *));
 	if (!tokens)
 		return (NULL);
 	i = 0;
@@ -80,7 +80,7 @@ char	**get_nodes(const char *s, struct s_mini *mini)
 		printf("Error: unmatched quotes\n");
 		return (NULL);
 	}
-	nodes = (char **)calloc(1024, sizeof(char *));
+	nodes = (char **)ft_calloc(1024, sizeof(char *));
 	if (!nodes)
 		return (NULL);
 	i = 0;
@@ -134,7 +134,7 @@ void	parser(const char *s, t_mini *mini)
 	num_cmds = 0;
 	while (cmds[num_cmds])
 		num_cmds++;
-	mini->nodes = (t_node **)calloc(num_cmds + 1, sizeof(t_node *));
+	mini->nodes = (t_node **)ft_calloc(num_cmds + 1, sizeof(t_node *));
 	if (!mini->nodes)
 	{
 		ft_free_matrix(cmds);

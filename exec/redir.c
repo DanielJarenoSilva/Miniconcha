@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/03 13:36:12 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 17:20:50 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	apply_redir_out(t_node *node, int i)
 {
 	int	fd;
 
-	fflush(stdout);
 	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -45,7 +44,6 @@ void	apply_redir_append(t_node *node, int i)
 {
 	int	fd;
 
-	fflush(stdout);
 	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd < 0)
 	{
