@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/03 18:28:46 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 22:48:29 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	handle_redir(const char *s, int *i, t_node *node)
 
 void	add_redir(t_node *node, t_redir_type type, int expand)
 {
-	node->redirs = ft_realloc(node->redirs, sizeof(t_redir) * (node->redir_count
+	node->redirs = realloc(node->redirs, sizeof(t_redir) * (node->redir_count
 				+ 1));
 	node->redirs[node->redir_count].type = type;
 	node->redirs[node->redir_count].delimiter = NULL;

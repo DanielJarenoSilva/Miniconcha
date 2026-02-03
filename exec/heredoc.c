@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 18:27:49 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 22:51:32 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini, int fd)
 		if (expand)
 			free(expanded);
 		write(fd, "\n", 1);
+		free(line);
 	}
 }
 

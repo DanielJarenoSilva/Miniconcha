@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/03 18:12:03 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 22:56:10 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ static int	process_single_node(t_mini *mini, int i)
 				mini->is_fork = 1;
 				apply_redirs(mini->nodes[i], mini);
 			}
-			if (is_builtin(mini->nodes[i]->tokens[0]))
+			if (mini->nodes[i]->tokens[0]
+				&& is_builtin(mini->nodes[i]->tokens[0]))
 			{
 				exec_builtin(mini->nodes[i], mini);
 				exit(mini->exit_code);
