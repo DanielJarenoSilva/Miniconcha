@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/03 17:20:53 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/03 18:28:46 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static int	handle_in_redir(const char *s, int *i, t_node *node)
 		return (1);
 	}
 }
-
 
 int	handle_out_redir(const char *s, int *i, t_node *node)
 {

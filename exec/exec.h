@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 17:19:51 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/03 18:24:42 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int						ft_strcmp_exact(const char *s1, const char *s2);
 int						handle_readline(t_mini *mini, char **rl);
 void					dup_stdin(int stdin_backup, int stdout_backup);
 void					heredoc_loop(int i, t_node *node, int expand,
-							t_mini *mini);
+							t_mini *mini, int fd);
 void					exec_heredoc(int i, int fd[], t_node *node,
 							t_mini *mini);
 char					**copy_envp(char **envp);

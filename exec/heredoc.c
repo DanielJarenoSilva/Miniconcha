@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 17:31:48 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/03 18:27:49 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,47 +38,74 @@
 // 	}
 // }
 
-void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
+void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini, int fd)
 {
 	char	*line;
 	char	*expanded;
-	char	*str;
 	int		k;
 
-	str = ft_strdup("");
+	line = NULL;
 	k = 0;
 	while (node->redirs[i].delimiter[k])
 	{
 		line = readline("> ");
-		ft_strjoin_free(str, line);
-		ft_strjoin_char_free(str, '\n');
-		if (!line)
-			break ;
 		if (ft_strncmp(line, node->redirs[i].delimiter[k],
-				ft_strlen(line)) == 0)
+				ft_strlen(node->redirs[i].delimiter[k])) == 0)
 		{
 			free(line);
 			k++;
 			continue ;
 		}
 		if (expand)
+		{
 			expanded = expand_token(line, mini);
+			write(fd, expanded, ft_strlen(expanded));
+		}
+		else
+			write(fd, line, ft_strlen(line));
 		if (expand)
 			free(expanded);
+		write(fd, "\n", 1);
 	}
-	printf("str : %s\n",str);
-	k = 0;
-	while (node->tokens[k])
-		k++;
-	node->tokens[k] = str;
 }
+
+// void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini, int fd)
+// {
+// 	char	*line;
+// 	char	*expanded;
+
+// 	while (1)
+// 	{
+// 		line = readline("> ");
+// 		if (!line)
+// 			break ;
+// 		if (ft_strcmp_exact(line, node->redirs[i].delimiter[0]))
+// 		{
+// 			free(line);
+// 			break ;
+// 		}
+// 		if (expand)
+// 		{
+// 			expanded = expand_token(line, mini);
+// 			free(line);
+// 			write(fd, expanded, ft_strlen(expanded));
+// 			free(expanded);
+// 		}
+// 		else
+// 		{
+// 			write(fd, line, ft_strlen(line));
+// 			free(line);
+// 		}
+// 		write(fd, "\n", 1);
+// 	}
+// }
 
 void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
-	heredoc_loop(i, node, node->redirs[i].expand, mini);
+	heredoc_loop(i, node, node->redirs[i].expand, mini, fd[1]);
 	close(fd[1]);
 	exit(0);
 }
