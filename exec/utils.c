@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/11 11:33:51 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 12:28:13 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/03 13:39:00 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	ft_free_matrix(char **strs)
 	int	i;
 
 	i = 0;
+	if (!strs)
+		return ;
 	while (strs[i])
 	{
 		free(strs[i]);

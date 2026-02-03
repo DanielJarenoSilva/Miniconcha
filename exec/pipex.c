@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/30 13:53:04 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 16:45:35 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (mini->nodes[i]->redir_count > 0)
-		apply_redirs(mini->nodes[i], mini);
 	if (in_fd != STDIN_FILENO)
 	{
 		dup2(in_fd, STDIN_FILENO);
@@ -90,6 +88,7 @@ void	run_pipes(t_mini *mini)
 	pid_t	pid;
 	pid_t	last_pid;
 
+	last_pid = 0;
 	i = 0;
 	in_fd = STDIN_FILENO;
 	init_fd(fd);
@@ -99,12 +98,17 @@ void	run_pipes(t_mini *mini)
 			return ;
 		pid = fork();
 		if (pid == 0)
+		{
+			if (mini->nodes[i]->redirs)
+				apply_redirs(mini->nodes[i], mini);
 			setup_child(mini, i, in_fd, fd);
+		}
 		else
 			setup_parent(&in_fd, fd, mini->nodes[i + 1] != NULL);
 		if (!mini->nodes[i + 1])
 			last_pid = pid;
 		i++;
+		wait_children(mini, last_pid);
 	}
 	wait_children(mini, last_pid);
 }

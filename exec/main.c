@@ -6,49 +6,50 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/02 16:11:59 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 16:32:51 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
 
-static void	process_cmd(t_mini *mini, int i)
-{
-	char	*cmd;
-
-	cmd = save_exec_cmd(mini->nodes[i], mini);
-	if (cmd && *cmd)
-		ft_putstr_fd(cmd, 1);
-	free(cmd);
-}
-
 static int	process_single_node(t_mini *mini, int i)
 {
-	int	stdin_backup;
-	int	stdout_backup;
+	pid_t	pid;
+	int		status;
 
-	stdin_backup = dup(STDIN_FILENO);
-	stdout_backup = dup(STDOUT_FILENO);
-	if (mini->nodes[i]->redirs)
-	{
-		apply_redirs(mini->nodes[i], mini);
-		if (mini->heredoc_interrupted)
-		{
-			mini->heredoc_interrupted = 0;
-			dup_stdin(stdin_backup, stdout_backup);
-			return (1);
-		}
-	}
 	if (mini->is_pipe)
 	{
 		run_pipes(mini);
-		dup_stdin(stdin_backup, stdout_backup);
-		return (1);
+		return (0);
 	}
-	if (mini->nodes[i]->tokens && mini->nodes[i]->tokens[0])
-		process_cmd(mini, i);
-	dup_stdin(stdin_backup, stdout_backup);
+	if (pb(mini->nodes[i]->tokens[0]))
+		exec_builtin(mini->nodes[i], mini);
+	else
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			if (mini->nodes[i]->redirs)
+			{
+				mini->is_fork = 1;
+				apply_redirs(mini->nodes[i], mini);
+			}
+			if (is_builtin(mini->nodes[i]->tokens[0]))
+			{
+				exec_builtin(mini->nodes[i], mini);
+				exit(mini->exit_code);
+			}
+			exec_cmd(mini->nodes[i]->tokens, mini);
+			exit(mini->exit_code);
+		}
+		else
+		{
+			waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				mini->exit_code = WEXITSTATUS(status);
+		}
+	}
 	return (0);
 }
 
@@ -57,6 +58,11 @@ void	process_nodes(t_mini *mini)
 	int	i;
 
 	i = 0;
+	if (mini->is_pipe)
+	{
+		process_single_node(mini, i);
+		return ;
+	}
 	while (mini->nodes && mini->nodes[i])
 	{
 		if (process_single_node(mini, i))

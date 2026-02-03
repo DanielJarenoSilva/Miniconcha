@@ -6,12 +6,37 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/02 16:14:34 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 16:18:08 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
+
+// void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
+// {
+// 	char	*line;
+// 	int		k;
+
+// 	k = 0;
+// 	signal(SIGINT, SIG_DFL);
+// 	signal(SIGQUIT, SIG_IGN);
+// 	line = NULL;
+// 	while (node->redirs[i].delimiter[k])
+// 	{
+// 		line = readline("> ");
+// 		if (!line)
+// 			break ;
+// 		if (expand)
+// 			line = expand_token(line, mini);
+// 		if (ft_strncmp(line, node->redirs[i].delimiter[k],
+// 				ft_strlen(node->redirs[i].delimiter[k] + 1)) == 0)
+// 		{
+// 			free(line);
+// 			k++;
+// 		}
+// 	}
+// }
 
 void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
 {
@@ -20,16 +45,13 @@ void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
 	int		k;
 
 	k = 0;
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
-	line = NULL;
 	while (node->redirs[i].delimiter[k])
 	{
 		line = readline("> ");
 		if (!line)
 			break ;
 		if (ft_strncmp(line, node->redirs[i].delimiter[k],
-				ft_strlen(node->redirs[i].delimiter[k] + 1)) == 0)
+				ft_strlen(node->redirs[i].delimiter[k])) == 0)
 		{
 			free(line);
 			k++;
@@ -63,9 +85,10 @@ void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
 		mini->exit_code = 130;
 		mini->heredoc_interrupted = 1;
 		close(fd[0]);
-		return ;
+		exit(130);
 	}
 	dup2(fd[0], STDIN_FILENO);
+	close(fd[0]);
 }
 
 void	apply_heredoc(t_node *node, int i, t_mini *mini)

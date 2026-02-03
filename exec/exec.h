@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/30 19:04:09 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 15:02:56 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
+int						ft_strcmp_exact(const char *s1, const char *s2);
 int						handle_readline(t_mini *mini, char **rl);
 void					dup_stdin(int stdin_backup, int stdout_backup);
 void					heredoc_loop(int i, t_node *node, int expand,

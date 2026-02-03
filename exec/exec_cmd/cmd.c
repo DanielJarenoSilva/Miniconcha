@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/30 19:08:46 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 16:30:53 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	exec_cmd(char **tokens, t_mini *mini)
 	char	**path_dirs;
 	char	*path_cmd;
 
+	(void)mini;
 	if (!tokens || !tokens[0])
 		exit(0);
 	signal(SIGINT, SIG_DFL);
@@ -24,16 +25,14 @@ void	exec_cmd(char **tokens, t_mini *mini)
 	path_dirs = get_path_dirs(mini->envp);
 	path_cmd = find_cmd(tokens[0], path_dirs);
 	ft_free_matrix(path_dirs);
-	if (!path_cmd || !path_dirs)
+	if (!path_cmd)
 	{
 		print_error_cmd(tokens[0]);
-		free_mini(mini);
 		exit(127);
 	}
 	execve(path_cmd, tokens, mini->envp);
 	perror("execve");
-	free(path_cmd);
-	exit(1);
+	exit(126);
 }
 
 void	child(t_node *node, t_mini *mini, int *fd)

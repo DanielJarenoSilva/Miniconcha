@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/02 13:54:03 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 16:04:04 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,26 @@ void	init_mini(t_mini *mini, char **envp)
 	mini->is_pipe = 0;
 	mini->builtin_quote = 0;
 	mini->heredoc_interrupted = 0;
+	mini->is_fork = 0;
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+int	ft_strcmp_exact(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	if (!s1 || !s2)
+		return (0);
+	while (s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (0);
+		i++;
+	}
+	if (s1[i] == '\0' && s2[i] == '\0')
+		return (1);
+	else
+		return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/30 18:53:25 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/03 13:36:12 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	apply_redir_out(t_node *node, int i)
 {
 	int	fd;
 
+	fflush(stdout);
 	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -44,6 +45,7 @@ void	apply_redir_append(t_node *node, int i)
 {
 	int	fd;
 
+	fflush(stdout);
 	fd = open(node->redirs[i].file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd < 0)
 	{
@@ -77,7 +79,14 @@ int	apply_redirs(t_node *node, t_mini *mini)
 	while (i < node->redir_count)
 	{
 		if (node->redirs[i].type == HEREDOC)
+		{
+			if (!node->tokens[0])
+			{
+				heredoc_loop(i, node, node->redirs->expand, mini);
+				exit(0);
+			}
 			apply_heredoc(node, i, mini);
+		}
 		else if (node->redirs[i].type == REDIR_IN)
 			apply_redir_in(node, i);
 		else if (node->redirs[i].type == REDIR_OUT)
