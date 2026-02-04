@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/04 12:04:34 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/04 13:26:19 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static void	wait_children(t_mini *mini, int last_pid)
 				mini->exit_code = 128 + WTERMSIG(status);
 		}
 	}
+	mini->is_pipe = 0;
 }
 
 void	run_pipes(t_mini *mini)

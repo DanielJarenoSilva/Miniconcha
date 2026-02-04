@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirparseutils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:08:14 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/04 12:01:21 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/04 13:10:16 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	add_delimiter(t_redir *redir, char *delim)
 	while (redir->delimiter[i])
 		i++;
 	redir->delimiter = ft_realloc(redir->delimiter,
-			sizeof(char *) * (i + 2));
+			sizeof(char *) * (i + 2), sizeof(char *) * i);
 	redir->delimiter[i] = delim;
 	redir->delimiter[i + 1] = NULL;
 }

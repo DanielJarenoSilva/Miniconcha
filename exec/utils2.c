@@ -6,7 +6,7 @@
 /*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 17:06:33 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/04 12:58:01 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/04 13:09:39 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	handle_readline(t_mini *mini, char **rl)
 	return (1);
 }
 
-void	*ft_realloc(void *ptr, size_t size)
+void	*ft_realloc(void *ptr, size_t size, size_t old_size)
 {
 	void	*new_ptr;
 
@@ -40,7 +40,7 @@ void	*ft_realloc(void *ptr, size_t size)
 	new_ptr = malloc(size);
 	if (new_ptr == NULL)
 		return (NULL);
-	ft_memcpy(new_ptr, ptr, sizeof(ptr));
+	ft_memcpy(new_ptr, ptr, old_size);
 	free(ptr);
 	return (new_ptr);
 }

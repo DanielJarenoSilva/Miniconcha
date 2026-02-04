@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 16:30:53 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/04 13:22:14 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ void	exec_cmd(char **tokens, t_mini *mini)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	path_dirs = get_path_dirs(mini->envp);
+	if (!path_dirs)
+	{
+		print_error_cmd(tokens[0]);
+		exit(127);
+	}
 	path_cmd = find_cmd(tokens[0], path_dirs);
 	ft_free_matrix(path_dirs);
 	if (!path_cmd)

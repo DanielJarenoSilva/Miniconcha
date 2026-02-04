@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/04 12:05:16 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/04 13:09:51 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void					print_nodes(t_mini mini);
 void					init_mini(t_mini *mini, char **envp);
 int						create_pipe(int fd[2]);
 void					init_fd(int fd[2]);
-void					*ft_realloc(void *ptr, size_t size);
+void					*ft_realloc(void *ptr, size_t size, size_t old_size);
 void					pipes_aux(t_mini *mini, int i, int in_fd, int *fd);
 void					setup_child(t_mini *mini, int i, int in_fd, int fd[2]);
 
