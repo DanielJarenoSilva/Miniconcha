@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 17:06:33 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/03 22:48:46 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/04 12:03:56 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,11 @@ void	*ft_realloc(void *ptr, size_t size)
 	memcpy(new_ptr, ptr, size);
 	free(ptr);
 	return (new_ptr);
+}
+
+void	pipes_aux(t_mini *mini, int i, int in_fd, int *fd)
+{
+	if (mini->nodes[i]->redirs)
+		apply_redirs(mini->nodes[i], mini);
+	setup_child(mini, i, in_fd, fd);
 }

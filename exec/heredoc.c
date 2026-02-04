@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 22:51:32 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/04 11:06:36 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,16 @@
 // 		}
 // 	}
 // }
+char	*loop_aux(char *line, t_mini *mini, int fd)
+{
+	char	*expanded;
 
-void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini, int fd)
+	expanded = expand_token(line, mini);
+	write(fd, expanded, ft_strlen(expanded));
+	return (expanded);
+}
+
+void	heredoc_loop(int i, t_node *node, t_mini *mini, int fd)
 {
 	char	*line;
 	char	*expanded;
@@ -56,14 +64,11 @@ void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini, int fd)
 			k++;
 			continue ;
 		}
-		if (expand)
-		{
-			expanded = expand_token(line, mini);
-			write(fd, expanded, ft_strlen(expanded));
-		}
+		if (node->redirs[i].expand)
+			expanded = loop_aux(line, mini, fd);
 		else
 			write(fd, line, ft_strlen(line));
-		if (expand)
+		if (node->redirs[i].expand)
 			free(expanded);
 		write(fd, "\n", 1);
 		free(line);
@@ -106,7 +111,7 @@ void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
-	heredoc_loop(i, node, node->redirs[i].expand, mini, fd[1]);
+	heredoc_loop(i, node, mini, fd[1]);
 	close(fd[1]);
 	exit(0);
 }

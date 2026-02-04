@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 16:45:35 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/04 12:04:34 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute_node(t_mini *mini, int i)
 	exit(mini->exit_code);
 }
 
-static void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
+void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -98,11 +98,7 @@ void	run_pipes(t_mini *mini)
 			return ;
 		pid = fork();
 		if (pid == 0)
-		{
-			if (mini->nodes[i]->redirs)
-				apply_redirs(mini->nodes[i], mini);
-			setup_child(mini, i, in_fd, fd);
-		}
+			pipes_aux(mini, i, in_fd, fd);
 		else
 			setup_parent(&in_fd, fd, mini->nodes[i + 1] != NULL);
 		if (!mini->nodes[i + 1])

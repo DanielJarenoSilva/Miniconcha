@@ -3,15 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/03 22:56:10 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/04 11:09:13 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
+
+void	process_node_aux(t_mini *mini, int i)
+{
+	if (mini->nodes[i]->redirs)
+	{
+		mini->is_fork = 1;
+		apply_redirs(mini->nodes[i], mini);
+	}
+	if (mini->nodes[i]->tokens[0]
+		&& is_builtin(mini->nodes[i]->tokens[0]))
+	{
+		exec_builtin(mini->nodes[i], mini);
+		exit(mini->exit_code);
+	}
+	exec_cmd(mini->nodes[i]->tokens, mini);
+	exit(mini->exit_code);
+}
 
 static int	process_single_node(t_mini *mini, int i)
 {
@@ -29,21 +46,7 @@ static int	process_single_node(t_mini *mini, int i)
 	{
 		pid = fork();
 		if (pid == 0)
-		{
-			if (mini->nodes[i]->redirs)
-			{
-				mini->is_fork = 1;
-				apply_redirs(mini->nodes[i], mini);
-			}
-			if (mini->nodes[i]->tokens[0]
-				&& is_builtin(mini->nodes[i]->tokens[0]))
-			{
-				exec_builtin(mini->nodes[i], mini);
-				exit(mini->exit_code);
-			}
-			exec_cmd(mini->nodes[i]->tokens, mini);
-			exit(mini->exit_code);
-		}
+			process_node_aux(mini, i);
 		else
 		{
 			waitpid(pid, &status, 0);
