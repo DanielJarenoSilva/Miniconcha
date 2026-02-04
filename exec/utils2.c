@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 17:06:33 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/04 12:03:56 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/04 12:58:01 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	*ft_realloc(void *ptr, size_t size)
 	new_ptr = malloc(size);
 	if (new_ptr == NULL)
 		return (NULL);
-	memcpy(new_ptr, ptr, size);
+	ft_memcpy(new_ptr, ptr, sizeof(ptr));
 	free(ptr);
 	return (new_ptr);
 }
