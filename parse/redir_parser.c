@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   redir_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/05 03:01:32 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/05 12:49:13 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-static int	handle_add_heredoc(int expand, char *delim, t_node *node)
+static int	handle_add_heredoc(int e, char *delim, t_node *node, t_mini *mini)
 {
 	if (!delim)
 	{
 		node->wrong_redir++;
+		mini->exit_code = 2;
 		printf("minishell: syntax error near unexpected token `<<`\n");
 		return (2);
 	}
@@ -27,13 +28,13 @@ static int	handle_add_heredoc(int expand, char *delim, t_node *node)
 	}
 	else
 	{
-		add_redir(node, HEREDOC, expand);
+		add_redir(node, HEREDOC, e);
 		add_delimiter(&node->redirs[node->redir_count - 1], delim);
 	}
 	return (1);
 }
 
-static int	handle_in_redir(const char *s, int *i, t_node *node)
+static int	handle_in_redir(const char *s, int *i, t_node *node, t_mini *mini)
 {
 	char	*delim;
 	int		expand;
@@ -43,7 +44,7 @@ static int	handle_in_redir(const char *s, int *i, t_node *node)
 		*i += 2;
 		expand = is_quoted_delimiter(s, *i);
 		delim = get_next_word(s, i);
-		return (handle_add_heredoc(expand, delim, node));
+		return (handle_add_heredoc(expand, delim, node, mini));
 	}
 	else
 	{
@@ -52,6 +53,7 @@ static int	handle_in_redir(const char *s, int *i, t_node *node)
 		if (!delim)
 		{
 			node->wrong_redir++;
+			mini->exit_code = 2;
 			printf("minishell: syntax error near unexpected token `<`\n");
 			return (2);
 		}
@@ -90,14 +92,17 @@ int	handle_out_redir(const char *s, int *i, t_node *node)
 	return (node->redirs[node->redir_count - 1].file = file, 1);
 }
 
-int	handle_redir(const char *s, int *i, t_node *node)
+int	handle_redir(const char *s, int *i, t_node *node, t_mini *mini)
 {
 	if (!ft_ischev(s[*i]))
 		return (0);
 	if (s[*i] == '<')
-		return (handle_in_redir(s, i, node));
+		return (handle_in_redir(s, i, node, mini));
 	if (s[*i] == '>')
-		return (handle_out_redir(s, i, node));
+	{
+		mini->exit_code = handle_out_redir(s, i, node);
+		return (mini->exit_code);
+	}
 	return (0);
 }
 

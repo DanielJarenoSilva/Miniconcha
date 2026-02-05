@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/05 11:56:59 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/05 12:54:31 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static void	mini_loop(t_mini *mini)
 			parser(rl, mini);
 			if (mini->is_pipe != -1)
 			{
-				if (!mini->nodes[0]->wrong_redir)
+				if (mini->nodes[0]->wrong_redir == 0)
 					process_nodes(mini);
 			}
 		}

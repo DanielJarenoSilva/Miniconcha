@@ -6,13 +6,13 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/05 11:58:15 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/05 12:54:45 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-char	**tokenizer(const char *s, t_node *node, t_mini mini)
+char	**tokenizer(const char *s, t_node *node, t_mini *mini)
 {
 	char	**tokens;
 	int		i;
@@ -28,13 +28,13 @@ char	**tokenizer(const char *s, t_node *node, t_mini mini)
 	{
 		while (ft_isspace(s[i]))
 			i++;
-		if (ft_ischev(s[i]) && handle_redir(s, &i, node) == 0)
+		if (ft_ischev(s[i]) && handle_redir(s, &i, node, mini) == 0)
 		{
 			ft_free_matrix(tokens);
 			return (NULL);
 		}
 		start = i;
-		skip_token_quotes(s, &i, &mini);
+		skip_token_quotes(s, &i, mini);
 		if (i > start)
 			tokens[j++] = word_dup_no_quotes(s + start, i - start);
 	}
@@ -106,9 +106,9 @@ static int	init_nodes(char **cmds, struct s_mini *mini, int num_cmds)
 		mini->nodes[j] = (t_node *)malloc(sizeof(t_node));
 		mini->nodes[j]->redirs = NULL;
 		mini->nodes[j]->redir_count = 0;
-		mini->nodes[j]->tokens = tokenizer(cmds[i], mini->nodes[j], *mini);
-		mini->nodes[j]->expand = has_single_quotes(cmds[i]);
 		mini->nodes[j]->wrong_redir = 0;
+		mini->nodes[j]->tokens = tokenizer(cmds[i], mini->nodes[j], mini);
+		mini->nodes[j]->expand = has_single_quotes(cmds[i]);
 		if (mini->nodes[j]->tokens)
 			expand_tokens(mini->nodes[j], mini);
 		i++;
