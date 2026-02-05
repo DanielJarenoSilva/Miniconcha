@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/04 11:06:36 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/05 02:32:09 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,43 +37,6 @@
 // 		}
 // 	}
 // }
-char	*loop_aux(char *line, t_mini *mini, int fd)
-{
-	char	*expanded;
-
-	expanded = expand_token(line, mini);
-	write(fd, expanded, ft_strlen(expanded));
-	return (expanded);
-}
-
-void	heredoc_loop(int i, t_node *node, t_mini *mini, int fd)
-{
-	char	*line;
-	char	*expanded;
-	int		k;
-
-	line = NULL;
-	k = 0;
-	while (node->redirs[i].delimiter[k])
-	{
-		line = readline("> ");
-		if (ft_strncmp(line, node->redirs[i].delimiter[k],
-				ft_strlen(node->redirs[i].delimiter[k])) == 0)
-		{
-			free(line);
-			k++;
-			continue ;
-		}
-		if (node->redirs[i].expand)
-			expanded = loop_aux(line, mini, fd);
-		else
-			write(fd, line, ft_strlen(line));
-		if (node->redirs[i].expand)
-			free(expanded);
-		write(fd, "\n", 1);
-		free(line);
-	}
-}
 
 // void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini, int fd)
 // {

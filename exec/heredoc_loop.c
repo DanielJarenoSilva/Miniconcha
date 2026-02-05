@@ -1,0 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_loop.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/05 02:30:58 by kfuto             #+#    #+#             */
+/*   Updated: 2026/02/05 02:32:18 by kfuto            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../parse/parse.h"
+#include "exec.h"
+
+static char	*loop_aux(char *line, t_mini *mini, int fd)
+{
+	char	*expanded;
+
+	expanded = expand_token(line, mini);
+	write(fd, expanded, ft_strlen(expanded));
+	return (expanded);
+}
+
+static void	process_heredoc_line(t_node *node, t_mini *mini,
+								int fd, int *idx)
+{
+	char	*line;
+	char	*expanded;
+
+	line = readline("> ");
+	if (ft_strncmp(line, node->redirs[idx[0]].delimiter[idx[1]],
+			ft_strlen(node->redirs[idx[0]].delimiter[idx[1]])) == 0)
+	{
+		free(line);
+		idx[1]++;
+		return ;
+	}
+	if (!node->redirs[idx[0]].delimiter[idx[1] + 1])
+	{
+		if (node->redirs[idx[0]].expand)
+			expanded = loop_aux(line, mini, fd);
+		else
+			write(fd, line, ft_strlen(line));
+		if (node->redirs[idx[0]].expand)
+			free(expanded);
+		write(fd, "\n", 1);
+	}
+	free(line);
+}
+
+void	heredoc_loop(int i, t_node *node, t_mini *mini, int fd)
+{
+	int	idx[2];
+
+	idx[0] = i;
+	idx[1] = 0;
+	while (node->redirs[i].delimiter[idx[1]])
+		process_heredoc_line(node, mini, fd, idx);
+}

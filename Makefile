@@ -20,6 +20,7 @@ SRCS =  ./exec/main.c \
         ./gnl/get_next_line_utils.c \
         ./exec/redir.c \
         ./exec/heredoc.c \
+        ./exec/heredoc_loop.c \
         ./parse/redir_parser.c \
         ./exec/builtins/echo.c \
         ./exec/builtins/pwd.c \
