@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/05 01:51:52 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/05 02:57:12 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ static int	process_single_node(t_mini *mini, int i)
 	pid_t	pid;
 	int		status;
 
+	if (mini->nodes[i]->wrong_redir)
+		return (0);
 	if (mini->is_pipe)
 	{
 		run_pipes(mini);
@@ -88,7 +90,8 @@ static void	mini_loop(t_mini *mini)
 			free_nodes(mini->nodes);
 			mini->nodes = NULL;
 			parser(rl, mini);
-			process_nodes(mini);
+			if (!mini->nodes[0]->wrong_redir)
+				process_nodes(mini);
 		}
 		free(rl);
 	}

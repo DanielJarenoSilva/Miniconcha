@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 16:59:53 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/05 03:10:07 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,11 @@ static int	init_nodes(char **cmds, struct s_mini *mini, int num_cmds)
 			return (mini->exit_code = 2, 0);
 		}
 		mini->nodes[j] = (t_node *)malloc(sizeof(t_node));
-		if (!mini->nodes[j])
-			return (0);
 		mini->nodes[j]->redirs = NULL;
 		mini->nodes[j]->redir_count = 0;
 		mini->nodes[j]->tokens = tokenizer(cmds[i], mini->nodes[j], *mini);
 		mini->nodes[j]->expand = has_single_quotes(cmds[i]);
+		mini->nodes[j]->wrong_redir = 0;
 		if (mini->nodes[j]->tokens)
 			expand_tokens(mini->nodes[j], mini);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 16:00:36 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/05 02:43:18 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_node
 	t_redir			*redirs;
 	int				redir_count;
 	int				expand;
+	int				wrong_redir;
 }					t_node;
 
 typedef struct s_mini

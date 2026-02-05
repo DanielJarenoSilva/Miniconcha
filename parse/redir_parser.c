@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/04 13:29:44 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/05 03:01:32 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 static int	handle_add_heredoc(int expand, char *delim, t_node *node)
 {
 	if (!delim)
-		return (0);
+	{
+		node->wrong_redir++;
+		printf("minishell: syntax error near unexpected token `<<`\n");
+		return (2);
+	}
 	if (node->redir_count > 0 && node->redirs[node->redir_count
 			- 1].type == HEREDOC)
 	{
@@ -46,7 +50,11 @@ static int	handle_in_redir(const char *s, int *i, t_node *node)
 		(*i)++;
 		delim = get_next_word(s, i);
 		if (!delim)
-			return (0);
+		{
+			node->wrong_redir++;
+			printf("minishell: syntax error near unexpected token `<`\n");
+			return (2);
+		}
 		add_redir(node, REDIR_IN, 0);
 		node->redirs[node->redir_count - 1].file = delim;
 		return (1);
@@ -64,7 +72,7 @@ int	handle_out_redir(const char *s, int *i, t_node *node)
 		if (!file)
 		{
 			printf("minishell: syntax error near unexpected token `>>`\n");
-			return (0);
+			return (node->wrong_redir++, 2);
 		}
 		add_redir(node, REDIR_APPEND, 0);
 	}
@@ -75,7 +83,7 @@ int	handle_out_redir(const char *s, int *i, t_node *node)
 		if (!file)
 		{
 			printf("minishell: syntax error near unexpected token `>`\n");
-			return (0);
+			return (node->wrong_redir++, 2);
 		}
 		add_redir(node, REDIR_OUT, 0);
 	}
