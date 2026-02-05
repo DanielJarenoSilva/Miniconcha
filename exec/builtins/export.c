@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:46 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:25:56 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/05 01:55:47 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	export(t_mini *mini, char	**tokens)
 	char	*value;
 	char	*eq;
 
+	sort_envp(mini->envp);
 	if (!tokens[1])
 		return (empty_export(mini));
 	i = 1;

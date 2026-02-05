@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/04 13:26:50 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/05 01:51:52 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,12 @@
 
 void	process_node_aux(t_mini *mini, int i)
 {
-	if (mini->nodes[i]->redirs)
+	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0)
 	{
 		mini->is_fork = 1;
 		apply_redirs(mini->nodes[i], mini);
 	}
-	if (mini->nodes[i]->tokens[0]
-		&& is_builtin(mini->nodes[i]->tokens[0]))
+	if (mini->nodes[i]->tokens[0] && is_builtin(mini->nodes[i]->tokens[0]))
 	{
 		exec_builtin(mini->nodes[i], mini);
 		exit(mini->exit_code);
@@ -40,7 +39,7 @@ static int	process_single_node(t_mini *mini, int i)
 		run_pipes(mini);
 		return (0);
 	}
-	if (pb(mini->nodes[i]->tokens[0]))
+	if (mini->nodes[i]->tokens[0] && is_builtin(mini->nodes[i]->tokens[0]))
 		exec_builtin(mini->nodes[i], mini);
 	else
 	{
