@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/05 02:57:12 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/05 11:56:59 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,11 @@ static void	mini_loop(t_mini *mini)
 			free_nodes(mini->nodes);
 			mini->nodes = NULL;
 			parser(rl, mini);
-			if (!mini->nodes[0]->wrong_redir)
-				process_nodes(mini);
+			if (mini->is_pipe != -1)
+			{
+				if (!mini->nodes[0]->wrong_redir)
+					process_nodes(mini);
+			}
 		}
 		free(rl);
 	}

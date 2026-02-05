@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/05 03:10:07 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/05 11:58:15 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,12 @@ void	parser(const char *s, t_mini *mini)
 
 	if (!check_pipe_syntax(s))
 	{
+		mini->is_pipe = -1;
+		mini->exit_code = 2;
 		printf("Error: invalid pipe sequence\n");
 		return ;
 	}
+	mini->is_pipe = 0;
 	cmds = get_nodes(s, mini);
 	if (!cmds)
 		return ;
@@ -135,13 +138,8 @@ void	parser(const char *s, t_mini *mini)
 		num_cmds++;
 	mini->nodes = (t_node **)ft_calloc(num_cmds + 1, sizeof(t_node *));
 	if (!mini->nodes)
-	{
-		ft_free_matrix(cmds);
-		return ;
-	}
-	if (!init_nodes(cmds, mini, num_cmds))
-	{
 		return (ft_free_matrix(cmds));
-	}
+	if (!init_nodes(cmds, mini, num_cmds))
+		return (ft_free_matrix(cmds));
 	ft_free_matrix(cmds);
 }

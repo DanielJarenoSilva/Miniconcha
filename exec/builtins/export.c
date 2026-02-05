@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:46 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/05 01:55:47 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/05 11:35:45 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,5 @@ void	export(t_mini *mini, char	**tokens)
 		free(key);
 		i++;
 	}
+	mini->exit_code = 0;
 }
