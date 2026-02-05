@@ -3,71 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/05 02:32:09 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/05 12:26:03 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parse/parse.h"
 #include "exec.h"
-
-// void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini)
-// {
-// 	char	*line;
-// 	int		k;
-
-// 	k = 0;
-// 	signal(SIGINT, SIG_DFL);
-// 	signal(SIGQUIT, SIG_IGN);
-// 	line = NULL;
-// 	while (node->redirs[i].delimiter[k])
-// 	{
-// 		line = readline("> ");
-// 		if (!line)
-// 			break ;
-// 		if (expand)
-// 			line = expand_token(line, mini);
-// 		if (ft_strncmp(line, node->redirs[i].delimiter[k],
-// 				ft_strlen(node->redirs[i].delimiter[k] + 1)) == 0)
-// 		{
-// 			free(line);
-// 			k++;
-// 		}
-// 	}
-// }
-
-// void	heredoc_loop(int i, t_node *node, int expand, t_mini *mini, int fd)
-// {
-// 	char	*line;
-// 	char	*expanded;
-
-// 	while (1)
-// 	{
-// 		line = readline("> ");
-// 		if (!line)
-// 			break ;
-// 		if (ft_strcmp_exact(line, node->redirs[i].delimiter[0]))
-// 		{
-// 			free(line);
-// 			break ;
-// 		}
-// 		if (expand)
-// 		{
-// 			expanded = expand_token(line, mini);
-// 			free(line);
-// 			write(fd, expanded, ft_strlen(expanded));
-// 			free(expanded);
-// 		}
-// 		else
-// 		{
-// 			write(fd, line, ft_strlen(line));
-// 			free(line);
-// 		}
-// 		write(fd, "\n", 1);
-// 	}
-// }
 
 void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
