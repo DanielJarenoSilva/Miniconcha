@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/05 12:26:03 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/06 12:33:26 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
 
 	close(fd[1]);
 	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+		write(2, "Quit (core dumped)\n", 20);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		mini->exit_code = 130;

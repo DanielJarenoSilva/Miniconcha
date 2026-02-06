@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/04 13:09:51 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/06 11:11:57 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,6 @@ void					init_fd(int fd[2]);
 void					*ft_realloc(void *ptr, size_t size, size_t old_size);
 void					pipes_aux(t_mini *mini, int i, int in_fd, int *fd);
 void					setup_child(t_mini *mini, int i, int in_fd, int fd[2]);
+void					exec_pb(t_mini *mini, int i);
 
 #endif

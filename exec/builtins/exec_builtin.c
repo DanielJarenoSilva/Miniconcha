@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:24:49 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:17:57 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/06 11:11:42 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,22 @@ int	pb(char *cmd)
 	if (!cmd)
 		return (0);
 	return (ft_strncmp(cmd, "cd", 3) == 0 || ft_strncmp(cmd, "unset", 5) == 0
-		|| ft_strncmp(cmd, "exit", 4) == 0);
+		|| ft_strncmp(cmd, "exit", 4) == 0
+		|| ft_strncmp(cmd, "export", 4) == 0);
+}
+
+void	exec_pb(t_mini *mini, int i)
+{
+	int		save_stdin;
+	int		save_stdout;
+
+	save_stdin = dup(STDIN_FILENO);
+	save_stdout = dup(STDOUT_FILENO);
+	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0)
+		apply_redirs(mini->nodes[i], mini);
+	exec_builtin(mini->nodes[i], mini);
+	dup2(save_stdin, STDIN_FILENO);
+	dup2(save_stdout, STDOUT_FILENO);
+	close(save_stdin);
+	close(save_stdout);
 }

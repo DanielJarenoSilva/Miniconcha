@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/04 13:22:14 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:33:01 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ char	*exec_child(t_node *node, t_mini *mini, int *fd)
 		close(fd[0]);
 	}
 	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+		write(2, "Quit (core dumped)\n", 20);
 	if (WIFEXITED(status))
 		mini->exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))

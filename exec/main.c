@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/05 12:54:31 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/06 12:36:48 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 void	process_node_aux(t_mini *mini, int i)
 {
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0)
 	{
 		mini->is_fork = 1;
@@ -37,12 +39,9 @@ static int	process_single_node(t_mini *mini, int i)
 	if (mini->nodes[i]->wrong_redir)
 		return (0);
 	if (mini->is_pipe)
-	{
-		run_pipes(mini);
-		return (0);
-	}
-	if (mini->nodes[i]->tokens[0] && is_builtin(mini->nodes[i]->tokens[0]))
-		exec_builtin(mini->nodes[i], mini);
+		return (run_pipes(mini), 0);
+	if (mini->nodes[i]->tokens[0] && pb(mini->nodes[i]->tokens[0]))
+		exec_pb(mini, i);
 	else
 	{
 		pid = fork();
@@ -51,6 +50,8 @@ static int	process_single_node(t_mini *mini, int i)
 		else
 		{
 			waitpid(pid, &status, 0);
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+				write(2, "Quit (core dumped)\n", 20);
 			if (WIFEXITED(status))
 				mini->exit_code = WEXITSTATUS(status);
 		}
@@ -90,7 +91,7 @@ static void	mini_loop(t_mini *mini)
 			free_nodes(mini->nodes);
 			mini->nodes = NULL;
 			parser(rl, mini);
-			if (mini->is_pipe != -1)
+			if (mini->nodes[0] && mini->is_pipe != -1)
 			{
 				if (mini->nodes[0]->wrong_redir == 0)
 					process_nodes(mini);

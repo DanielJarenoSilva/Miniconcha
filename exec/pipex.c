@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/04 13:26:19 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/06 12:38:14 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ static void	wait_children(t_mini *mini, int last_pid)
 			break ;
 		if (pid == last_pid)
 		{
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+				write(2, "Quit (core dumped)\n", 20);
 			if (WIFEXITED(status))
 				mini->exit_code = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
