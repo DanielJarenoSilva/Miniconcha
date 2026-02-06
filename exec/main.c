@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/06 12:48:39 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/06 16:26:28 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,21 @@ void	process_node_aux(t_mini *mini, int i)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0)
+
+	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0
+		&& !mini->is_pipe)
 	{
 		mini->is_fork = 1;
 		apply_redirs(mini->nodes[i], mini);
+		exit (0);
 	}
+
 	if (mini->nodes[i]->tokens[0] && is_builtin(mini->nodes[i]->tokens[0]))
 	{
 		exec_builtin(mini->nodes[i], mini);
 		exit(mini->exit_code);
 	}
+
 	exec_cmd(mini->nodes[i]->tokens, mini);
 	exit(mini->exit_code);
 }
@@ -46,7 +51,10 @@ static int	process_single_node(t_mini *mini, int i)
 	{
 		pid = fork();
 		if (pid == 0)
+		{
 			process_node_aux(mini, i);
+			exit(0);
+		}
 		else
 		{
 			waitpid(pid, &status, 0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/06 12:33:26 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/06 16:25:46 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 
 void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
 	heredoc_loop(i, node, mini, fd[1]);
 	close(fd[1]);
-	exit(0);
+	// exit(0);
+	return ;
 }
 
 void	heredoc_father(int fd[], pid_t pid, t_mini *mini)
 {
 	int	status;
 
+	(void)mini;
 	close(fd[1]);
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)

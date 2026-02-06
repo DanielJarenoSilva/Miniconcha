@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 17:06:33 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/04 13:09:39 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/06 16:25:55 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,5 @@ void	*ft_realloc(void *ptr, size_t size, size_t old_size)
 
 void	pipes_aux(t_mini *mini, int i, int in_fd, int *fd)
 {
-	if (mini->nodes[i]->redirs)
-		apply_redirs(mini->nodes[i], mini);
 	setup_child(mini, i, in_fd, fd);
 }
