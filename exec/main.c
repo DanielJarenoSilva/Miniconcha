@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/06 16:26:28 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/06 16:57:23 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ void	process_nodes(t_mini *mini)
 	int	i;
 
 	i = 0;
+	if (mini->heredoc_interrupted)
+	{
+		mini->heredoc_interrupted = 0;
+		return ;
+	}
 	if (mini->is_pipe)
 	{
 		process_single_node(mini, i);
@@ -91,6 +96,7 @@ static void	mini_loop(t_mini *mini)
 
 	while (1)
 	{
+		mini->heredoc_interrupted = 0;
 		if (!handle_readline(mini, &rl))
 			break ;
 		if (*rl)

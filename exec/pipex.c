@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/06 16:20:34 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/06 16:59:02 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ void	run_pipes(t_mini *mini)
 			if (mini->nodes[i]->redirs->type == HEREDOC)
 			{
 				apply_redirs(mini->nodes[i], mini);
+				if (mini->heredoc_interrupted)
+					return ;
 			}
 		}
 		i++;
