@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/06 16:57:23 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/06 17:32:14 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	process_node_aux(t_mini *mini, int i)
 	{
 		mini->is_fork = 1;
 		apply_redirs(mini->nodes[i], mini);
-		exit (0);
 	}
 
 	if (mini->nodes[i]->tokens[0] && is_builtin(mini->nodes[i]->tokens[0]))

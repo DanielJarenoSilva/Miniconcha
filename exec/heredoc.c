@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/06 16:51:08 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/06 17:41:33 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 	close(fd[0]);
 	heredoc_loop(i, node, mini, fd[1]);
 	close(fd[1]);
-	// exit(0);
+	if (mini->is_fork)
+		exit(0);
 	return ;
 }
 
