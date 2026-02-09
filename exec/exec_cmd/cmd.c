@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 11:55:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/06 15:59:34 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/09 11:03:36 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ void	exec_cmd(char **tokens, t_mini *mini)
 {
 	char	**path_dirs;
 	char	*path_cmd;
-	// printf("siesie\n");
-	(void)mini;
+
 	if (!tokens || !tokens[0])
 		exit(0);
 	signal(SIGINT, SIG_DFL);

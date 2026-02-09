@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/09 04:00:14 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/09 12:16:16 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void	run_pipes(t_mini *mini)
 	pid_t	last_pid;
 
 	last_pid = 0;
-	i = 0;
 	in_fd = STDIN_FILENO;
 	init_fd(fd);
 	resolve_all_heredocs(mini);

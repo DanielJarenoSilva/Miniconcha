@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/09 03:54:37 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/09 11:15:21 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	process_node_aux(t_mini *mini, int i)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-
 	mini->is_fork = 1;
 	resolve_all_heredocs(mini);
 	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0
@@ -25,13 +24,11 @@ void	process_node_aux(t_mini *mini, int i)
 	{
 		apply_redirs(mini->nodes[i], mini);
 	}
-
 	if (mini->nodes[i]->tokens[0] && is_builtin(mini->nodes[i]->tokens[0]))
 	{
 		exec_builtin(mini->nodes[i], mini);
 		exit(mini->exit_code);
 	}
-
 	exec_cmd(mini->nodes[i]->tokens, mini);
 	exit(mini->exit_code);
 }
@@ -41,6 +38,7 @@ static int	process_single_node(t_mini *mini, int i)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	if (mini->nodes[i]->wrong_redir)
 		return (0);
 	if (mini->is_pipe)
@@ -56,13 +54,7 @@ static int	process_single_node(t_mini *mini, int i)
 			exit(0);
 		}
 		else
-		{
-			waitpid(pid, &status, 0);
-			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
-				write(2, "Quit (core dumped)\n", 20);
-			if (WIFEXITED(status))
-				mini->exit_code = WEXITSTATUS(status);
-		}
+			wait_node(mini, pid, status);
 	}
 	return (0);
 }
@@ -70,7 +62,7 @@ static int	process_single_node(t_mini *mini, int i)
 void	process_nodes(t_mini *mini)
 {
 	int	i;
-	
+
 	i = 0;
 	if (mini->heredoc_interrupted)
 	{
@@ -87,7 +79,7 @@ void	process_nodes(t_mini *mini)
 		if (process_single_node(mini, i))
 			break ;
 		i++;
-	}    
+	}
 }
 
 static void	mini_loop(t_mini *mini)
@@ -107,7 +99,8 @@ static void	mini_loop(t_mini *mini)
 			parser(rl, mini);
 			if (mini->is_pipe != -1)
 			{
-				if (mini->nodes && mini->nodes[0] && mini->nodes[0]->wrong_redir == 0)
+				if (mini->nodes && mini->nodes[0]
+					&& mini->nodes[0]->wrong_redir == 0)
 					process_nodes(mini);
 			}
 		}

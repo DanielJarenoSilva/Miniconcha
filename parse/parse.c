@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/09 01:27:58 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/09 12:02:30 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	**get_nodes(const char *s, struct s_mini *mini)
 	if (!get_quotes(s))
 	{
 		printf("Error: unmatched quotes\n");
-		return (NULL);
+		return (free(nodes), NULL);
 	}
 	if (!nodes)
 		return (NULL);
