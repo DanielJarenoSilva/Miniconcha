@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/09 11:15:38 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/09 19:13:28 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
+void					apply_heredoc_file(int heredoc_index);
+void					apply_heredoc_in(t_node *node, int i);
 int						resolve_all_heredocs(t_mini *mini);
 int						handle_out_redir(const char *s, int *i, t_node *node);
 int						ft_strcmp_exact(const char *s1, const char *s2);
@@ -29,7 +31,7 @@ void					exec_heredoc(int i, int fd[], t_node *node,
 char					**copy_envp(char **envp);
 void					sort_envp(char **env);
 void					exec_heredoc_cmd(char **tokens, t_mini *mini);
-void					heredoc_father(int fd[], pid_t pid, t_mini *mini);
+void					heredoc_father(int fd[], pid_t pid, t_node *node, int i, t_mini *mini);;
 void					exec_cmd(char **tokens, t_mini *mini);
 int						set_env(char **envp, const char *key,
 							const char *value);

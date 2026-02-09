@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 17:06:33 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/09 11:13:02 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/09 18:58:11 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,10 @@ int	resolve_all_heredocs(t_mini *mini)
 {
 	int	i;
 	int	j;
+	int	global_index;
 
 	i = 0;
+	global_index = 0;
 	while (mini->nodes && mini->nodes[i])
 	{
 		j = 0;
@@ -63,9 +65,11 @@ int	resolve_all_heredocs(t_mini *mini)
 		{
 			if (mini->nodes[i]->redirs[j].type == HEREDOC)
 			{
+				mini->nodes[i]->redirs[j].heredoc_index = global_index;
 				apply_heredoc(mini->nodes[i], j, mini);
 				if (mini->heredoc_interrupted)
 					return (1);
+				global_index++;
 			}
 			j++;
 		}
@@ -81,4 +85,18 @@ void	wait_node(t_mini *mini, pid_t pid, int status)
 		write(2, "Quit (core dumped)\n", 20);
 	if (WIFEXITED(status))
 		mini->exit_code = WEXITSTATUS(status);
+}
+
+void	apply_heredoc_in(t_node *node, int i)
+{
+	int	fd;
+
+	fd = open(node->redirs[i].file, O_RDONLY);
+	if (fd < 0)
+	{
+		perror(node->redirs[i].file);
+		exit(1);
+	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
 }

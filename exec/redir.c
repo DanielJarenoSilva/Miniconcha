@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/09 11:16:24 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/09 18:54:18 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,29 @@ int	has_redir_out(t_node *node)
 	return (0);
 }
 
+void	apply_heredoc_file(int heredoc_index)
+{
+	int		fd;
+	char	*tmp_filename;
+	char	*index_str;
+
+	index_str = ft_itoa(heredoc_index);
+	tmp_filename = ft_strjoin("/tmp/.heredoc_", index_str);
+	free(index_str);
+	
+	fd = open(tmp_filename, O_RDONLY);
+	if (fd < 0)
+	{
+		perror(tmp_filename);
+		free(tmp_filename);
+		exit(1);
+	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	unlink(tmp_filename);
+	free(tmp_filename);
+}
+
 int	apply_redirs(t_node *node, t_mini *mini)
 {
 	int	i;
@@ -77,7 +100,9 @@ int	apply_redirs(t_node *node, t_mini *mini)
 	i = 0;
 	while (i < node->redir_count)
 	{
-		if (node->redirs[i].type == REDIR_IN)
+		if (node->redirs[i].type == HEREDOC)
+			apply_heredoc_file(node->redirs[i].heredoc_index);
+		else if (node->redirs[i].type == REDIR_IN)
 			apply_redir_in(node, i);
 		else if (node->redirs[i].type == REDIR_OUT)
 			apply_redir_out(node, i);
