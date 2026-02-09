@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/06 17:32:14 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/09 01:32:09 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,10 @@ static void	mini_loop(t_mini *mini)
 			free_nodes(mini->nodes);
 			mini->nodes = NULL;
 			parser(rl, mini);
+			// printf("node : %s\n", mini->nodes[0]->tokens[0]);
 			if (mini->is_pipe != -1)
 			{
-				if (mini->nodes[0] && mini->nodes[0]->wrong_redir == 0)
+				if (mini->nodes && mini->nodes[0] && mini->nodes[0]->wrong_redir == 0)
 					process_nodes(mini);
 			}
 		}
