@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/06 11:11:57 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/09 02:27:01 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 typedef struct s_node	t_node;
 typedef struct s_mini	t_mini;
 
+int 					resolve_all_heredocs(t_mini *mini);
 int						handle_out_redir(const char *s, int *i, t_node *node);
 int						ft_strcmp_exact(const char *s1, const char *s2);
 int						handle_readline(t_mini *mini, char **rl);

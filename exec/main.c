@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/09 01:32:09 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/09 03:54:37 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ void	process_node_aux(t_mini *mini, int i)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 
+	mini->is_fork = 1;
+	resolve_all_heredocs(mini);
 	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0
 		&& !mini->is_pipe)
 	{
-		mini->is_fork = 1;
 		apply_redirs(mini->nodes[i], mini);
 	}
 
@@ -69,7 +70,7 @@ static int	process_single_node(t_mini *mini, int i)
 void	process_nodes(t_mini *mini)
 {
 	int	i;
-
+	
 	i = 0;
 	if (mini->heredoc_interrupted)
 	{
@@ -86,7 +87,7 @@ void	process_nodes(t_mini *mini)
 		if (process_single_node(mini, i))
 			break ;
 		i++;
-	}
+	}    
 }
 
 static void	mini_loop(t_mini *mini)
@@ -104,7 +105,6 @@ static void	mini_loop(t_mini *mini)
 			free_nodes(mini->nodes);
 			mini->nodes = NULL;
 			parser(rl, mini);
-			// printf("node : %s\n", mini->nodes[0]->tokens[0]);
 			if (mini->is_pipe != -1)
 			{
 				if (mini->nodes && mini->nodes[0] && mini->nodes[0]->wrong_redir == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/06 16:59:02 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/09 04:00:14 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 		close(fd[1]);
 	}
 	close(fd[0]);
+	if (mini->nodes[i]->redirs)
+		apply_redirs(mini->nodes[i], mini);
 	execute_node(mini, i);
 }
 
@@ -95,20 +97,7 @@ void	run_pipes(t_mini *mini)
 	i = 0;
 	in_fd = STDIN_FILENO;
 	init_fd(fd);
-	i = 0;
-	while (mini->nodes && mini->nodes[i])
-	{
-		if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0)
-		{
-			if (mini->nodes[i]->redirs->type == HEREDOC)
-			{
-				apply_redirs(mini->nodes[i], mini);
-				if (mini->heredoc_interrupted)
-					return ;
-			}
-		}
-		i++;
-	}
+	resolve_all_heredocs(mini);
 	i = 0;
 	while (mini->nodes[i])
 	{

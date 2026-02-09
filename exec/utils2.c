@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/30 17:06:33 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/06 16:25:55 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/09 03:56:35 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,25 @@ void	*ft_realloc(void *ptr, size_t size, size_t old_size)
 void	pipes_aux(t_mini *mini, int i, int in_fd, int *fd)
 {
 	setup_child(mini, i, in_fd, fd);
+}
+
+int resolve_all_heredocs(t_mini *mini)
+{
+    int i;
+
+    i = 0;
+    while (mini->nodes && mini->nodes[i])
+    {
+        for (int j = 0; j < mini->nodes[i]->redir_count; j++)
+        {
+            if (mini->nodes[i]->redirs[j].type == HEREDOC)
+            {
+                apply_heredoc(mini->nodes[i], j, mini);
+                if (mini->heredoc_interrupted)
+                    return (1);
+            }
+        }
+        i++;
+    }
+    return (0);
 }
