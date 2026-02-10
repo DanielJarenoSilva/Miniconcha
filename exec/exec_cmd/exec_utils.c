@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:30:56 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 03:50:40 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/11 00:34:46 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ char	*find_cmd(char *cmd, char **path_dirs)
 	char	*full_path;
 	int		i;
 
-	i = 0;
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
@@ -59,6 +58,9 @@ char	*find_cmd(char *cmd, char **path_dirs)
 		else
 			return (NULL);
 	}
+	if (!path_dirs)
+		return (NULL);
+	i = 0;
 	while (path_dirs[i])
 	{
 		full_path = join_path(path_dirs[i], cmd);
