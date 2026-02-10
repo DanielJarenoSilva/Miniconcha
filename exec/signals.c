@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/10 01:28:41 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/10 10:41:35 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int		g_signal_state = 0;
 
 void	sigint_heredoc(int sig)
 {
-	int fd;
+	int	fd;
 
 	(void)sig;
 	fd = 3;

@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 00:44:34 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/05 12:49:13 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/10 11:26:14 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,5 +114,6 @@ void	add_redir(t_node *node, t_redir_type type, int expand)
 	node->redirs[node->redir_count].delimiter = NULL;
 	node->redirs[node->redir_count].expand = expand;
 	node->redirs[node->redir_count].file = NULL;
+	node->redirs[node->redir_count].heredoc_index = 0;
 	node->redir_count++;
 }

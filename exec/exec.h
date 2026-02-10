@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/09 19:13:28 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/10 10:48:55 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void					exec_heredoc(int i, int fd[], t_node *node,
 char					**copy_envp(char **envp);
 void					sort_envp(char **env);
 void					exec_heredoc_cmd(char **tokens, t_mini *mini);
-void					heredoc_father(int fd[], pid_t pid, t_node *node, int i, t_mini *mini);;
+void					heredoc_father(int fd[],
+							t_node *node, int i, t_mini *mini);;
 void					exec_cmd(char **tokens, t_mini *mini);
 int						set_env(char **envp, const char *key,
 							const char *value);
@@ -77,7 +78,6 @@ void					init_mini(t_mini *mini, char **envp);
 int						create_pipe(int fd[2]);
 void					init_fd(int fd[2]);
 void					*ft_realloc(void *ptr, size_t size, size_t old_size);
-void					pipes_aux(t_mini *mini, int i, int in_fd, int *fd);
 void					setup_child(t_mini *mini, int i, int in_fd, int fd[2]);
 void					exec_pb(t_mini *mini, int i);
 void					wait_node(t_mini *mini, pid_t pid, int status);

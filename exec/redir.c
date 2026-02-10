@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 22:47:40 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/10 01:05:42 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/10 10:42:59 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,29 +67,6 @@ int	has_redir_out(t_node *node)
 		i++;
 	}
 	return (0);
-}
-
-void	apply_heredoc_file(int heredoc_index)
-{
-	int		fd;
-	char	*tmp_filename;
-	char	*index_str;
-
-	index_str = ft_itoa(heredoc_index);
-	tmp_filename = ft_strjoin("/tmp/.heredoc_", index_str);
-	free(index_str);
-	
-	fd = open(tmp_filename, O_RDONLY);
-	if (fd < 0)
-	{
-		perror(tmp_filename);
-		free(tmp_filename);
-		exit(1);
-	}
-	dup2(fd, STDIN_FILENO);
-	close(fd);
-	unlink(tmp_filename);
-	free(tmp_filename);
 }
 
 int	apply_redirs(t_node *node, t_mini *mini)
