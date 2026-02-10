@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 02:30:58 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/10 10:43:07 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/10 13:26:15 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static void	process_heredoc_line(t_node *node, t_mini *mini,
 		idx[1]++;
 		return ;
 	}
+	node->redirs[idx[0]].expand = 1;
 	if (!node->redirs[idx[0]].delimiter[idx[1] + 1])
 	{
 		if (node->redirs[idx[0]].expand)

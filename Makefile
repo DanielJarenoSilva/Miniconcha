@@ -2,7 +2,7 @@ NAME = minishell
 
 LIBFT_DIR = ./libft
 
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror
 CC = cc
 
 SRCS =  ./exec/main.c \
