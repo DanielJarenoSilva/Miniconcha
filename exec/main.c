@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/09 17:35:32 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/10 01:11:53 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void	process_node_aux(t_mini *mini, int i)
 	signal(SIGQUIT, SIG_DFL);
 	mini->is_fork = 1;
 	resolve_all_heredocs(mini);
+
+	if (mini->heredoc_interrupted)
+		exit(130);
 	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0
 		&& !mini->is_pipe)
 	{

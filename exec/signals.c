@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 12:31:22 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/03 16:04:04 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/10 01:28:41 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,12 @@ int		g_signal_state = 0;
 
 void	sigint_heredoc(int sig)
 {
+	int fd;
+
 	(void)sig;
+	fd = 3;
+	while (fd < 20)
+		close(fd++);
 	exit(130);
 }
 

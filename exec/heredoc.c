@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/09 19:13:02 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/10 01:29:00 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
-	signal(SIGINT, SIG_DFL);
+	signal(SIGINT, sigint_heredoc);
 	signal(SIGQUIT, SIG_DFL);
+	
 	close(fd[0]);
 	heredoc_loop(i, node, mini, fd[1]);
 	close(fd[1]);
@@ -43,7 +44,6 @@ void	heredoc_father(int fd[], pid_t pid, t_node *node, int i, t_mini *mini)
 		return ;
 	}
 
-	// Ahora sí, accede correctamente al heredoc_index
 	index_str = ft_itoa(node->redirs[i].heredoc_index);
 	tmp_filename = ft_strjoin("/tmp/.heredoc_", index_str);
 	free(index_str);
@@ -74,5 +74,5 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 		exec_heredoc(i, fd, node, mini);
 	}
 	else
-		heredoc_father(fd, pid, node, i, mini);  // <-- Pasa node aquí
+		heredoc_father(fd, pid, node, i, mini);
 }
