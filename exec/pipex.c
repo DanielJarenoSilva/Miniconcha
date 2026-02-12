@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/10 11:06:25 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/12 09:25:49 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/12 13:29:06 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	setup_child(t_mini *mini, int i, int in_fd, int fd[2])
 	close(fd[0]);
 	if (mini->nodes[i]->redirs)
 		apply_redirs(mini->nodes[i], mini);
+	close(fd[1]);
 	execute_node(mini, i);
 }
 
