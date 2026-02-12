@@ -6,7 +6,7 @@
 /*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/12 02:59:25 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/12 03:28:04 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	wait_heredoc_father(pid_t pid, int fd[], t_mini *mini)
 	}
 }
 
-void	heredoc_father(int fd[], t_node *node, int i, t_mini *mini, pid_t pid)
+void	heredoc_father(int fd[], t_node *node, int i, t_mini *mini)
 {
 	int		tmp_fd;
 	char	*tmp_filename;
@@ -60,7 +60,7 @@ void	heredoc_father(int fd[], t_node *node, int i, t_mini *mini, pid_t pid)
 	char	buffer[4096];
 	ssize_t	bytes;
 
-	wait_heredoc_father(pid, fd, mini);
+	wait_heredoc_father(mini->heredoc_pid, fd, mini);
 	index_str = ft_itoa(node->redirs[i].heredoc_index);
 	tmp_filename = ft_strjoin("/tmp/.heredoc_", index_str);
 	free(index_str);
@@ -84,6 +84,7 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 	if (pipe(fd) == -1)
 		return ;
 	pid = fork();
+	mini->heredoc_pid = pid;
 	if (pid == -1)
 		return ;
 	if (pid == 0)
@@ -93,6 +94,6 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 	}
 	else
 	{
-		heredoc_father(fd, node, i, mini, pid);
+		heredoc_father(fd, node, i, mini);
 	}
 }
