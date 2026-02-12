@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/10 11:03:26 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 01:20:11 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	wait_heredoc_father(pid_t pid, int fd[], t_mini *mini)
 	}
 }
 
-void	heredoc_father(int fd[], t_node *node, int i, t_mini *mini)
+void	heredoc_father(int fd[], t_node *node, int i, t_mini *mini, pid_t pid)
 {
 	int		tmp_fd;
 	char	*tmp_filename;
@@ -47,7 +47,7 @@ void	heredoc_father(int fd[], t_node *node, int i, t_mini *mini)
 	char	buffer[4096];
 	ssize_t	bytes;
 
-	wait_heredoc_father(node->redirs[i].heredoc_index, fd, mini);
+	wait_heredoc_father(pid, fd, mini);
 	index_str = ft_itoa(node->redirs[i].heredoc_index);
 	tmp_filename = ft_strjoin("/tmp/.heredoc_", index_str);
 	free(index_str);
@@ -79,5 +79,5 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 		exec_heredoc(i, fd, node, mini);
 	}
 	else
-		heredoc_father(fd, node, i, mini);
+		heredoc_father(fd, node, i, mini, pid);
 }

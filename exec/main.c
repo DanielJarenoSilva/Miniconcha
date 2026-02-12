@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 20:40:24 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/10 10:49:22 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 01:24:52 by pabalvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@ void	process_node_aux(t_mini *mini, int i)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	mini->is_fork = 1;
-	resolve_all_heredocs(mini);
-	if (mini->heredoc_interrupted)
-		exit(130);
 	if (mini->nodes[i]->redirs && mini->nodes[i]->redir_count > 0
 		&& !mini->is_pipe)
 	{
@@ -45,18 +42,32 @@ static int	process_single_node(t_mini *mini, int i)
 		return (0);
 	if (mini->is_pipe)
 		return (run_pipes(mini), 0);
+	resolve_all_heredocs(mini);
+	if (mini->heredoc_interrupted)
+	{
+		mini->exit_code = 130;
+		mini->heredoc_interrupted = 0;
+		return (0);
+	}
 	if (mini->nodes[i]->tokens[0] && pb(mini->nodes[i]->tokens[0]))
+	{
 		exec_pb(mini, i);
+		return (0);
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		process_node_aux(mini, i);
+		exit(mini->exit_code);
+	}
+	else if (pid > 0)
+		wait_node(mini, pid, status);
 	else
 	{
-		pid = fork();
-		if (pid == 0)
-		{
-			process_node_aux(mini, i);
-			exit(0);
-		}
-		else
-			wait_node(mini, pid, status);
+		perror("fork");
+		mini->exit_code = 1;
 	}
 	return (0);
 }
