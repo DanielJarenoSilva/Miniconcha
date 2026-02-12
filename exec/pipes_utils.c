@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:45:49 by djareno           #+#    #+#             */
-/*   Updated: 2026/01/29 10:49:08 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 16:27:24 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,18 @@ int	create_pipe(int fd[2])
 		return (1);
 	}
 	return (0);
+}
+
+int ft_strcmp_strict(char *str, char *std)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (std[i] == '\0' || std[i] != str[i])
+			return (0);
+		i++;
+	}
+	return (1);
 }

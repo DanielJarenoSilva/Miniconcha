@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_loop.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 02:30:58 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/12 11:48:45 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 16:29:34 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ static void	process_heredoc_line(t_node *node, t_mini *mini, int fd, int *idx)
 
 	line = readline("> ");
 	line_aux(line, fd);
-	if (ft_strncmp(line, node->redirs[idx[0]].delimiter[idx[1]],
-			ft_strlen(line)) == 0 && ft_strncmp(line, "> ", ft_strlen(line)))
+	if (ft_strcmp_exact(line, node->redirs[idx[0]].delimiter[idx[1]]))
 	{
 		free(line);
 		idx[1]++;
