@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 13:14:46 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/05 11:35:45 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 14:40:44 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,28 +76,25 @@ void	empty_export(t_mini *mini)
 void	export(t_mini *mini, char	**tokens)
 {
 	int		i;
-	char	*key;
 	char	*value;
-	char	*eq;
+	char	**fvalue;
 
 	sort_envp(mini->envp);
 	if (!tokens[1])
 		return (empty_export(mini));
 	i = 1;
+	value = ft_strdup("");
 	while (tokens[i])
 	{
-		eq = ft_strchr(tokens[i], '=');
-		if (!eq || !*(eq + 1))
-		{
-			i++;
-			continue ;
-		}
-		key = ft_substr(tokens[i], 0, eq - tokens[i]);
-		value = eq + 1;
-		if (set_env(mini->envp, key, value) == 1)
-			mini->envp = new_env(mini, key, value);
-		free(key);
+		if (i != 1)
+			value = ft_strjoin_char_free(value, ' ');
+		value = ft_strjoin_free(value, tokens[i]);
 		i++;
 	}
+	fvalue = ft_split(value, '=');
+	free(value);
+	if (set_env(mini->envp, fvalue[0], fvalue[1]) == 1)
+		mini->envp = new_env(mini, fvalue[0], fvalue[1]);
+	ft_free_matrix(fvalue);
 	mini->exit_code = 0;
 }
