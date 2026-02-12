@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_loop.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/05 02:30:58 by kfuto             #+#    #+#             */
-/*   Updated: 2026/02/12 01:00:09 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/12 03:03:28 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,17 @@ static char	*loop_aux(char *line, t_mini *mini, int fd)
 	return (expanded);
 }
 
-static void	process_heredoc_line(t_node *node, t_mini *mini,
-								int fd, int *idx)
+static void	process_heredoc_line(t_node *node, t_mini *mini, int fd, int *idx)
 {
 	char	*line;
 	char	*expanded;
 
 	line = readline("> ");
 	if (!line)
-		exit (0);
+	{
+		close(fd);
+		exit(0);
+	}
 	if (ft_strncmp(line, node->redirs[idx[0]].delimiter[idx[1]],
 			ft_strlen(line)) == 0 && ft_strncmp(line, "> ", ft_strlen(line)))
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabalvar <pabalvar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/12 01:20:11 by pabalvar         ###   ########.fr       */
+/*   Updated: 2026/02/12 02:59:25 by kfuto            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,30 @@ void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 
 void	wait_heredoc_father(pid_t pid, int fd[], t_mini *mini)
 {
-	int		status;
+	int	status;
+	int	code;
 
-	status = 0;
 	close(fd[1]);
 	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	if (WIFSIGNALED(status))
 	{
-		mini->exit_code = 130;
-		mini->heredoc_interrupted = 1;
-		close(fd[0]);
-		return ;
+		if (WTERMSIG(status) == SIGINT || WTERMSIG(status) == SIGQUIT
+			|| WTERMSIG(status) == 0)
+		{
+			mini->exit_code = 130;
+			mini->heredoc_interrupted = 1;
+			close(fd[0]);
+		}
+	}
+	else if (WIFEXITED(status))
+	{
+		code = WEXITSTATUS(status);
+		if (code == 130)
+		{
+			mini->exit_code = 130;
+			mini->heredoc_interrupted = 1;
+			close(fd[0]);
+		}
 	}
 }
 
@@ -79,5 +92,7 @@ void	apply_heredoc(t_node *node, int i, t_mini *mini)
 		exec_heredoc(i, fd, node, mini);
 	}
 	else
+	{
 		heredoc_father(fd, node, i, mini, pid);
+	}
 }
