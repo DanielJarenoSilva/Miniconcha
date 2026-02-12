@@ -6,13 +6,13 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/10 13:24:04 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 11:16:08 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-char	**tokenizer(const char *s, t_node *node, t_mini *mini)
+char	**tokenizer(char *s, t_node *node, t_mini *mini)
 {
 	char	**tokens;
 	int		i;
@@ -109,15 +109,13 @@ static int	init_nodes(char **cmds, struct s_mini *mini, int num_cmds)
 		mini->nodes[j]->wrong_redir = 0;
 		mini->nodes[j]->tokens = tokenizer(cmds[i], mini->nodes[j], mini);
 		mini->nodes[j]->expand = has_single_quotes(cmds[i]);
-		if (mini->nodes[j]->tokens)
-			expand_tokens(mini->nodes[j], mini);
 		i++;
 		j++;
 	}
 	return (mini->nodes[j] = NULL, 1);
 }
 
-void	parser(const char *s, t_mini *mini)
+void	parser(char *s, t_mini *mini)
 {
 	char	**cmds;
 	int		num_cmds;
@@ -129,17 +127,19 @@ void	parser(const char *s, t_mini *mini)
 		printf("Error: invalid pipe sequence\n");
 		return ;
 	}
+	s = expand_token(s, mini);
 	mini->is_pipe = 0;
 	cmds = get_nodes(s, mini);
 	if (!cmds)
-		return ;
+		return (free(s));
 	num_cmds = 0;
 	while (cmds[num_cmds])
 		num_cmds++;
 	mini->nodes = (t_node **)ft_calloc(num_cmds + 1, sizeof(t_node *));
 	if (!mini->nodes)
-		return (ft_free_matrix(cmds));
+		return (ft_free_matrix(cmds), free(s));
 	if (!init_nodes(cmds, mini, num_cmds))
-		return (ft_free_matrix(cmds));
+		return (ft_free_matrix(cmds), free(s));
 	ft_free_matrix(cmds);
+	free(s);
 }

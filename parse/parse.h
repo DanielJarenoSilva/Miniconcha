@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/05 12:45:24 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 11:08:28 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ char					**get_nodes(const char *s, struct s_mini *mini);
 int						ft_isnode(char c);
 int						ft_count_nodes(const char *s);
 char					*word_dup(const char *start, int len);
-void					parser(const char *s, t_mini *mini);
+void					parser(char *s, t_mini *mini);
 int						ft_ispipe(char c, t_mini *mini);
 int						ft_isquote(char c);
-char					**tokenizer(const char *s, t_node *node, t_mini *mini);
+char					**tokenizer(char *s, t_node *node, t_mini *mini);
 void					get_tookens(t_mini *mini);
 int						has_single_quotes(char *s);
 void					expand_tokens(t_node *node, t_mini *mini);

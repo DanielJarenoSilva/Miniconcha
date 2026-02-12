@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 10:55:23 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/12 03:28:16 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/12 11:49:50 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ typedef struct s_mini	t_mini;
 
 void					apply_heredoc_file(int heredoc_index);
 void					apply_heredoc_in(t_node *node, int i);
+void					aux_node(t_mini *mini, int i);
+void					process_node_aux(t_mini *mini, int i);
 int						resolve_all_heredocs(t_mini *mini);
 int						handle_out_redir(const char *s, int *i, t_node *node);
 int						ft_strcmp_exact(const char *s1, const char *s2);

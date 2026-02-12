@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/07 14:30:56 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/11 00:34:46 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/12 11:43:43 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,28 @@ char	*read_fd(int fd)
 		return (NULL);
 	}
 	return (buffer);
+}
+
+void	aux_node(t_mini *mini, int i)
+{
+	int	pid;
+	int	status;
+
+	status = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		if (!mini->is_pipe)
+			process_node_aux(mini, i);
+		exit(mini->exit_code);
+	}
+	else if (pid > 0)
+		wait_node(mini, pid, status);
+	else
+	{
+		perror("fork");
+		mini->exit_code = 1;
+	}
 }

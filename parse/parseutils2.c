@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 19:49:35 by kfuto             #+#    #+#             */
-/*   Updated: 2026/01/29 11:12:41 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/12 11:34:36 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*handle_single_quote(char *str, int *i, char *res)
 	{
 		tmp = ft_strjoin_char_free(res, str[*i]);
 		if (!tmp)
-			return (NULL);
+			return (free(res), NULL);
 		res = tmp;
 		(*i)++;
 	}
@@ -32,12 +32,18 @@ char	*handle_single_quote(char *str, int *i, char *res)
 
 char	*handle_double_quote(char *str, int *i, char *result, t_mini *mini)
 {
+	char	*s;
+
 	(*i)++;
 	while (str[*i] && str[*i] != '"')
 	{
 		if (str[*i] == '$' && str[*i + 1] && (ft_isalnum(str[*i + 1])
 				|| str[*i + 1] == '_' || str[*i + 1] == '?'))
-			result = ft_strjoin_free(result, expand_var(str, i, mini));
+		{
+			s = expand_var(str, i, mini);
+			result = ft_strjoin_free(result, s);
+			free(s);
+		}
 		else
 			result = ft_strjoin_char_free(result, str[(*i)++]);
 	}
@@ -79,9 +85,7 @@ char	*word_dup_no_quotes(const char *s, int len)
 	j = 0;
 	while (i < len)
 	{
-		if (!quote && (s[i] == '"' || s[i] == '\''))
-			quote = s[i++];
-		else if (quote && s[i] == quote)
+		if (quote && s[i] == quote)
 		{
 			quote = 0;
 			i++;
