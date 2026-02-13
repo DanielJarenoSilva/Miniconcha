@@ -6,7 +6,7 @@
 /*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 12:37:33 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/12 11:16:08 by djareno          ###   ########.fr       */
+/*   Updated: 2026/02/13 18:33:08 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ char	**tokenizer(char *s, t_node *node, t_mini *mini)
 	{
 		while (ft_isspace(s[i]))
 			i++;
-		if (ft_ischev(s[i]) && handle_redir(s, &i, node, mini) == 0)
-		{
-			ft_free_matrix(tokens);
-			return (NULL);
-		}
+		start = handle_redir(s, &i, node, mini);
+		if (ft_ischev(s[i]) && start == 0)
+			return (ft_free_matrix(tokens), NULL);
+		if (start == 2)
+			return (ft_free_matrix(tokens), NULL);
 		start = i;
 		skip_token_quotes(s, &i, mini);
 		if (i > start)
@@ -108,6 +108,8 @@ static int	init_nodes(char **cmds, struct s_mini *mini, int num_cmds)
 		mini->nodes[j]->redir_count = 0;
 		mini->nodes[j]->wrong_redir = 0;
 		mini->nodes[j]->tokens = tokenizer(cmds[i], mini->nodes[j], mini);
+		if (!mini->nodes[j]->tokens)
+			return (0);
 		mini->nodes[j]->expand = has_single_quotes(cmds[i]);
 		i++;
 		j++;

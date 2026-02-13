@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kfuto <kfuto@student.42.fr>                +#+  +:+       +#+        */
+/*   By: djareno <djareno@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 10:07:13 by djareno           #+#    #+#             */
-/*   Updated: 2026/02/12 03:28:04 by kfuto            ###   ########.fr       */
+/*   Updated: 2026/02/13 18:17:35 by djareno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 void	exec_heredoc(int i, int fd[], t_node *node, t_mini *mini)
 {
 	signal(SIGINT, sigint_heredoc);
-	signal(SIGQUIT, SIG_DFL);
 	close(fd[0]);
 	heredoc_loop(i, node, mini, fd[1]);
 	close(fd[1]);
@@ -32,7 +31,7 @@ void	wait_heredoc_father(pid_t pid, int fd[], t_mini *mini)
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
 	{
-		if (WTERMSIG(status) == SIGINT || WTERMSIG(status) == SIGQUIT
+		if (WTERMSIG(status) == SIGINT
 			|| WTERMSIG(status) == 0)
 		{
 			mini->exit_code = 130;
