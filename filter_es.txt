@@ -1,0 +1,60 @@
+Nombre del ejercicio : filter
+Archivos esperados   : *.c
+Funciones permitidas : read, strlen, malloc, calloc, realloc, free, printf, perror, memmove
+------------------------------------------------------------------------------
+
+Escribe un programa que tome uno y solo un argumento s.
+
+Tu programa leerá desde stdin y escribirá todo el contenido leído en stdout
+excepto que cada aparición de s debe ser reemplazada por '*'.
+
+Por ejemplo:
+
+./filter bonjour
+se comportará de la misma manera que:
+sed 's/bonjour/*******/g'
+
+En caso de error durante la lectura o un malloc debes escribir "Error: " seguido
+del mensaje de error en stderr y retornar 1.
+
+$> echo 'abcdefgaaaabcdefabc' | ./filter abc | cat -e
+***defgaaa***def***
+
+Si el programa es llamado sin argumentos o con un argumento vacío o con
+múltiples argumentos debe retornar 1.
+
+Ejemplos adicionales:
+
+$> echo 'bonjourbonjour' | ./filter bonjour | cat -e
+**************$
+
+$> echo 'hola hola holahola' | ./filter hola | cat -e
+**** **** ********$
+
+$> echo 'mississippi' | ./filter s | cat -e
+mi**i**ippi$
+
+$> echo 'lololol' | ./filter lo | cat -e
+******l$
+
+$> echo 'aaaaa' | ./filter aa | cat -e
+****a$
+
+$> echo 'xyztestabc test' | ./filter test | cat -e
+xyz****abc ****$
+
+$> echo -e 'uno\ndos\nuno' | ./filter uno | cat -e
+***
+dos
+***$
+
+$> printf 'abc\n' | ./filter a | cat -e
+*bc$
+
+$> printf 'fin\n' | ./filter fin | cat -e
+***$
+
+Casos de uso incorrecto (retorno 1):
+$> ./filter
+$> ./filter ''
+$> ./filter uno dos

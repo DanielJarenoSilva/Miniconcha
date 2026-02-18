@@ -1,0 +1,27 @@
+Nombre de la asignación: rip
+Archivos esperados: *.c *.h
+Funciones permitidas: puts, write
+--------------------------------------------------------------------------------
+Escribe un programa que tome como argumento una cadena que contenga solo paréntesis.
+Si los paréntesis no están balanceados (por ejemplo "())"), tu programa debe eliminar el
+mínimo número de paréntesis para que la expresión quede balanceada.
+Por eliminar se entiende reemplazar por espacios.
+Debes imprimir todas las soluciones (puede haber más de una).
+El orden de las soluciones no es importante.
+Por ejemplo, esto debería funcionar:
+(Por razones de legibilidad, el '_' significa espacio y los espacios son solo para legibilidad.)
+$> ./rip '( ( )' | cat -e
+_ ( ) $
+( _ ) $
+$> ./rip '( ( ( ) ( ) ( ) ) ( ) )' | cat -e
+( ( ( ) ( ) ( ) ) ( ) ) $
+$> ./rip '( ) ( ) ) ( )' | cat -e
+( ) ( ) _ ( ) $
+( ) ( _ ) ( ) $
+( _ ( ) ) ( ) $
+$> ./rip '( ( ) ( ( ) (' | cat -e
+( ( ) _ _ ) _ $
+( _ ) ( _ ) _ $
+( _ ) _ ( ) _ $
+_ ( ) ( _ ) _ $
+_ ( ) _ ( ) _ $

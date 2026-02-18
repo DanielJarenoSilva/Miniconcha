@@ -1,0 +1,49 @@
+Nombre de la asignación : powerset
+Archivos esperados : *.c *.h
+Funciones permitidas : atoi, printf, malloc, calloc, realloc, free.
+---------------------------------------------------------------
+
+Escribe un programa que tome como argumento un entero n seguido de un conjunto de enteros,
+tu programa debe mostrar todos los subconjuntos cuya suma de elementos sea n.
+
+En caso de un error de malloc, tu programa debe salir con el código 1.
+No probaremos casos de prueba inválidos (por ejemplo '1 1 2')
+pista: el conjunto vacío es un subconjunto de cualquier conjunto.
+
+Por ejemplo, esto debería funcionar:
+$> ./powerset 3 1 0 2 4 5 3 | cat -e
+3$
+0 3$
+1 2$
+1 0 2$
+$> ./powerset 12 5 2 1 8 4 3 7 11 | cat -e
+8 4$
+1 11$
+1 4 7$
+2 3 7$
+5 4 3$
+5 7$
+5 2 1 4$
+$> ./powerset 7 3 8 2| cat -e
+$
+$> ./powerset 0 1 -1| cat -e
+$
+1 -1$
+
+El orden de las líneas no es importante, pero el orden de los elementos en un subconjunto sí lo es.
+No debes tener duplicados (por ejemplo 2 1, 1 2)
+$> ./powerset 5 1 2 3 4 5| cat -e
+válido:
+1 4$
+2 3$
+5$
+
+o:
+
+2 3$
+5$
+1 4$
+no válido:
+4 1$
+3 2$
+5$
